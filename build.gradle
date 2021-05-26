@@ -1,0 +1,61 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java-library'
+    id 'checkstyle'
+}
+
+System.setProperty("org.checkstyle.google.suppressionfilter.config", "$projectDir/checkstyle/suppressions.xml")
+checkstyle {
+    configFile file("$projectDir/checkstyle/google_checks.xml")
+    toolVersion '8.42'
+    maxWarnings 0
+    ignoreFailures false
+    showViolations true
+}
+checkstyleMain.source = 'src/main/java'
+checkstyleTest.source = 'src/test/java'
+
+group = 'jp.co.ichain'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_15
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+dependencies {
+	// spring
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.5'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    // security
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+    
+    // jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
+
+    // javax
+    implementation group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2.2'
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
+    
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// tools
+    implementation 'com.google.guava:guava:28.2-jre'
+}
