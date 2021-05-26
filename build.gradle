@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.4'
+    id 'org.springframework.boot' version '2.5.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'checkstyle'
@@ -38,6 +38,11 @@ configurations {
 	}
 }
 
+ext {
+    lombokVersion = '1.18.18'
+    jacksonVersion = '2.12.2'
+}
+
 dependencies {
 	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
@@ -50,8 +55,8 @@ dependencies {
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
     
     // jackson
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.2'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '${jacksonVersion}'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '${jacksonVersion}'
 
     // javax
     implementation group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2.2'
@@ -59,10 +64,10 @@ dependencies {
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
     
     // lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly 'org.projectlombok:lombok:${lombokVersion}'
+    testAnnotationProcessor 'org.projectlombok:lombok:${lombokVersion}'
 
 	// tools
     implementation 'com.google.guava:guava:28.2-jre'
