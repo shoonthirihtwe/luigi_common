@@ -19,7 +19,7 @@ public class WebException extends RuntimeException {
   /** バグコード */
   String code;
   /** エラー引数 */
-  List<String> errArgs;
+  List<String> errArgs = null;
   /** 原因となった例外 */
   Throwable cause;
 

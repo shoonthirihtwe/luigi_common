@@ -1,6 +1,5 @@
 package jp.co.ichain.luigi2.dto;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,4 @@ public class ResultWebDto {
    * 情報の状態。 成功の場合 [OK] 失敗の場合はエラーコードがセットされ返却される。
    */
   protected String code = null;
-
-  protected List<String> errArgs = null;
 }

@@ -21,7 +21,7 @@ import jp.co.ichain.luigi2.resources.Luigi2Code;
 @Constraint(validatedBy = {})
 @Pattern(
     regexp = "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}(.[a-zA-Z]{2,3})?$",
-    message = Luigi2Code.EP005)
+    message = Luigi2Code.P003_V0001)
 public @interface Email {
   String message() default "";
 

@@ -42,7 +42,8 @@ dependencies {
 	// spring
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.5'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     
     // security
@@ -56,10 +57,15 @@ dependencies {
     implementation group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2.2'
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
+    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
     
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 
 	// tools
     implementation 'com.google.guava:guava:28.2-jre'
+    
+    // swagger2
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 }

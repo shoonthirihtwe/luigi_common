@@ -19,7 +19,7 @@ import jp.co.ichain.luigi2.resources.Luigi2Code;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {FormatListValidator.class})
 public @interface FormatList {
-  String message() default Luigi2Code.EP002;
+  String message() default Luigi2Code.P005_V0001;
 
   Class<?>[] groups() default {};
 

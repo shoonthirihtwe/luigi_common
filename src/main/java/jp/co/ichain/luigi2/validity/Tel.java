@@ -19,7 +19,7 @@ import jp.co.ichain.luigi2.resources.Luigi2Code;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {})
-@Pattern(regexp = "^\\d{3,4}-?\\d{3,4}-?\\d{4}$", message = Luigi2Code.EP006)
+@Pattern(regexp = "^\\d{3,4}-?\\d{3,4}-?\\d{4}$", message = Luigi2Code.P003_V0001)
 public @interface Tel {
   String message() default "";
 
