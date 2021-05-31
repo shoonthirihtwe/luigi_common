@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.exception;
 
+import java.util.List;
+
 /**
  * データ更新エラー
  * 
@@ -9,9 +11,12 @@ package jp.co.ichain.luigi2.exception;
  */
 @SuppressWarnings("serial")
 public class WebUpdatedException extends WebException {
-  public Object result;
 
-  public WebUpdatedException(String code) {
+  public WebUpdatedException(String code, List<String> args) {
+    super(code, args);
+  }
+
+  public WebUpdatedException(String... code) {
     super(code);
   }
 }
