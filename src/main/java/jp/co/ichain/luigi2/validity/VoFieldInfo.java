@@ -42,7 +42,8 @@ public @interface VoFieldInfo {
 
   public enum Validity {
     Email(Luigi2Code.P003_V0001), Tel(Luigi2Code.P003_V0001), Format(
-        Luigi2Code.P005_V0001), IntFormat(Luigi2Code.P005_V0001), Size(Luigi2Code.P002_V0001);
+        Luigi2Code.P005_V0001), IntFormat(
+            Luigi2Code.P005_V0001), Size(Luigi2Code.P002_V0001), ByteSize(Luigi2Code.P002_V0001);
 
     private final String name;
 

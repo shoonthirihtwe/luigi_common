@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import javax.validation.constraints.Size;
 import jp.co.ichain.luigi2.exception.WebListException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
@@ -176,7 +177,7 @@ public class Validity {
      * @param field
      * @return
      */
-    VALID_MAP.put(VoFieldInfo.Validity.IntFormat, (obj, field) -> {
+    VALID_MAP.put(VoFieldInfo.Validity.Size, (obj, field) -> {
       String value = (String) obj;
       Size fieldInfo = field.getAnnotation(Size.class);
 
@@ -185,6 +186,30 @@ public class Validity {
       }
 
       if (value.length() <= fieldInfo.max() && value.length() >= fieldInfo.min()) {
+        return true;
+      }
+      return false;
+    });
+
+    /**
+     * サイズフォーマット検証
+     * 
+     * @author : [AOT] s.paku
+     * @createdAt : 2021-05-31
+     * @updatedAt : 2021-05-31
+     * @param value
+     * @param field
+     * @return
+     */
+    VALID_MAP.put(VoFieldInfo.Validity.ByteSize, (obj, field) -> {
+      String value = (String) obj;
+      Size fieldInfo = field.getAnnotation(Size.class);
+
+      if (value == null || fieldInfo.max() == 0) {
+        return true;
+      }
+
+      if (value.length() <= fieldInfo.max() && value.getBytes().length >= fieldInfo.min()) {
         return true;
       }
       return false;

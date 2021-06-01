@@ -1,12 +1,13 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.validity.Email;
 import jp.co.ichain.luigi2.validity.VoFieldInfo;
+import jp.co.ichain.luigi2.validity.VoFieldInfo.Validity;
 import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,14 +34,16 @@ public class UsersVo extends ObjectVo {
   @VoFieldInfo(name = "テナントID")
   Integer tenantId;
 
-  @VoFieldInfo(name = "ユーザ名")
+  @Size(max = 32)
+  @VoFieldInfo(name = "ユーザ名", validitys = {Validity.ByteSize})
   String name;
 
-  @VoFieldInfo(name = "メールアドレス")
-  @Email
+  @Size(max = 128)
+  @VoFieldInfo(name = "メールアドレス", validitys = {Validity.Email, Validity.Size})
   String email;
 
-  @VoFieldInfo(name = "パスワード")
+  @Size(max = 32)
+  @VoFieldInfo(name = "パスワード", validitys = {Validity.Size})
   String password;
 
   @VoFieldInfo(name = "RememberMe用トークン")
