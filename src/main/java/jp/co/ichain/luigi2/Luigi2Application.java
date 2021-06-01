@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
+@PropertySource("application.properties")
 @PropertySource("common/application-common.properties")
 public class Luigi2Application {
 
