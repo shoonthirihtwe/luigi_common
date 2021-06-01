@@ -59,6 +59,12 @@ dependencies {
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12'
     implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
     
+    // DB
+	runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.1.4'
+    implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+    
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
 
