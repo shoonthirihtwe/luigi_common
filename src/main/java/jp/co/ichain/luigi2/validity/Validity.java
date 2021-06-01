@@ -68,20 +68,22 @@ public class Validity {
         // required Validate
         Map<String, Boolean> requiredFieldNamesMap =
             Arrays.asList(requiredFieldNames).stream().collect(Collectors.toMap(f -> f, f -> true));
+        field.setAccessible(true);
+        Object data = field.get(voList[i]);
+        boolean dataIsNull = data == null || ((data instanceof String) && data.equals(""));
         if (requiredFieldNamesMap.get(fieldName)) {
-          field.setAccessible(true);
-          Object data = field.get(voList[i]);
-          if (data == null || ((data instanceof String) && data.equals(""))) {
+          if (dataIsNull) {
             if (result == null) {
               result = new WebListException();
             }
             result.addWebException(new WebParameterException(Luigi2Code.P001_V0001, fieldDesName));
-          } else if (fieldInfo != null) {
-            // Validate
-            for (val validity : fieldInfo.validitys()) {
-              if (VALID_MAP.get(validity).apply(data, field)) {
-                result.addWebException(new WebParameterException(validity.name(), fieldDesName));
-              }
+          }
+        }
+        if (dataIsNull == false) {
+          // Validate
+          for (val validity : fieldInfo.validitys()) {
+            if (VALID_MAP.get(validity).apply(data, field)) {
+              result.addWebException(new WebParameterException(validity.name(), fieldDesName));
             }
           }
         }
