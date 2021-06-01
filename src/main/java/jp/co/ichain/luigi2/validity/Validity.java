@@ -31,6 +31,23 @@ public class Validity {
    * パラメーターを検証する
    * 
    * @author : [AOT] s.paku
+   * @createdAt : 2021-06-01
+   * @updatedAt : 2021-06-01
+   * @param voList
+   * @param requiredFieldNames
+   * @throws IllegalAccessException
+   * @throws IllegalArgumentException
+   * @throws WebListException
+   */
+  public static void validateParameter(ObjectVo vo, String... requiredFieldNames)
+      throws WebListException, IllegalArgumentException, IllegalAccessException {
+    validateParameter(new ObjectVo[] {vo}, requiredFieldNames);
+  }
+
+  /**
+   * パラメーターを検証する
+   * 
+   * @author : [AOT] s.paku
    * @createdAt : 2021-05-25
    * @updatedAt : 2021-05-25
    * @param bidResult

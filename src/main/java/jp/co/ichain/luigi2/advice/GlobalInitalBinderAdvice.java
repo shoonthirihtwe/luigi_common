@@ -4,10 +4,8 @@ import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.InitBinder;
  */
 @ControllerAdvice
 public class GlobalInitalBinderAdvice {
-  @Inject
-  private Validator validator;
 
   @Value("${config.time-zone}")
   private String timeZone;
@@ -44,8 +40,6 @@ public class GlobalInitalBinderAdvice {
         setValue(new Date(Long.valueOf(value)));
       }
     });
-    // Validate
-    binder.setValidator(validator);
   }
 
   /**
