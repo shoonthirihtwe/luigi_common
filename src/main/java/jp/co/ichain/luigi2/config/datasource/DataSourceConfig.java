@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.val;
 
 /**
@@ -104,9 +105,9 @@ public class DataSourceConfig {
    * @return
    */
   @Bean(name = "luigi2MasterDataSource")
-  @ConfigurationProperties(prefix = "spring.luigi2.master.datasource")
+  @ConfigurationProperties(prefix = "spring.luigi2.datasource.master")
   public DataSource createMasterDataSource() {
-    return DataSourceBuilder.create().build();
+    return DataSourceBuilder.create().type(HikariDataSource.class).build();
   }
 
   /**
@@ -118,7 +119,7 @@ public class DataSourceConfig {
    * @return
    */
   @Bean(name = "luigi2SlaveDataSource")
-  @ConfigurationProperties(prefix = "spring.luigi2.slave.datasource")
+  @ConfigurationProperties(prefix = "spring.luigi2.datasource.slave")
   public DataSource createSlaveDataSource() {
     return DataSourceBuilder.create().build();
   }

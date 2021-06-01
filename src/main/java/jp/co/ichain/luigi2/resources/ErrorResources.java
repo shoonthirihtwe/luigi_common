@@ -23,7 +23,7 @@ public class ErrorResources {
 
   private Properties properties = null;
 
-  @Value("classpath:error.properties")
+  @Value("classpath:common/error.properties")
   Resource resourceFile;
 
   /**
@@ -37,7 +37,7 @@ public class ErrorResources {
   @Lock(LockType.WRITE)
   @PostConstruct
   public void initialize() throws IOException {
-    Properties properties = new Properties();
+    properties = new Properties();
     properties.load(resourceFile.getInputStream());
   }
 
@@ -52,6 +52,10 @@ public class ErrorResources {
    * @throws IOException
    */
   public String get(String code) throws IOException {
-    return this.properties.getProperty(code);
+    if (code.length() > 4) {
+      return this.properties.getProperty(code.substring(0, 4));
+    } else {
+      return this.properties.getProperty(code);
+    }
   }
 }
