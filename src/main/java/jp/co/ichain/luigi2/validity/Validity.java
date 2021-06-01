@@ -79,7 +79,7 @@ public class Validity {
             result.addWebException(new WebParameterException(Luigi2Code.P001_V0001, fieldDesName));
           }
         }
-        if (dataIsNull == false) {
+        if (fieldInfo != null && dataIsNull == false) {
           // Validate
           for (val validity : fieldInfo.validitys()) {
             if (VALID_MAP.get(validity).apply(data, field)) {
