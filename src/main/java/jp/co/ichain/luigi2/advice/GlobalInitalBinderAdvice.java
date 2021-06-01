@@ -24,7 +24,7 @@ public class GlobalInitalBinderAdvice {
   @Inject
   private Validator validator;
 
-  @Value("${config-time-zone}")
+  @Value("${config.time-zone}")
   private String timeZone;
 
   /**

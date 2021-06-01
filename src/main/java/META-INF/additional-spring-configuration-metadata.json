@@ -1,0 +1,57 @@
+{"properties": [
+  {
+    "name": "spring.luigi2.datasource.master.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.jdbc-url'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.driver-class-name'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.password'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.username'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.jdbc-url'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.driver-class-name'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.password'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.username'"
+  },
+  {
+    "name": "config.time-zone",
+    "type": "java.lang.String",
+    "description": "A description for 'config.time-zone'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.platform",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.platform'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.platform",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  }
+]}
