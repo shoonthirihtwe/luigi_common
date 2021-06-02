@@ -17,4 +17,7 @@ import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 public interface CommonMapper {
   void pessimisticLockKey(@Param("tableInfo") Map<String, String> map,
       @Param("tenantId") Integer tenantId);
+
+  String selectIncrementNumber(@Param("tableInfo") Map<String, String> map,
+      @Param("tenantId") Integer tenantId);
 }

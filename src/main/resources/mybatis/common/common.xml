@@ -11,4 +11,12 @@
 		${key} DESC LIMIT 1)
 		for update
 	</select>
+
+	<select id="selectIncrementNumber" parameterType="map"
+		resultType="string">
+		select
+		LPAD(ifnull(max(${tableInfo.key}),0)+1,10,'0') from
+		${tableInfo.table}
+		WHERE tenant_id=#{tenantId}
+	</select>
 </mapper>
