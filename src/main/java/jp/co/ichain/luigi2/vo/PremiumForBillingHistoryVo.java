@@ -1,18 +1,16 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
-import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import jp.co.ichain.luigi2.validity.FormatList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * ContractRequestVo
+ * FrequenciesVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -23,32 +21,30 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContractRequestVo extends ObjectVo {
+public class PremiumForBillingHistoryVo extends ObjectVo {
 
-  @Size(min = 20, max = 20)
-  String insurerCodeSeq;
+  Integer id;
+  
+  Integer tenantId;
+  
+  String contractNo;
+  
+  String contractBranchNo;
+  
+  Date startDate;
+  
+  Date endDate;
+  
+  Integer premiumForBilling;
+  
+  String salesPlanCode;
+  
+  String salesPlanTypeCode;
+  
+  String status;
 
-  @Size(min = 10, max = 10)
-  String insurerInceptionDate;
-
-  @Size(min = 1, max = 1)
-  String contNumberNotNumbering;
-
-  @Size(min = 1, max = 2)
-  String frequency;
-
-  @FormatList(list = {"0", "1", "2", "12"})
-  String paymentMethod;
-
-  AgencyInfoVo agencyInfo;
-
-  PolicyVo policy;
-
-  InsuredVo insured;
-
-  BeneficialiesVo beneficialies;
-
-  String data;
+  @JsonIgnore
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
@@ -61,4 +57,10 @@ public class ContractRequestVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 }

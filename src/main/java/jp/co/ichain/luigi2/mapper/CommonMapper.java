@@ -1,9 +1,12 @@
 package jp.co.ichain.luigi2.mapper;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
+import jp.co.ichain.luigi2.vo.TenantsVo;
 
 /**
  * Common Mapper
@@ -20,4 +23,8 @@ public interface CommonMapper {
 
   String selectIncrementNumber(@Param("tableInfo") Map<String, String> map,
       @Param("tenantId") Integer tenantId);
+  
+  List<TenantsVo> selectTenants(TenantsVo tenantVo);
+  
+  Date selectTenantLastUpdatedAt();
 }

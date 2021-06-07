@@ -4,14 +4,13 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import jp.co.ichain.luigi2.validity.VoFieldInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * AgencyInfoVo
+ * FrequenciesVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -22,19 +21,24 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgencyInfoVo extends ObjectVo {
+public class FrequenciesVo extends ObjectVo {
 
-  @VoFieldInfo(name = "総代理店フラグ")
-  String generalAgentFlag;
+  Integer id;
+  
+  Integer tenantId;
+  
+  String contractNo;
+  
+  Integer sequenceNo;
+  
+  Date startDate;
+  
+  Date endDate;
+  
+  String frequency;
 
-  @VoFieldInfo(name = "代理店コード")
-  String[] agencyCode1;
-
-  @VoFieldInfo(name = "募集人コード")
-  String agenctCode1;
-
-  @VoFieldInfo(name = "募集割合")
-  String agentShare1;
+  @JsonIgnore
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
@@ -47,4 +51,10 @@ public class AgencyInfoVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 }

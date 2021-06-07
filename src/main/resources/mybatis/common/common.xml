@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="jp.co.ichain.mew2.mapper.CommonMapper">
+<mapper namespace="jp.co.ichain.luigi2.mapper.CommonMapper">
 	<select id="pessimisticLockKey" parameterType="map">
 		select ${tableInfo.key} from ${tableInfo.table} where tenant_id =
 		#{tenantId} and ${tableInfo.key} <![CDATA[ > ]]>
@@ -18,5 +18,22 @@
 		LPAD(ifnull(max(${tableInfo.key}),0)+1,10,'0') from
 		${tableInfo.table}
 		WHERE tenant_id=#{tenantId}
+	</select>
+	
+	<select id="selectTenants" parameterType="TenantsVo" resultType="TenantsVo">
+		SELECT
+			*
+		FROM
+			tenants
+		<where>
+			<if test="id != null">id = #{id}</if>
+			<if test="updatedAt != null">AND updated_at > #{updatedAt}</if>
+		</where>
+		ORDER BY updated_at DESC
+	</select>
+	<select id="selectTenantLastUpdatedAt" resultType="java.util.Date">
+		SELECT
+			  max(updated_at) as updatedAt
+		FROM tenants
 	</select>
 </mapper>
