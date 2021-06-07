@@ -21,7 +21,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationValidateResultVo extends ObjectVo {
+public class ApplicationResultVo extends ObjectVo {
 
   String contractNo;
  

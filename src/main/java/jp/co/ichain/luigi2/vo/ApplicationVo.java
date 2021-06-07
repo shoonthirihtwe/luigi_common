@@ -25,7 +25,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationValidateVo extends ObjectVo {
+public class ApplicationVo extends ObjectVo {
 
   @Size(min = 12, max = 12)
   @VoFieldInfo(name = "保険会社情報コード連番", validitys = {Validity.Size})
