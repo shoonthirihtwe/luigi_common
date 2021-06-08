@@ -15,14 +15,22 @@ public class Luigi2TableInfo {
     Contracts
   }
 
-  private static final Map<TableInfo, Map<String, String>> TABLE_INFO_MAP;
-  private static final Map<String, String> CONTRACTS_MAP;
+  private static final Map<TableInfo, Map<String, Object>> TABLE_INFO_MAP;
+  private static final Map<String, Object> CONTRACTS_MAP;
   static {
-    CONTRACTS_MAP = new HashMap<String, String>();
+    CONTRACTS_MAP = new HashMap<String, Object>();
+
+    // contracts
     CONTRACTS_MAP.put("table", "contracts");
     CONTRACTS_MAP.put("key", "contract_no");
+    CONTRACTS_MAP.put("size", 10);
 
-    TABLE_INFO_MAP = new HashMap<TableInfo, Map<String, String>>();
+    // customers
+    CONTRACTS_MAP.put("table", "customers");
+    CONTRACTS_MAP.put("key", "customer_id");
+    CONTRACTS_MAP.put("size", 12);
+
+    TABLE_INFO_MAP = new HashMap<TableInfo, Map<String, Object>>();
     TABLE_INFO_MAP.put(TableInfo.Contracts, CONTRACTS_MAP);
   }
 
@@ -35,7 +43,7 @@ public class Luigi2TableInfo {
    * @param tableInfo
    * @return
    */
-  public static Map<String, String> getLockTable(TableInfo tableInfo) {
+  public static Map<String, Object> getLockTable(TableInfo tableInfo) {
     return TABLE_INFO_MAP.get(tableInfo);
   }
 }

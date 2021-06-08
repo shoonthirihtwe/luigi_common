@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -24,27 +25,29 @@ import lombok.Setter;
 public class ServiceInstancesVo extends ObjectVo {
 
   Integer id;
-  
+
   Integer tenantId;
-  
+
   Integer templateId;
-  
+
   String businessGroupType;
-  
+
   String sourceKey;
-  
+
   String sourceType;
-  
+
   String inherentJson;
-  
+
+  Map<String, Object> inherentMap;
+
   String inherentText;
-  
+
   String description;
-  
+
   String status;
-  
+
   Integer version;
-  
+
   @JsonIgnore
   Date createdAt;
 

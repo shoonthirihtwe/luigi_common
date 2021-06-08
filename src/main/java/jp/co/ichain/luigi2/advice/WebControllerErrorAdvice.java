@@ -1,15 +1,10 @@
 package jp.co.ichain.luigi2.advice;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,8 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import jp.co.ichain.luigi2.dto.ResultListDto;
 import jp.co.ichain.luigi2.exception.WebException;
-import jp.co.ichain.luigi2.exception.WebListException;
-import jp.co.ichain.luigi2.resources.ErrorResources;
+import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -41,16 +35,6 @@ public class WebControllerErrorAdvice {
   @Value("${spring.servlet.multipart.max-file-size}")
   private String maxFileSize;
 
-  @Autowired
-  private ErrorResources errorResources;
-
-  String SYSTEM_ERROR_DESC = "SYSTEM ERROR";
-
-  @PostConstruct
-  void initialize() throws IOException {
-    SYSTEM_ERROR_DESC = errorResources.get(Luigi2Code.S000_S0002);
-  }
-
   /**
    * 予想外システムエラー処理
    * 
@@ -68,11 +52,10 @@ public class WebControllerErrorAdvice {
 
     try {
       e.printStackTrace();
-      result.setCode(Luigi2Code.S000_S0002);
+      result.setCode(Luigi2Code.S0000);
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
       ex.printStackTrace();
-      result.setItems(Arrays.asList(SYSTEM_ERROR_DESC));
     }
 
     return result;
@@ -87,20 +70,19 @@ public class WebControllerErrorAdvice {
    * @param e
    * @return
    */
+  @SuppressWarnings("unchecked")
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @Produces(MediaType.APPLICATION_JSON)
   @ExceptionHandler(WebException.class)
-  public @ResponseBody ResultListDto<String> handleWebException(WebException e) {
-    val result = new ResultListDto<String>();
+  public @ResponseBody ResultListDto<Object> handleWebException(WebException e) {
+    val result = new ResultListDto<Object>();
 
     try {
-      String[] code = e.getCode().split("_");
-      result.setCode(code[1]);
-      result.setItems(Arrays.asList(makeDescForWebException(code[0], e.getErrArgs())));
+      result.setCode(e.getCode());
+      result.setItems((List<Object>) e.getErrArgs());
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S000_S0002);
-      result.setItems(Arrays.asList(SYSTEM_ERROR_DESC));
+      result.setCode(Luigi2Code.S0000);
     }
 
     return result;
@@ -115,25 +97,19 @@ public class WebControllerErrorAdvice {
    * @param e
    * @return
    */
+  @SuppressWarnings("unchecked")
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @Produces(MediaType.APPLICATION_JSON)
-  @ExceptionHandler(WebListException.class)
-  public @ResponseBody ResultListDto<String> handleWebException(WebListException eList) {
-    val result = new ResultListDto<String>();
+  @ExceptionHandler(WebParameterException.class)
+  public @ResponseBody ResultListDto<WebException> handleWebException(WebParameterException e) {
+    val result = new ResultListDto<WebException>();
 
     try {
-      result.setCode("V0001");
-      val descList = new ArrayList<String>();
-
-      for (val e : eList.getWebExceptionList()) {
-        String[] code = e.getCode().split("_");
-        descList.add(makeDescForWebException(code[0], e.getErrArgs()));
-      }
-      result.setItems(descList);
+      result.setCode(e.getCode());
+      result.setItems((List<WebException>) e.getErrArgs());
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S000_S0002);
-      result.setItems(Arrays.asList(SYSTEM_ERROR_DESC));
+      result.setCode(Luigi2Code.S0000);
     }
 
     return result;
@@ -158,38 +134,17 @@ public class WebControllerErrorAdvice {
     try {
       val rootEx = e.getRootCause();
       if (rootEx instanceof FileSizeLimitExceededException) {
-        result.setCode(Luigi2Code.S000_S0002);
+        result.setCode(Luigi2Code.S0000);
       } else if (rootEx instanceof SizeLimitExceededException) {
-        result.setCode(Luigi2Code.S000_S0002);
+        result.setCode(Luigi2Code.S0000);
       } else {
-        result.setCode(Luigi2Code.S000_S0002);
+        result.setCode(Luigi2Code.S0000);
       }
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S000_S0002);
-      result.setItems(Arrays.asList(SYSTEM_ERROR_DESC));
+      result.setCode(Luigi2Code.S0000);
     }
 
     return result;
-  }
-
-  /**
-   * エラー説明リスト作成
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-05-31
-   * @updatedAt : 2021-05-31
-   * @param e
-   * @return
-   * @throws IOException
-   */
-  private String makeDescForWebException(String code, List<String> errArgs) throws IOException {
-    String desc = errorResources.get(code);
-    if (desc != null) {
-      if (errArgs != null && errArgs.size() > 0) {
-        desc = String.format(desc, errArgs);
-      }
-    }
-    return desc;
   }
 }

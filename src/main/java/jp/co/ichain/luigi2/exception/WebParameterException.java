@@ -12,11 +12,16 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class WebParameterException extends WebException {
 
-  public WebParameterException(String code, List<String> args) {
+  public WebParameterException(String code) {
+    super(code);
+  }
+
+  public WebParameterException(String code, Object... args) {
     super(code, args);
   }
 
-  public WebParameterException(String... code) {
-    super(code);
+  public WebParameterException(String code, List<? extends Object> args) {
+    super(code, args);
   }
+
 }

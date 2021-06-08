@@ -1,17 +1,18 @@
 package jp.co.ichain.luigi2.validity;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-import javax.validation.constraints.Size;
-import jp.co.ichain.luigi2.exception.WebListException;
+import java.util.function.Function;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
-import jp.co.ichain.luigi2.util.ClassUtils;
-import jp.co.ichain.luigi2.vo.ObjectVo;
+import jp.co.ichain.luigi2.vo.ValidityVo;
 import lombok.val;
 
 /**
@@ -23,79 +24,265 @@ import lombok.val;
  */
 public class Validity {
 
+  /**
+   * パラメータータイプ
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   */
+  enum VType {
+    String("string"), Boolean("bool"), Integer("int"), Date("date"), Fraction("fraction"), Object(
+        "object");
+
+    String name;
+
+    VType(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return name;
+    }
+  }
+
+  /**
+   * パラメーターフォマット
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   */
+  enum FormatType {
+    Email("email"), Tel("tel");
+
+    String name;
+
+    FormatType(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return name;
+    }
+  }
+
   private final static String VALIDITY_EMAIL =
       "^[0-9a-zA-Z]([-_\\\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\\\.]?[0-9a-zA-Z])*\\\\.[a-zA-Z]{2,3}(.[a-zA-Z]{2,3})?$";
   private final static String VALIDITY_TEL = "^\\\\d{3,4}-?\\\\d{3,4}-?\\\\d{4}$";
 
   /**
-   * パラメーターを検証する
+   * service instancesの検証情報取得
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-01
-   * @updatedAt : 2021-06-01
-   * @param voList
-   * @param requiredFieldNames
-   * @throws IllegalAccessException
-   * @throws IllegalArgumentException
-   * @throws WebListException
+   * @createdAt : 2021-06-07
+   * @updatedAt : 2021-06-07
+   * @param endpoint
+   * @return
    */
-  public static void validateParameter(ObjectVo vo, String... requiredFieldNames)
-      throws WebListException, IllegalArgumentException, IllegalAccessException {
-    validateParameter(new ObjectVo[] {vo}, requiredFieldNames);
+  public static String getValiditySourceKey(String endpoint) {
+    return endpoint + "-validity";
+  }
+
+
+
+  /**
+   * 検証する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   * @param validityMap
+   * @param serviceInstanceMap
+   * @param paramMap
+   * @param exList
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   * @throws UnsupportedEncodingException
+   */
+  @SuppressWarnings("unchecked")
+  public static void validate(Map<String, ValidityVo> validityMap,
+      Map<String, Object> serviceInstanceMap, Map<String, Object> paramMap,
+      List<WebException> exList)
+      throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+
+    // validate
+    for (val key : serviceInstanceMap.keySet()) {
+      val validity = serviceInstanceMap.get(key);
+      val data = paramMap.get(key);
+
+      // type object
+      if (validity instanceof Map) {
+        val objValidityMap = (Map<String, Object>) validity;
+        val validityVo = validityMap.get(objValidityMap.get("param-key"));
+        val type = VType.valueOf(validityVo.getType());
+
+        objValidityMap.remove("param-key");
+
+        // Required
+        if (validityVo.getRequired() && data == null) {
+          exList.add(new WebParameterException(Luigi2Code.V0001, key));
+        }
+
+        // type validate
+        if (type != VType.Object) {
+          exList.add(new WebParameterException(Luigi2Code.V0005, key));
+        } else if (data != null) {
+          // Object recursive call
+          if (validityVo.getArray()) {
+            if (data instanceof List) {
+              List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+              for (val map : list) {
+                Validity.validate(validityMap, objValidityMap, map, exList);
+              }
+            } else {
+              exList.add(new WebParameterException(Luigi2Code.V0005, key));
+            }
+          } else {
+            if (data instanceof Map) {
+              Validity.validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
+            } else {
+              exList.add(new WebParameterException(Luigi2Code.V0005, key));
+            }
+          }
+        }
+      } else {
+        val validityVo = validityMap.get(validity);
+        if (validityVo.getArray()) {
+          if (data instanceof List) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+            for (val map : list) {
+              Validity.validate(validityVo, serviceInstanceMap, map, exList, key, key, data);
+            }
+          } else {
+            exList.add(new WebParameterException(Luigi2Code.V0005, key));
+          }
+        } else {
+          Validity.validate(validityVo, serviceInstanceMap, paramMap, exList, key, key, data);
+        }
+      }
+    }
+
+    if (exList.size() > 0) {
+      throw new WebParameterException(Luigi2Code.V0000, exList);
+    }
   }
 
   /**
-   * パラメーターを検証する
+   * 検証する
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-05-25
-   * @updatedAt : 2021-05-25
-   * @param bidResult
-   * @throws IllegalAccessException
-   * @throws IllegalArgumentException
-   * @throws Exception
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   * @param validityVo
+   * @param serviceInstanceMap
+   * @param paramMap
+   * @param exList
+   * @param validity
+   * @param key
+   * @param data
+   * @throws UnsupportedEncodingException
    */
-  public static void validateParameter(ObjectVo[] voList, String... requiredFieldNames)
-      throws WebListException, IllegalArgumentException, IllegalAccessException {
-    WebListException result = null;
-    for (int i = 0; i < voList.length; i++) {
-      Class<?> cls = voList[i].getClass();
-      for (Field field : ClassUtils.getUsefullFields(cls)) {
-        String fieldName = field.getName();
-        VoFieldInfo fieldInfo = field.getAnnotation(VoFieldInfo.class);
-        String fieldDesName = fieldInfo != null ? fieldInfo.name() : field.getName();
+  private static void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
+      Map<String, Object> paramMap, List<WebException> exList, String validity, String key,
+      Object data) throws UnsupportedEncodingException {
+    val type = VType.valueOf(validityVo.getType());
 
-        // required Validate
-        Map<String, Boolean> requiredFieldNamesMap =
-            Arrays.asList(requiredFieldNames).stream().collect(Collectors.toMap(f -> f, f -> true));
-        field.setAccessible(true);
-        Object data = field.get(voList[i]);
-        boolean dataIsNull = data == null || ((data instanceof String) && data.equals(""));
-        if (requiredFieldNamesMap.get(fieldName)) {
-          if (dataIsNull) {
-            if (result == null) {
-              result = new WebListException();
-            }
-            result.addWebException(new WebParameterException(Luigi2Code.P001_V0001, fieldDesName));
-          }
+    // Required
+    if (validityVo.getRequired() && data == null) {
+      exList.add(new WebParameterException(Luigi2Code.V0001, key));
+    }
+
+    if (data != null) {
+      // type
+      if (Validity.validateType(type, data) == false) {
+        exList.add(new WebParameterException(Luigi2Code.V0005, key));
+      }
+
+      // type is string
+      if (VType.String.toString().equals(validityVo.getType())) {
+        String sData = (String) data;
+        int length = sData.getBytes("UTF-8").length;
+        // min
+        if (validityVo.getMin() != null && validityVo.getMin() > length) {
+          exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
         }
-        if (fieldInfo != null && dataIsNull == false) {
-          // Validate
-          for (val validity : fieldInfo.validitys()) {
-            if (VALID_MAP.get(validity).apply(data, field)) {
-              result.addWebException(new WebParameterException(validity.name(), fieldDesName));
+        // max
+        if (validityVo.getMax() != null && validityVo.getMax() < length) {
+          exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+        }
+        // formats
+        if (validityVo.getFormats() != null) {
+          for (val format : validityVo.getFormats()) {
+            if (FORMAT_MAP.get(FormatType.valueOf(format)).apply(sData) == false) {
+              exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
             }
           }
         }
       }
-    }
-    if (result != null) {
-      throw result;
+
+      // fixed
+      if (Validity.validiateFixedList(validityVo.getFixedList(), data) == false) {
+        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+      }
     }
   }
 
-  public static Map<VoFieldInfo.Validity, BiFunction<Object, Field, Boolean>> VALID_MAP =
-      new HashMap<VoFieldInfo.Validity, BiFunction<Object, Field, Boolean>>();
+  /**
+   * 属性検証
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   * @param type
+   * @param data
+   * @return
+   */
+  private static boolean validateType(VType type, Object data) {
+    switch (type) {
+      case String:
+        return data instanceof String;
+      case Boolean:
+        return data instanceof Boolean;
+      case Date:
+      case Integer:
+        return data instanceof Integer || data instanceof Long || data instanceof Short
+            || data instanceof Byte || data instanceof BigInteger;
+      case Fraction:
+        return data instanceof Double || data instanceof Float || data instanceof BigDecimal;
+      default:
+        return true;
+    }
+  }
+
+  /**
+   * 決められた値検証
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   * @param fixedList
+   * @param data
+   * @return
+   */
+  private static boolean validiateFixedList(List<Object> fixedList, Object data) {
+
+    if (data == null || fixedList == null || fixedList.size() == 0) {
+      return true;
+    }
+
+    for (Object item : fixedList) {
+      if (data.equals(item)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static Map<FormatType, Function<String, Boolean>> FORMAT_MAP =
+      new HashMap<FormatType, Function<String, Boolean>>();
   static {
     /**
      * Emailフォーマット検証
@@ -107,8 +294,7 @@ public class Validity {
      * @param field
      * @return
      */
-    VALID_MAP.put(VoFieldInfo.Validity.Email, (obj, field) -> {
-      String value = (String) obj;
+    FORMAT_MAP.put(FormatType.Email, (value) -> {
       if (value == null || value.length() == 0) {
         return true;
       }
@@ -126,112 +312,12 @@ public class Validity {
      * @param field
      * @return
      */
-    VALID_MAP.put(VoFieldInfo.Validity.Tel, (obj, field) -> {
-      String value = (String) obj;
+    FORMAT_MAP.put(FormatType.Tel, (value) -> {
       if (value == null || value.length() == 0) {
         return true;
       }
 
       return value.matches(VALIDITY_TEL);
-    });
-
-    /**
-     * 文字列フォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    VALID_MAP.put(VoFieldInfo.Validity.Format, (obj, field) -> {
-      String value = (String) obj;
-      FormatList fieldInfo = field.getAnnotation(FormatList.class);
-      if (value == null || value.length() == 0 || fieldInfo == null) {
-        return true;
-      }
-
-      for (String item : fieldInfo.list()) {
-        if (item.equals(value)) {
-          return true;
-        }
-      }
-      return false;
-    });
-
-    /**
-     * 数字フォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    VALID_MAP.put(VoFieldInfo.Validity.IntFormat, (obj, field) -> {
-      Integer value = (Integer) obj;
-      IntFormatList fieldInfo = field.getAnnotation(IntFormatList.class);
-
-      if (value == null || fieldInfo == null) {
-        return true;
-      }
-
-      for (int item : fieldInfo.list()) {
-        if (item == value) {
-          return true;
-        }
-      }
-      return false;
-    });
-
-    /**
-     * サイズフォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    VALID_MAP.put(VoFieldInfo.Validity.Size, (obj, field) -> {
-      String value = (String) obj;
-      Size fieldInfo = field.getAnnotation(Size.class);
-
-      if (value == null || fieldInfo.max() == 0) {
-        return true;
-      }
-
-      if (value.length() <= fieldInfo.max() && value.length() >= fieldInfo.min()) {
-        return true;
-      }
-      return false;
-    });
-
-    /**
-     * サイズフォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    VALID_MAP.put(VoFieldInfo.Validity.ByteSize, (obj, field) -> {
-      String value = (String) obj;
-      Size fieldInfo = field.getAnnotation(Size.class);
-
-      if (value == null || fieldInfo.max() == 0) {
-        return true;
-      }
-
-      if (value.length() <= fieldInfo.max() && value.getBytes().length >= fieldInfo.min()) {
-        return true;
-      }
-      return false;
     });
   }
 }

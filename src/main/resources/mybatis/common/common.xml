@@ -4,19 +4,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.ichain.mew2.mapper.CommonMapper">
 	<select id="pessimisticLockKey" parameterType="map">
-		select ${tableInfo.key} from ${tableInfo.table} where tenant_id =
-		#{tenantId} and ${tableInfo.key} <![CDATA[ > ]]>
-		(select ${tableInfo.key} from ${tableInfo.table} where tenant_id =
-		#{tenantId} order by
-		${key} DESC LIMIT 1)
-		for update
+		SELECT ${tableInfo.key} FROM ${tableInfo.table} WHERE
+		tenant_id=#{tenantId} AND ${tableInfo.key} <![CDATA[ > ]]>
+		(SELECT ${tableInfo.key} FROM ${tableInfo.table} WHERE
+		tenant_id=#{tenantId} ORDER BY ${key} DESC LIMIT 1)
+		FOR UPDATE
 	</select>
 
 	<select id="selectIncrementNumber" parameterType="map"
 		resultType="string">
-		select
-		LPAD(ifnull(max(${tableInfo.key}),0)+1,10,'0') from
-		${tableInfo.table}
-		WHERE tenant_id=#{tenantId}
+		SELECT
+		LPAD(IFNULL(max(${tableInfo.key}),0)+1,#{tableInfo.size},'0')
+		FROM ${tableInfo.table} WHERE tenant_id=#{tenantId}
+	</select>
+
+	<select id="selectServiceInstances" parameterType="map"
+		resultType="ServiceInstancesVo">
+		SELECT * from service_instances WHERE status='1'
+		<if test="updatedAt != null">AND updated_at > #{updatedAt}</if>
+		ORDER BY updated_at DESC
+	</select>
+
+	<select id="selectLastUpdatedAt" parameterType="map" resultType="java.util.Date">
+		SELECT
+		max(updated_at) from ${table}
 	</select>
 </mapper>
