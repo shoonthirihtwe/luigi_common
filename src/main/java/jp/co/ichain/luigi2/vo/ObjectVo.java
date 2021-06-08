@@ -4,18 +4,18 @@ import java.lang.reflect.Field;
 
 /**
  * 基本VO
- *
- * @author : [AOT] s.park
- * @createdAt : 2021-05-25
- * @updatedAt : 2021-03-16
+ * 
+ * @author : [AOT] s.paku
+ * @createdAt : 2021-06-07
+ * @updatedAt : 2021-06-07
  */
 public abstract class ObjectVo {
   /**
    * テナントIDセット
-   *
+   * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-03-16
-   * @updatedAt : 2021-03-16
+   * @createdAt : 2021-06-07
+   * @updatedAt : 2021-06-07
    * @param tenantId
    */
   public void setTenantId(int tenantId) {
@@ -29,36 +29,18 @@ public abstract class ObjectVo {
   }
 
   /**
-   * 代理店IDセット
+   * 更新者セット
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-04-26
-   * @updatedAt : 2021-04-26
-   * @param agencyId
+   * @createdAt : 2021-06-07
+   * @updatedAt : 2021-06-07
+   * @param updatedBy
    */
-  public void setAgencyId(int agencyId) {
+  public void setUpdatedUser(String updatedBy) {
     try {
-      Field field = this.getClass().getDeclaredField("agencyId");
+      Field field = this.getClass().getDeclaredField("updatedBy");
       field.setAccessible(true);
-      field.set(this, agencyId);
-    } catch (Exception e) {
-      // ignore
-    }
-  }
-
-  /**
-   * 更新者セット
-   *
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-03-16
-   * @updatedAt : 2021-03-16
-   * @param updatedUser
-   */
-  public void setUpdatedUser(int updatedUser) {
-    try {
-      Field field = this.getClass().getDeclaredField("updatedUser");
-      field.setAccessible(true);
-      field.set(this, updatedUser);
+      field.set(this, updatedBy);
     } catch (Exception e) {
       // ignore
     }

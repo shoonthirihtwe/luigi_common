@@ -19,14 +19,18 @@ public class WebException extends RuntimeException {
   /** バグコード */
   String code;
   /** エラー引数 */
-  List<String> errArgs = null;
+  List<? extends Object> errArgs = null;
   /** 原因となった例外 */
   Throwable cause;
 
-  public WebException(String... code) {
-    this.code = code[0];
-    if (code.length > 0) {
-      this.errArgs = Arrays.asList(Arrays.copyOfRange(code, 1, code.length));
+  public WebException(String code) {
+    this.code = code;
+  }
+
+  public WebException(String code, Object... args) {
+    this.code = code;
+    if (args.length > 0) {
+      this.errArgs = Arrays.asList(args);
     }
   }
 
@@ -35,7 +39,7 @@ public class WebException extends RuntimeException {
     this.cause = cause;
   }
 
-  public WebException(String code, List<String> errArgs) {
+  public WebException(String code, List<? extends Object> errArgs) {
     this.code = code;
     this.errArgs = errArgs;
   }

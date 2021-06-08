@@ -4,7 +4,6 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import jp.co.ichain.luigi2.validity.VoFieldInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,16 +23,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AgencyInfoVo extends ObjectVo {
 
-  @VoFieldInfo(name = "総代理店フラグ")
   String generalAgentFlag;
 
-  @VoFieldInfo(name = "代理店コード")
   String[] agencyCode1;
 
-  @VoFieldInfo(name = "募集人コード")
   String agenctCode1;
 
-  @VoFieldInfo(name = "募集割合")
   String agentShare1;
 
   @JsonIgnore

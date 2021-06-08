@@ -12,15 +12,19 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class WebLoginException extends WebException {
 
-  public WebLoginException(String... code) {
+  public WebLoginException(String code) {
     super(code);
+  }
+
+  public WebLoginException(String code, Object... args) {
+    super(code, args);
   }
 
   public WebLoginException(String code, Throwable cause) {
     super(code, cause);
   }
 
-  public WebLoginException(String code, List<String> errArgs) {
+  public WebLoginException(String code, List<? extends Object> errArgs) {
     super(code, errArgs);
   }
 

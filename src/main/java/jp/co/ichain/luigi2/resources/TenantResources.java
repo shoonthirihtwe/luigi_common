@@ -147,7 +147,7 @@ public class TenantResources {
       srchVo.setUpdatedAt(updatedAt);
       return mapper.selectTenants(srchVo);
     } else {
-      throw new WebException();
+      throw new WebException(Luigi2Code.S0000);
     }
   }
 }
