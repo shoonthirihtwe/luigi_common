@@ -43,18 +43,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum FormatType {
-    Email("email"), Tel("tel");
-
-    String name;
-
-    FormatType(String name) {
-      this.name = name;
-    }
-
-    @Override
-    public String toString() {
-      return name;
-    }
+    EMAIL, TEL
   }
 
   private final static String VALIDITY_EMAIL =
@@ -310,7 +299,7 @@ public class Validity {
      * @param field
      * @return
      */
-    FORMAT_MAP.put(FormatType.Email, (value) -> {
+    FORMAT_MAP.put(FormatType.EMAIL, (value) -> {
       if (value == null || value.length() == 0) {
         return true;
       }
@@ -328,7 +317,7 @@ public class Validity {
      * @param field
      * @return
      */
-    FORMAT_MAP.put(FormatType.Tel, (value) -> {
+    FORMAT_MAP.put(FormatType.TEL, (value) -> {
       if (value == null || value.length() == 0) {
         return true;
       }
