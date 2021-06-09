@@ -47,8 +47,8 @@ public class Validity {
   }
 
   private final static String VALIDITY_EMAIL =
-      "^[0-9a-zA-Z]([-_\\\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\\\.]?[0-9a-zA-Z])*\\\\.[a-zA-Z]{2,3}(.[a-zA-Z]{2,3})?$";
-  private final static String VALIDITY_TEL = "^\\\\d{3,4}-?\\\\d{3,4}-?\\\\d{4}$";
+      "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}(.[a-zA-Z]{2,3})?$";
+  private final static String VALIDITY_TEL = "^\\d{2,4}-\\d{3,4}-\\d{4}$";
 
   /**
    * service instancesの検証情報取得
@@ -88,9 +88,6 @@ public class Validity {
     // validate
     for (val key : serviceInstanceMap.keySet()) {
       val validity = serviceInstanceMap.get(key);
-      if ("param-key".equals(validity)) {
-        continue;
-      }
       val data = paramMap.get(key);
 
       // type object
@@ -126,11 +123,8 @@ public class Validity {
             }
           }
         }
-      } else {
+      } else if ("param-key".equals(key) == false) {
         val validityVo = validityMap.get(validity);
-        if (validityVo == null) {
-          continue;
-        }
         if (validityVo.getArray()) {
           if (data instanceof List) {
             List<Map<String, Object>> list = (List<Map<String, Object>>) data;
