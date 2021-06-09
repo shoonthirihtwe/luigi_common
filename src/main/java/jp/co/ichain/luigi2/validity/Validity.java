@@ -88,6 +88,9 @@ public class Validity {
     // validate
     for (val key : serviceInstanceMap.keySet()) {
       val validity = serviceInstanceMap.get(key);
+      if ("param-key".equals(validity)) {
+        continue;
+      }
       val data = paramMap.get(key);
 
       // type object
@@ -189,13 +192,13 @@ public class Validity {
         }
         // max
         if (validityVo.getMax() != null && validityVo.getMax() < length) {
-          exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+          exList.add(new WebParameterException(Luigi2Code.V0003, key, validityVo.getMax()));
         }
         // formats
         if (validityVo.getFormats() != null) {
           for (val format : validityVo.getFormats()) {
             if (FORMAT_MAP.get(FormatType.valueOf(format)).apply(sData) == false) {
-              exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+              exList.add(new WebParameterException(Luigi2Code.V0004, key));
             }
           }
         }
