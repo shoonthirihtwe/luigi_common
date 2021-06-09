@@ -73,7 +73,8 @@ public class ServiceInstancesResources {
       }
 
       // last updatedAt
-      Date maxValue = listByTenant.stream().map(vo -> vo.getUpdatedAt())
+      Date maxValue = listByTenant.stream()
+          .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
           .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
           .orElseThrow(() -> new WebDataException(Luigi2Code.D0002));
       updatedAtMap.put(tenantId, maxValue);
