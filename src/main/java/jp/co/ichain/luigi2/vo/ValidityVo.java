@@ -22,11 +22,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ValidityVo extends ObjectVo {
 
-  Boolean required;
+  Boolean required = false;
 
   String type;
 
-  Boolean array;
+  Boolean array = false;
 
   String objectType;
 

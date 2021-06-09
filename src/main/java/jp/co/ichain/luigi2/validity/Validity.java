@@ -32,19 +32,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum VType {
-    String("string"), Boolean("bool"), Integer("int"), Date("date"), Fraction("fraction"), Object(
-        "object");
-
-    String name;
-
-    VType(String name) {
-      this.name = name;
-    }
-
-    @Override
-    public String toString() {
-      return name;
-    }
+    STRING, BOOL, INT, DATE, FRACTION, OBJECT
   }
 
   /**
@@ -83,7 +71,7 @@ public class Validity {
    * @return
    */
   public static String getValiditySourceKey(String endpoint) {
-    return endpoint + "-validity";
+    return endpoint + "_validity";
   }
 
 
@@ -127,7 +115,7 @@ public class Validity {
         }
 
         // type validate
-        if (type != VType.Object) {
+        if (type != VType.OBJECT) {
           exList.add(new WebParameterException(Luigi2Code.V0005, key));
         } else if (data != null) {
           // Object recursive call
@@ -202,7 +190,7 @@ public class Validity {
       }
 
       // type is string
-      if (VType.String.toString().equals(validityVo.getType())) {
+      if (VType.STRING.toString().equals(validityVo.getType())) {
         String sData = (String) data;
         int length = sData.getBytes("UTF-8").length;
         // min
@@ -242,15 +230,15 @@ public class Validity {
    */
   private static boolean validateType(VType type, Object data) {
     switch (type) {
-      case String:
+      case STRING:
         return data instanceof String;
-      case Boolean:
+      case BOOL:
         return data instanceof Boolean;
-      case Date:
-      case Integer:
+      case DATE:
+      case INT:
         return data instanceof Integer || data instanceof Long || data instanceof Short
             || data instanceof Byte || data instanceof BigInteger;
-      case Fraction:
+      case FRACTION:
         return data instanceof Double || data instanceof Float || data instanceof BigDecimal;
       default:
         return true;

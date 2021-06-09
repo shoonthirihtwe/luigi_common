@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.advice;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -16,6 +17,7 @@ import jp.co.ichain.luigi2.dto.ResultListDto;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.vo.ErrorVo;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -97,16 +99,19 @@ public class WebControllerErrorAdvice {
    * @param e
    * @return
    */
-  @SuppressWarnings("unchecked")
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @Produces(MediaType.APPLICATION_JSON)
   @ExceptionHandler(WebParameterException.class)
-  public @ResponseBody ResultListDto<WebException> handleWebException(WebParameterException e) {
-    val result = new ResultListDto<WebException>();
+  public @ResponseBody ResultListDto<ErrorVo> handleWebException(WebParameterException e) {
+    val result = new ResultListDto<ErrorVo>();
 
     try {
       result.setCode(e.getCode());
-      result.setItems((List<WebException>) e.getErrArgs());
+      if (e.getErrArgs() != null) {
+        result.setItems(
+            e.getErrArgs().stream().map(ex -> new ErrorVo(((WebParameterException) ex).getCode(),
+                ((WebParameterException) ex).getErrArgs())).collect(Collectors.toList()));
+      }
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
       result.setCode(Luigi2Code.S0000);

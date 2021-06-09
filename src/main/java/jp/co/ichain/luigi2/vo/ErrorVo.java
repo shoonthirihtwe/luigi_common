@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.vo;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(Include.NON_NULL)
 public class ErrorVo {
-
-  String fieldName;
+  String code;
+  List<? extends Object> errArgs;
 }
