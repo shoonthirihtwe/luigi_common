@@ -107,8 +107,6 @@ public class Validity {
         val validityVo = validityMap.get(objValidityMap.get("param-key"));
         val type = VType.valueOf(validityVo.getType());
 
-        objValidityMap.remove("param-key");
-
         // Required
         if (validityVo.getRequired() && data == null) {
           exList.add(new WebParameterException(Luigi2Code.V0001, key));
@@ -138,17 +136,20 @@ public class Validity {
         }
       } else {
         val validityVo = validityMap.get(validity);
+        if (validityVo == null) {
+          continue;
+        }
         if (validityVo.getArray()) {
           if (data instanceof List) {
             List<Map<String, Object>> list = (List<Map<String, Object>>) data;
             for (val map : list) {
-              Validity.validate(validityVo, serviceInstanceMap, map, exList, key, key, data);
+              Validity.validate(validityVo, serviceInstanceMap, map, exList, key, data);
             }
           } else {
             exList.add(new WebParameterException(Luigi2Code.V0005, key));
           }
         } else {
-          Validity.validate(validityVo, serviceInstanceMap, paramMap, exList, key, key, data);
+          Validity.validate(validityVo, serviceInstanceMap, paramMap, exList, key, data);
         }
       }
     }
@@ -174,8 +175,8 @@ public class Validity {
    * @throws UnsupportedEncodingException
    */
   private static void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
-      Map<String, Object> paramMap, List<WebException> exList, String validity, String key,
-      Object data) throws UnsupportedEncodingException {
+      Map<String, Object> paramMap, List<WebException> exList, String key, Object data)
+      throws UnsupportedEncodingException {
     val type = VType.valueOf(validityVo.getType());
 
     // Required
@@ -213,6 +214,9 @@ public class Validity {
 
       // fixed
       if (Validity.validiateFixedList(validityVo.getFixedList(), data) == false) {
+        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+      }
+      if (Validity.validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
     }
@@ -255,9 +259,33 @@ public class Validity {
    * @param data
    * @return
    */
-  private static boolean validiateFixedList(List<Object> fixedList, Object data) {
+  private static boolean validiateFixedList(List<String> fixedList, Object data) {
 
-    if (data == null || fixedList == null || fixedList.size() == 0) {
+    if (fixedList == null || data == null || fixedList.size() == 0) {
+      return true;
+    }
+
+    for (Object item : fixedList) {
+      if (data.equals(item)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 決められた値検証
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-08
+   * @updatedAt : 2021-06-08
+   * @param fixedList
+   * @param data
+   * @return
+   */
+  private static boolean validiateIntFixedList(List<Integer> fixedList, Object data) {
+
+    if (fixedList == null || data == null || fixedList.size() == 0) {
       return true;
     }
 

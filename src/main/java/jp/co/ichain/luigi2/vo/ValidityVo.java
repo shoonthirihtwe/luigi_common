@@ -36,5 +36,7 @@ public class ValidityVo extends ObjectVo {
 
   List<String> formats;
 
-  List<Object> fixedList;
+  List<Integer> intFixedList;
+
+  List<String> fixedList;
 }
