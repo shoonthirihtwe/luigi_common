@@ -1,13 +1,16 @@
 package jp.co.ichain.luigi2.util;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.dto.ResultWebDto;
-import jp.co.ichain.luigi2.vo.ObjectVo;
+import jp.co.ichain.luigi2.service.AuthService;
+import jp.co.ichain.luigi2.service.CommonService;
 import lombok.val;
 
 /**
@@ -19,6 +22,12 @@ import lombok.val;
  */
 @Service
 public class ControllerUtils {
+
+  @Autowired
+  AuthService authService;
+
+  @Autowired
+  CommonService commonService;
 
   /**
    * Controller Function
@@ -32,13 +41,13 @@ public class ControllerUtils {
    * @param <R>
    */
   @FunctionalInterface
-  public interface ControllerFunction<T, U, W, R> {
-    R apply(T t, U u, W w) throws Exception;
+  public interface ControllerFunction<T, U, W, Y, R> {
+    R apply(T t, U u, W w, Y y) throws Exception;
 
-    default <V> ControllerFunction<T, U, W, V> andThen(Function<? super R, ? extends V> after)
+    default <V> ControllerFunction<T, U, W, Y, V> andThen(Function<? super R, ? extends V> after)
         throws Exception {
       Objects.requireNonNull(after);
-      return (T t, U u, W w) -> after.apply(apply(t, u, w));
+      return (T t, U u, W w, Y y) -> after.apply(apply(t, u, w, y));
     }
   }
 
@@ -64,10 +73,10 @@ public class ControllerUtils {
    * @return
    * @throws Exception
    */
-  public ControllerFunction<HttpServletRequest, ObjectVo, ThrowingSupplier<ResultWebDto>, ? extends ResultWebDto> makeCommonControllerHandler()
+  public ControllerFunction<HttpServletRequest, String, Map<String, Object>, ThrowingSupplier<ResultWebDto>, ? extends ResultWebDto> makeCommonControllerHandler()
       throws Exception {
-    return (request, vo, supplier) -> {
-      this.controllerFunction(request, vo);
+    return (request, endpoint, paramMap, supplier) -> {
+      this.controllerFunction(request, endpoint, paramMap);
       val result = supplier.get();
 
       result.setCode("OK");
@@ -84,10 +93,10 @@ public class ControllerUtils {
    * @return
    * @throws Exception
    */
-  public ControllerFunction<HttpServletRequest, ObjectVo, ThrowingSupplier<ResponseEntity<Resource>>, ResponseEntity<Resource>> makeResourceControllerHandler()
+  public ControllerFunction<HttpServletRequest, String, Map<String, Object>, ThrowingSupplier<ResponseEntity<Resource>>, ResponseEntity<Resource>> makeResourceControllerHandler()
       throws Exception {
-    return (request, vo, supplier) -> {
-      this.controllerFunction(request, vo);
+    return (request, endpoint, paramMap, supplier) -> {
+      this.controllerFunction(request, endpoint, paramMap);
       val result = supplier.get();
 
       return result;
@@ -104,6 +113,13 @@ public class ControllerUtils {
    * @param vo
    * @throws Exception
    */
-  private void controllerFunction(HttpServletRequest request, ObjectVo vo) throws Exception {}
+  private void controllerFunction(HttpServletRequest request, String endpoint,
+      Map<String, Object> paramMap) throws Exception {
+
+    val curUser = authService.getCurrentUser();
+    paramMap.put("tenantId", curUser.getTenantId());
+    paramMap.put("email", curUser.getEmail());
+    commonService.validate(paramMap, endpoint);
+  }
 
 }
