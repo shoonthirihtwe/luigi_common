@@ -37,9 +37,7 @@ public class ValidityVo extends ObjectVo {
 
   Object formats;
 
-  Map<String, List<Object>> commonCondition;
-
-  Map<String, List<Object>> inherentCondition;
+  Map<String, List<Object>> condition;
 
   List<Integer> intFixedList;
 

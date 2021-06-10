@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import jp.co.ichain.luigi2.exception.WebConditionException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
@@ -29,9 +30,6 @@ public class Validity {
 
   @Autowired
   CommonCondition commonCondition;
-
-  @Autowired
-  InherentCondition inherentCondition;
 
   /**
    * パラメータータイプ
@@ -126,7 +124,7 @@ public class Validity {
         }
 
         // Condition
-        validateCondition(validityVo, data);
+        validateCondition(validityVo, data, exList);
 
         // type validate
         if (type != VType.OBJECT) {
@@ -153,7 +151,7 @@ public class Validity {
       } else if ("param-key".equals(key) == false) {
         val validityVo = validityMap.get(validity);
         // Condition
-        validateCondition(validityVo, data);
+        validateCondition(validityVo, data, exList);
 
         if (validityVo.getArray()) {
           if (data instanceof List) {
@@ -247,23 +245,18 @@ public class Validity {
    * @throws IllegalArgumentException
    * @throws InvocationTargetException
    */
-  private void validateCondition(ValidityVo validityVo, Object data)
+  private void validateCondition(ValidityVo validityVo, Object data, List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
-    if (validityVo.getCommonCondition() != null) {
-      val commonConditionMap = validityVo.getCommonCondition();
+    if (validityVo.getCondition() != null) {
+      val conditionMap = validityVo.getCondition();
 
-      for (String conditionMethod : commonConditionMap.keySet()) {
-        commonCondition.validate(conditionMethod, data, commonConditionMap.get(conditionMethod));
-      }
-    }
-    // inherent-condition
-    if (validityVo.getInherentCondition() != null) {
-      val inherentConditionMap = validityVo.getInherentCondition();
-
-      for (String conditionMethod : inherentConditionMap.keySet()) {
-        inherentCondition.validate(conditionMethod, data,
-            inherentConditionMap.get(conditionMethod));
+      for (String conditionMethod : conditionMap.keySet()) {
+        try {
+          commonCondition.validate(conditionMethod, data, conditionMap.get(conditionMethod));
+        } catch (WebConditionException e) {
+          exList.add(e);
+        }
       }
     }
   }

@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jp.co.ichain.luigi2.condition.CommonNomalCondition;
+import jp.co.ichain.luigi2.util.BeanUtils;
 import lombok.val;
 
 /**
@@ -21,18 +20,18 @@ import lombok.val;
 @Service
 public class CommonCondition {
 
-  @Autowired
-  CommonNomalCondition commonConditionService;
 
-  Map<String, Condition> METHOD_CONDITION_MAP;
+  Map<String, Object> METHOD_CONDITION_MAP;
   Map<String, Method> METHOD_MAP;
 
   @PostConstruct
   void initialize() {
-    METHOD_CONDITION_MAP = new HashMap<String, Condition>();
+    METHOD_CONDITION_MAP = new HashMap<String, Object>();
     METHOD_MAP = new HashMap<String, Method>();
 
-    settingCondition(commonConditionService);
+    for (val condition : BeanUtils.getBeanByAnnotation(getClass())) {
+      settingCondition(condition);
+    }
   }
 
   /**
@@ -65,7 +64,7 @@ public class CommonCondition {
    * @updatedAt : 2021-06-10
    * @param condition
    */
-  private void settingCondition(Condition condition) {
+  private void settingCondition(Object condition) {
     for (val method : condition.getClass().getMethods()) {
       val methodName = method.getName();
       METHOD_CONDITION_MAP.put(methodName, condition);

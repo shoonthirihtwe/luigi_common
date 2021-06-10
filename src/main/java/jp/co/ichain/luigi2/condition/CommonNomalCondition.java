@@ -2,6 +2,8 @@ package jp.co.ichain.luigi2.condition;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import jp.co.ichain.luigi2.exception.WebConditionException;
+import jp.co.ichain.luigi2.resources.Luigi2Code;
 import jp.co.ichain.luigi2.validity.Condition;
 
 /**
@@ -12,7 +14,8 @@ import jp.co.ichain.luigi2.validity.Condition;
  * @updatedAt : 2021-06-10
  */
 @Service
-public class CommonNomalCondition implements Condition {
+@Condition
+public class CommonNomalCondition {
 
   /**
    * テスト用
@@ -24,7 +27,13 @@ public class CommonNomalCondition implements Condition {
    * @param max
    * @return
    */
-  public boolean overMax(Object data, List<Object> max) {
-    return ((Integer) data) <= (int) (max != null && max.size() > 0 ? max.get(0) : 0);
+  public void overMax(Object data, List<Object> max) {
+    if (max == null || max.size() < 2) {
+      throw new WebConditionException(Luigi2Code.V0006);
+    }
+
+    if (((Integer) data) > (int) (max != null && max.size() > 0 ? max.get(1) : 0)) {
+      throw new WebConditionException((String) max.get(0));
+    }
   }
 }
