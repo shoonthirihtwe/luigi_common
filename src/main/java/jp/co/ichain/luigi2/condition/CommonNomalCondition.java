@@ -27,13 +27,11 @@ public class CommonNomalCondition {
    * @param max
    * @return
    */
-  public void overMax(Object data, List<Object> max) {
-    if (max == null || max.size() < 2) {
+  public boolean overMax(Object data, List<Object> max) throws WebConditionException {
+    if (max == null || max.size() < 1) {
       throw new WebConditionException(Luigi2Code.V0006);
     }
 
-    if (((Integer) data) > ((Double) max.get(1)).intValue()) {
-      throw new WebConditionException((String) max.get(0));
-    }
+    return ((Integer) data) <= ((Double) max.get(0)).intValue();
   }
 }

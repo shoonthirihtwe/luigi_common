@@ -124,7 +124,7 @@ public class Validity {
         }
 
         // Condition
-        validateCondition(validityVo, data, exList);
+        validateCondition(validityVo, key, data, exList);
 
         // type validate
         if (type != VType.OBJECT) {
@@ -151,7 +151,7 @@ public class Validity {
       } else if ("param-key".equals(key) == false) {
         val validityVo = validityMap.get(validity);
         // Condition
-        validateCondition(validityVo, data, exList);
+        validateCondition(validityVo, key, data, exList);
 
         if (validityVo.getArray()) {
           if (data instanceof List) {
@@ -245,17 +245,19 @@ public class Validity {
    * @throws IllegalArgumentException
    * @throws InvocationTargetException
    */
-  private void validateCondition(ValidityVo validityVo, Object data, List<WebException> exList)
+  @SuppressWarnings("unchecked")
+  private void validateCondition(ValidityVo validityVo, String key, Object data,
+      List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
     if (validityVo.getCondition() != null) {
       val conditionMap = validityVo.getCondition();
 
       for (String conditionMethod : conditionMap.keySet()) {
-        try {
-          commonCondition.validate(conditionMethod, data, conditionMap.get(conditionMethod));
-        } catch (WebConditionException e) {
-          exList.add(e);
+        Map<String, Object> argsMap = (Map<String, Object>) conditionMap.get(conditionMethod);
+        if (commonCondition.validate(conditionMethod, data,
+            (List<Object>) argsMap.get("args")) == false) {
+          exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
         }
       }
     }

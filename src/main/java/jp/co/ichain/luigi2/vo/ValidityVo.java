@@ -37,7 +37,7 @@ public class ValidityVo extends ObjectVo {
 
   Object formats;
 
-  Map<String, List<Object>> condition;
+  Map<String, Object> condition;
 
   List<Integer> intFixedList;
 
