@@ -108,9 +108,9 @@ public class WebControllerErrorAdvice {
     try {
       result.setCode(e.getCode());
       if (e.getErrArgs() != null) {
-        result.setItems(
-            e.getErrArgs().stream().map(ex -> new ErrorVo(((WebParameterException) ex).getCode(),
-                ((WebParameterException) ex).getErrArgs())).collect(Collectors.toList()));
+        result.setItems(e.getErrArgs().stream()
+            .map(ex -> new ErrorVo(((WebException) ex).getCode(), ((WebException) ex).getErrArgs()))
+            .collect(Collectors.toList()));
       }
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
