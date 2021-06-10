@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.service;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,9 @@ import lombok.val;
 public class CommonService {
 
   @Autowired
+  Validity validity;
+
+  @Autowired
   ValidityResources validityResources;
 
   @Autowired
@@ -44,24 +48,28 @@ public class CommonService {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    * @throws UnsupportedEncodingException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
    */
   public void validate(Map<String, Object> paramMap, String endpoint)
-      throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+      throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
     val tenantId = (Integer) paramMap.get("tenantId");
     val validityMap = validityResources.get(tenantId);
     Optional<ServiceInstancesVo> optional =
-        serviceInstancesResources.getFirst(tenantId, Validity.getValiditySourceKey(endpoint));
+        serviceInstancesResources.getFirst(tenantId, validity.getValiditySourceKey(endpoint));
 
     // sourceKeyが存在しない場合
     if (optional.isEmpty()) {
       throw new WebDataException(Luigi2Code.D0002, "sourceKey",
-          Validity.getValiditySourceKey(endpoint));
+          validity.getValiditySourceKey(endpoint));
     }
     val serviceInstanceMap = optional.get().getInherentMap();
 
     // validate
     val exList = new ArrayList<WebException>();
-    Validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
+    validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
   }
 }

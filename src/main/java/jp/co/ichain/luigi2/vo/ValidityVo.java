@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,10 @@ public class ValidityVo extends ObjectVo {
   Integer max;
 
   Object formats;
+
+  Map<String, List<Object>> commonCondition;
+
+  Map<String, List<Object>> inherentCondition;
 
   List<Integer> intFixedList;
 

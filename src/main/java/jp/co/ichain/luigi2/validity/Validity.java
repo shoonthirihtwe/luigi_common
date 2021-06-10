@@ -1,11 +1,14 @@
 package jp.co.ichain.luigi2.validity;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebException;
@@ -21,7 +24,14 @@ import lombok.val;
  * @createdAt : 2021-05-25
  * @updatedAt : 2021-05-25
  */
+@Service
 public class Validity {
+
+  @Autowired
+  CommonCondition commonCondition;
+
+  @Autowired
+  InherentCondition inherentCondition;
 
   /**
    * パラメータータイプ
@@ -45,8 +55,8 @@ public class Validity {
     EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA
   }
 
-  private final static Map<String, String> FORMAT_REGEX_MAP;
-  static {
+  private final Map<String, String> FORMAT_REGEX_MAP;
+  {
     FORMAT_REGEX_MAP = new HashMap<String, String>();
     FORMAT_REGEX_MAP.put("EMAIL",
         "^[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*@[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*$");
@@ -70,7 +80,7 @@ public class Validity {
    * @param endpoint
    * @return
    */
-  public static String getValiditySourceKey(String endpoint) {
+  public String getValiditySourceKey(String endpoint) {
     return endpoint + "_validity";
   }
 
@@ -89,12 +99,15 @@ public class Validity {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    * @throws UnsupportedEncodingException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
    */
   @SuppressWarnings("unchecked")
-  public static void validate(Map<String, ValidityVo> validityMap,
-      Map<String, Object> serviceInstanceMap, Map<String, Object> paramMap,
-      List<WebException> exList)
-      throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+  public void validate(Map<String, ValidityVo> validityMap, Map<String, Object> serviceInstanceMap,
+      Map<String, Object> paramMap, List<WebException> exList)
+      throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
     // validate
     for (val key : serviceInstanceMap.keySet()) {
@@ -112,6 +125,25 @@ public class Validity {
           exList.add(new WebParameterException(Luigi2Code.V0001, key));
         }
 
+        // Common Condition
+        if (validityVo.getCommonCondition() != null) {
+          val commonConditionMap = validityVo.getCommonCondition();
+
+          for (String conditionMethod : commonConditionMap.keySet()) {
+            commonCondition.validate(conditionMethod, data,
+                commonConditionMap.get(conditionMethod));
+          }
+        }
+        // inherent-condition
+        if (validityVo.getInherentCondition() != null) {
+          val inherentConditionMap = validityVo.getInherentCondition();
+
+          for (String conditionMethod : inherentConditionMap.keySet()) {
+            inherentCondition.validate(conditionMethod, data,
+                inherentConditionMap.get(conditionMethod));
+          }
+        }
+
         // type validate
         if (type != VType.OBJECT) {
           exList.add(new WebParameterException(Luigi2Code.V0005, key));
@@ -121,14 +153,14 @@ public class Validity {
             if (data instanceof List) {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                Validity.validate(validityMap, objValidityMap, map, exList);
+                validate(validityMap, objValidityMap, map, exList);
               }
             } else {
               exList.add(new WebParameterException(Luigi2Code.V0005, key));
             }
           } else {
             if (data instanceof Map) {
-              Validity.validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
+              validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
             } else {
               exList.add(new WebParameterException(Luigi2Code.V0005, key));
             }
@@ -140,13 +172,13 @@ public class Validity {
           if (data instanceof List) {
             List<Map<String, Object>> list = (List<Map<String, Object>>) data;
             for (val map : list) {
-              Validity.validate(validityVo, serviceInstanceMap, map, exList, key, data);
+              validate(validityVo, serviceInstanceMap, map, exList, key, data);
             }
           } else {
             exList.add(new WebParameterException(Luigi2Code.V0005, key));
           }
         } else {
-          Validity.validate(validityVo, serviceInstanceMap, paramMap, exList, key, data);
+          validate(validityVo, serviceInstanceMap, paramMap, exList, key, data);
         }
       }
     }
@@ -171,7 +203,7 @@ public class Validity {
    * @param data
    * @throws UnsupportedEncodingException
    */
-  private static void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
+  private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       Map<String, Object> paramMap, List<WebException> exList, String key, Object data)
       throws UnsupportedEncodingException {
     val type = VType.valueOf(validityVo.getType());
@@ -183,7 +215,7 @@ public class Validity {
 
     if (data != null) {
       // type
-      if (Validity.validateType(type, data) == false) {
+      if (validateType(type, data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0005, key));
       }
 
@@ -201,15 +233,15 @@ public class Validity {
         }
         // formats
         if (validityVo.getFormats() != null) {
-          Validity.validateFormat(key, validityVo.getFormats(), sData, exList);
+          validateFormat(key, validityVo.getFormats(), sData, exList);
         }
       }
 
       // fixed
-      if (Validity.validiateFixedList(validityVo.getFixedList(), data) == false) {
+      if (validiateFixedList(validityVo.getFixedList(), data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
-      if (Validity.validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
+      if (validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
     }
@@ -228,8 +260,7 @@ public class Validity {
    * @param exList
    */
   @SuppressWarnings("unchecked")
-  private static void validateFormat(String key, Object formats, String sData,
-      List<WebException> exList) {
+  private void validateFormat(String key, Object formats, String sData, List<WebException> exList) {
     if (formats instanceof String) {
       if (FormatType.valueOf((String) formats) != null) {
         if (sData.matches(FORMAT_REGEX_MAP.get(formats)) == false) {
@@ -265,7 +296,7 @@ public class Validity {
    * @param data
    * @return
    */
-  private static boolean validateType(VType type, Object data) {
+  private boolean validateType(VType type, Object data) {
     switch (type) {
       case STRING:
         return data instanceof String;
@@ -292,7 +323,7 @@ public class Validity {
    * @param data
    * @return
    */
-  private static boolean validiateFixedList(List<String> fixedList, Object data) {
+  private boolean validiateFixedList(List<String> fixedList, Object data) {
 
     if (fixedList == null || data == null || fixedList.size() == 0) {
       return true;
@@ -316,7 +347,7 @@ public class Validity {
    * @param data
    * @return
    */
-  private static boolean validiateIntFixedList(List<Integer> fixedList, Object data) {
+  private boolean validiateIntFixedList(List<Integer> fixedList, Object data) {
 
     if (fixedList == null || data == null || fixedList.size() == 0) {
       return true;
