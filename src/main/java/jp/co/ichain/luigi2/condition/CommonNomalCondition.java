@@ -27,7 +27,7 @@ public class CommonNomalCondition {
    * @param max
    * @return
    */
-  public boolean overMax(Object data, List<Object> max) throws WebConditionException {
+  public boolean overMax(Object data, List<Object> max) {
     if (max == null || max.size() < 1) {
       throw new WebConditionException(Luigi2Code.V0006);
     }
