@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.condition;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.validity.Condition;
 
@@ -23,7 +24,7 @@ public class CommonNomalCondition implements Condition {
    * @param max
    * @return
    */
-  public boolean overMax(Object data, int max) {
-    return ((Integer) data) <= max;
+  public boolean overMax(Object data, List<Object> max) {
+    return ((Integer) data) <= (int) (max != null && max.size() > 0 ? max.get(0) : 0);
   }
 }
