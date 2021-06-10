@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebException;
@@ -43,12 +42,23 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum FormatType {
-    EMAIL, TEL
+    EMAIL, TEL, HIRA, NUM, KANA, HANKANA, KANJI, ALPHA
   }
 
-  private final static String VALIDITY_EMAIL =
-      "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}(.[a-zA-Z]{2,3})?$";
-  private final static String VALIDITY_TEL = "^\\d{2,4}-\\d{3,4}-\\d{4}$";
+  private final static Map<String, String> FORMAT_REGEX_MAP;
+  static {
+    FORMAT_REGEX_MAP = new HashMap<String, String>();
+    FORMAT_REGEX_MAP.put("EMAIL",
+        "^[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*@[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*$");
+    FORMAT_REGEX_MAP.put("TEL", "^\\d{2,4}-\\d{3,4}-\\d{4}$");
+    FORMAT_REGEX_MAP.put("HIRA", "\\u3040-\\u309F");
+    FORMAT_REGEX_MAP.put("NUM", "0-9");
+    FORMAT_REGEX_MAP.put("KANA", "\\u30a0-\\u30ff");
+    FORMAT_REGEX_MAP.put("HANKANA", "\\uFF65-\\uFF9F");
+    FORMAT_REGEX_MAP.put("KANJI", "\\u4E00-\\u9FFF");
+    FORMAT_REGEX_MAP.put("ALPHA", "a-zA-Z");
+  }
+
 
   /**
    * service instancesの検証情報取得
@@ -190,11 +200,7 @@ public class Validity {
         }
         // formats
         if (validityVo.getFormats() != null) {
-          for (val format : validityVo.getFormats()) {
-            if (FORMAT_MAP.get(FormatType.valueOf(format)).apply(sData) == false) {
-              exList.add(new WebParameterException(Luigi2Code.V0004, key));
-            }
-          }
+          Validity.validateFormat(key, validityVo.getFormats(), sData, exList);
         }
       }
 
@@ -203,6 +209,46 @@ public class Validity {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
       if (Validity.validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
+        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+      }
+    }
+
+  }
+
+  /**
+   * フォマット検証を行う
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-09
+   * @updatedAt : 2021-06-09
+   * @param key
+   * @param format
+   * @param sData
+   * @param exList
+   */
+  @SuppressWarnings("unchecked")
+  private static void validateFormat(String key, Object formats, String sData,
+      List<WebException> exList) {
+    if (formats instanceof String) {
+      if (FormatType.valueOf((String) formats) != null) {
+        if (sData.matches(FORMAT_REGEX_MAP.get(formats)) == false) {
+          exList.add(new WebParameterException(Luigi2Code.V0004, key));
+        }
+      } else {
+        exList.add(new WebParameterException(Luigi2Code.V0006, key, formats));
+      }
+    } else if (formats instanceof List) {
+      val sb = new StringBuffer();
+      sb.append("^[");
+      for (val format : (List<String>) formats) {
+        if (FormatType.valueOf(format) != null) {
+          sb.append(FORMAT_REGEX_MAP.get(format));
+        } else {
+          exList.add(new WebParameterException(Luigi2Code.V0006, key, formats));
+        }
+      }
+      sb.append("]+$");
+      if (sData.matches(sb.toString()) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
     }
@@ -281,45 +327,5 @@ public class Validity {
       }
     }
     return false;
-  }
-
-  public static Map<FormatType, Function<String, Boolean>> FORMAT_MAP =
-      new HashMap<FormatType, Function<String, Boolean>>();
-  static {
-    /**
-     * Emailフォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    FORMAT_MAP.put(FormatType.EMAIL, (value) -> {
-      if (value == null || value.length() == 0) {
-        return true;
-      }
-
-      return value.matches(VALIDITY_EMAIL);
-    });
-
-    /**
-     * Emailフォーマット検証
-     * 
-     * @author : [AOT] s.paku
-     * @createdAt : 2021-05-31
-     * @updatedAt : 2021-05-31
-     * @param value
-     * @param field
-     * @return
-     */
-    FORMAT_MAP.put(FormatType.TEL, (value) -> {
-      if (value == null || value.length() == 0) {
-        return true;
-      }
-
-      return value.matches(VALIDITY_TEL);
-    });
   }
 }

@@ -39,6 +39,10 @@ public class Luigi2Code {
    * 属性不正
    */
   public static final String V0005 = "V0005";
+  /**
+   * 書式型不正
+   */
+  public static final String V0006 = "V0004";
 
   /**
    * 一致なし

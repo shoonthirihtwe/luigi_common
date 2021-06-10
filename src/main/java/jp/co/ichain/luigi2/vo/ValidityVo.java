@@ -34,7 +34,7 @@ public class ValidityVo extends ObjectVo {
 
   Integer max;
 
-  List<String> formats;
+  Object formats;
 
   List<Integer> intFixedList;
 
