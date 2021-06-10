@@ -42,7 +42,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum FormatType {
-    EMAIL, TEL, HIRA, NUM, KANA, HANKANA, KANJI, ALPHA
+    EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA
   }
 
   private final static Map<String, String> FORMAT_REGEX_MAP;
@@ -53,6 +53,7 @@ public class Validity {
     FORMAT_REGEX_MAP.put("TEL", "^\\d{2,4}-\\d{3,4}-\\d{4}$");
     FORMAT_REGEX_MAP.put("HIRA", "\\u3040-\\u309F");
     FORMAT_REGEX_MAP.put("NUM", "0-9");
+    FORMAT_REGEX_MAP.put("ZENNUM", "０-９");
     FORMAT_REGEX_MAP.put("KANA", "\\u30a0-\\u30ff");
     FORMAT_REGEX_MAP.put("HANKANA", "\\uFF65-\\uFF9F");
     FORMAT_REGEX_MAP.put("KANJI", "\\u4E00-\\u9FFF");
