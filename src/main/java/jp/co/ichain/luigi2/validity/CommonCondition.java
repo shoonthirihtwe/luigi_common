@@ -29,7 +29,7 @@ public class CommonCondition {
     METHOD_CONDITION_MAP = new HashMap<String, Object>();
     METHOD_MAP = new HashMap<String, Method>();
 
-    for (val condition : BeanUtils.getBeanByAnnotation(getClass())) {
+    for (val condition : BeanUtils.getBeanByAnnotation(Condition.class)) {
       settingCondition(condition);
     }
   }

@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.util;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 import org.springframework.context.ApplicationContext;
 import jp.co.ichain.luigi2.config.ApplicationContextProvider;
 
@@ -35,8 +37,8 @@ public class BeanUtils {
    * @param annotationCls
    * @return
    */
-  public static Object[] getBeanByAnnotation(Class<?> annotationCls) {
+  public static Collection<Object> getBeanByAnnotation(Class<? extends Annotation> annotationCls) {
     ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
-    return applicationContext.getBeanNamesForAnnotation(null);
+    return applicationContext.getBeansWithAnnotation(annotationCls).values();
   }
 }
