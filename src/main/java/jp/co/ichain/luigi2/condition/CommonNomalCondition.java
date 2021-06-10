@@ -32,7 +32,7 @@ public class CommonNomalCondition {
       throw new WebConditionException(Luigi2Code.V0006);
     }
 
-    if (((Integer) data) > (int) (max != null && max.size() > 0 ? max.get(1) : 0)) {
+    if (((Integer) data) > ((Double) max.get(1)).intValue()) {
       throw new WebConditionException((String) max.get(0));
     }
   }
