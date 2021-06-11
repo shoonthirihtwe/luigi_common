@@ -203,9 +203,8 @@ public class Validity {
       if (validateType(type, data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0005, key));
       }
-
       // type is string
-      if (VType.STRING.toString().equals(validityVo.getType())) {
+      else if (VType.STRING.toString().equals(validityVo.getType())) {
         String sData = (String) data;
         int length = sData.getBytes("UTF-8").length;
         // min
