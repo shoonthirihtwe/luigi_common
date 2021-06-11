@@ -206,15 +206,25 @@ public class Validity {
       // type is string
       else if (VType.STRING.toString().equals(validityVo.getType())) {
         String sData = (String) data;
-        int length = sData.getBytes("UTF-8").length;
-        // min
-        if (validityVo.getMin() != null && validityVo.getMin() > length) {
-          exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+
+        // min max
+        if (validityVo.getMin() != null || validityVo.getMax() != null) {
+          int length = 0;
+          if (validityVo.getIsBinaryLength()) {
+            length = sData.getBytes("UTF-8").length;
+          } else {
+            length = sData.length();
+          }
+          // min
+          if (validityVo.getMin() != null && validityVo.getMin() > length) {
+            exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+          }
+          // max
+          if (validityVo.getMax() != null && validityVo.getMax() < length) {
+            exList.add(new WebParameterException(Luigi2Code.V0003, key, validityVo.getMax()));
+          }
         }
-        // max
-        if (validityVo.getMax() != null && validityVo.getMax() < length) {
-          exList.add(new WebParameterException(Luigi2Code.V0003, key, validityVo.getMax()));
-        }
+
         // formats
         if (validityVo.getFormats() != null) {
           validateFormat(key, validityVo.getFormats(), sData, exList);
