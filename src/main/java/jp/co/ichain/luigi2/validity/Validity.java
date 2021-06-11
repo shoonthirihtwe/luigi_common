@@ -58,7 +58,7 @@ public class Validity {
     FORMAT_REGEX_MAP = new HashMap<String, String>();
     FORMAT_REGEX_MAP.put("EMAIL",
         "^[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*@[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*$");
-    FORMAT_REGEX_MAP.put("TEL", "^\\d{2,4}-\\d{3,4}-\\d{4}$");
+    FORMAT_REGEX_MAP.put("TEL", "^\\d{3,4}-?\\d{3,4}-?\\d{4}$");
     FORMAT_REGEX_MAP.put("HIRA", "\\u3040-\\u309F");
     FORMAT_REGEX_MAP.put("NUM", "0-9");
     FORMAT_REGEX_MAP.put("ZENNUM", "０-９");
