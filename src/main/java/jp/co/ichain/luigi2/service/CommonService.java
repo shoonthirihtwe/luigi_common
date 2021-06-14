@@ -70,6 +70,12 @@ public class CommonService {
 
     // validate
     val exList = new ArrayList<WebException>();
+
+    if (serviceInstanceMap.get("param-key") != null) {
+      // Condition
+      validity.validateCondition(validityMap.get(serviceInstanceMap.get("param-key")), "this",
+          paramMap, exList);
+    }
     validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
   }
 }

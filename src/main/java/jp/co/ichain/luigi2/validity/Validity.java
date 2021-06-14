@@ -255,7 +255,7 @@ public class Validity {
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  private void validateCondition(ValidityVo validityVo, String key, Object data,
+  public void validateCondition(ValidityVo validityVo, String key, Object data,
       List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
