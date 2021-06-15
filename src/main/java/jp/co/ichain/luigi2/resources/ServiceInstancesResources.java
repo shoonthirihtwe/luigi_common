@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.cj.util.StringUtils;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
+import jp.co.ichain.luigi2.util.StringUtils;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
 
@@ -66,7 +66,7 @@ public class ServiceInstancesResources {
 
       // json map setting
       for (val vo : listByTenant) {
-        if (StringUtils.isNullOrEmpty(vo.getInherentJson()) == false) {
+        if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
           ObjectMapper mapper = new ObjectMapper();
           vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
         }
