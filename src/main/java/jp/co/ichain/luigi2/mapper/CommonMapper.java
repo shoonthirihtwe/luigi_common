@@ -19,10 +19,10 @@ import jp.co.ichain.luigi2.vo.TenantsVo;
 @Repository
 @Luigi2Mapper
 public interface CommonMapper {
-  void pessimisticLockKey(@Param("tableInfo") Map<String, String> map,
+  void pessimisticLockKey(@Param("tableInfo") Map<String, Object> map,
       @Param("tenantId") Integer tenantId);
 
-  String selectIncrementNumber(@Param("tableInfo") Map<String, String> map,
+  String selectIncrementNumber(@Param("tableInfo") Map<String, Object> map,
       @Param("tenantId") Integer tenantId);
 
   List<TenantsVo> selectTenants(TenantsVo tenantVo);
