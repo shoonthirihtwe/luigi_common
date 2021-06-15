@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * AgencyInfoVo
+ * UnderWritingsVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -21,15 +21,38 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgencyInfoVo extends ObjectVo {
+public class SalesProductsVo extends ObjectVo {
 
-  String[] generalAgentFlag;
+  Integer id;
 
-  String[] agencyCode1;
+  Integer tenantId;
 
-  String[] agentCode1;
-
-  String[] agentShare1;
+  String salesPlanCode;
+  
+  String salesPlanTypeCode;
+  
+  Date startDate;
+  
+  Date endDate;
+  
+  String salesPlanName;
+  
+  String salePlanNameDisplay;
+  
+  Integer issueAgeUpper;
+  
+  Integer issueAgeLower;
+  
+  Integer premium;
+  
+  String activeInactive;
+  
+  String specialRequirement;
+  
+  Integer sortNo;
+  
+  @JsonIgnore
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
@@ -42,4 +65,10 @@ public class AgencyInfoVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 }
