@@ -175,10 +175,6 @@ public class Validity {
         }
       }
     }
-
-    if (exList.size() > 0) {
-      throw new WebParameterException(Luigi2Code.V0000, exList);
-    }
   }
 
   /**

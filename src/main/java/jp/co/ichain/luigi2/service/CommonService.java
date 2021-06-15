@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
+import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.resources.ValidityResources;
@@ -77,5 +78,9 @@ public class CommonService {
           paramMap, exList);
     }
     validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
+
+    if (exList.size() > 0) {
+      throw new WebParameterException(Luigi2Code.V0000, exList);
+    }
   }
 }
