@@ -23,6 +23,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BeneficialiesVo extends ObjectVo {
 
+  Integer id;
+  
+  Integer tenantId;
+  
+  String beneficiaryCode;
+  
+  String contractNo;
+  
+  String contractBranchNo;
+  
   String roleType;
 
   String personType;
@@ -37,7 +47,7 @@ public class BeneficialiesVo extends ObjectVo {
 
   String share;
 
-  String relationship;
+  String relShipToInsured;
 
   @JsonIgnore
   Date createdAt;

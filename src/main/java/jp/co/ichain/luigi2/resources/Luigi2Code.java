@@ -8,6 +8,17 @@ package jp.co.ichain.luigi2.resources;
  * @updatedAt : 2021-05-26
  */
 public class Luigi2Code {
+  
+  /**
+   * フラグコード
+   */
+  public static final String FLAG_FALSE = "0";
+  
+  /**
+   * フラグコード
+   */
+  public static final String FLAG_TRUE = "1";
+  
   public static final String SUCCESS_CODE = "OK";
 
   /**

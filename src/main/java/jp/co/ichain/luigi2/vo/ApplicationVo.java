@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * ContractRequestVo
+ * ApplicationVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31

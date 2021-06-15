@@ -39,13 +39,13 @@ public class UnderWritingsVo extends ObjectVo {
 
   Date effectiveDate;
 
-  String sumingUpCheck;
+  String sumingUpCheck = "0";
 
-  String antisocialForcesCheck;
+  String antisocialForcesCheck = "0";
 
-  String questionCheck;
+  String questionCheck = "0";
 
-  String otherCheck;
+  String otherCheck = "0";
 
   String cardCustNumber;
 

@@ -155,15 +155,23 @@ public class Validity {
 
         if (validityVo.getArray()) {
           if (data instanceof List) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) data;
-            for (val map : list) {
-              validate(validityVo, serviceInstanceMap, map, exList, key, data);
+            if (VType.valueOf(validityVo.getType()) != VType.OBJECT) {
+              List<String> list = (List<String>) data;
+              for (val map : list) {
+                validate(validityVo, serviceInstanceMap, exList, key, map);
+              }
+            } else {
+              List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+              for (val map : list) {
+                validate(validityVo, serviceInstanceMap, exList, key, map);
+              }
             }
+
           } else {
             exList.add(new WebParameterException(Luigi2Code.V0005, key));
           }
         } else {
-          validate(validityVo, serviceInstanceMap, paramMap, exList, key, data);
+          validate(validityVo, serviceInstanceMap, exList, key, data);
         }
       }
     }
@@ -189,8 +197,7 @@ public class Validity {
    * @throws UnsupportedEncodingException
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
-      Map<String, Object> paramMap, List<WebException> exList, String key, Object data)
-      throws UnsupportedEncodingException {
+      List<WebException> exList, String key, Object data) throws UnsupportedEncodingException {
     val type = VType.valueOf(validityVo.getType());
 
     // Required
