@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
-import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.resources.ValidityResources;
@@ -73,13 +72,9 @@ public class CommonService {
     val exList = new ArrayList<WebException>();
 
     if (serviceInstanceMap.get("param-key") != null) {
-      if (paramMap.get("param-key") == null) {
-        exList.add(new WebParameterException(Luigi2Code.V0001, "param-key"));
-      } else {
-        // Condition
-        validity.validateCondition(validityMap.get(serviceInstanceMap.get("param-key")), "this",
-            paramMap, exList);
-      }
+      // Condition
+      validity.validateCondition(validityMap.get(serviceInstanceMap.get("param-key")), "this",
+          paramMap, exList);
     }
     validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
   }

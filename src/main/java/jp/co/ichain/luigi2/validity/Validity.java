@@ -271,8 +271,12 @@ public class Validity {
 
       for (String conditionMethod : conditionMap.keySet()) {
         Map<String, Object> argsMap = (Map<String, Object>) conditionMap.get(conditionMethod);
-        if (commonCondition.validate(conditionMethod, data,
-            (List<Object>) argsMap.get("args")) == false) {
+        try {
+          if (commonCondition.validate(conditionMethod, data,
+              (List<Object>) argsMap.get("args")) == false) {
+            exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+          }
+        } catch (Exception e) {
           exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
         }
       }
