@@ -3,6 +3,7 @@ package jp.co.ichain.luigi2.config;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -28,6 +29,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
   @Bean
+  @Conditional(WebExistsCondition.class)
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
         .paths(PathSelectors.any()).build().apiInfo(apiInfo()).enable(false);
@@ -39,6 +41,7 @@ public class SwaggerConfig {
 
   @Primary
   @Bean
+  @Conditional(WebExistsCondition.class)
   public SwaggerResourcesProvider swaggerResourcesProvider(
       InMemorySwaggerResourcesProvider defaultResourcesProvider) {
     return () -> {
