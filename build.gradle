@@ -5,9 +5,9 @@ plugins {
     id 'checkstyle'
 }
 
-System.setProperty('org.checkstyle.google.suppressionfilter.config', '$projectDir/checkstyle/suppressions.xml')
+System.setProperty("org.checkstyle.google.suppressionfilter.config", "$projectDir/checkstyle/suppressions.xml")
 checkstyle {
-    configFile file('$projectDir/checkstyle/google_checks.xml')
+    configFile file("$projectDir/checkstyle/google_checks.xml")
     toolVersion '8.42'
     maxWarnings 0
     ignoreFailures false
