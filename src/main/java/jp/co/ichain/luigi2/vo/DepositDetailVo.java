@@ -25,45 +25,45 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepositDetailVo {
-	/**
-	 * 証券番号
-	 */
-	String contractNo;
+  /**
+   * 証券番号
+   */
+  String contractNo;
 
-	/**
-	 * 保険料収納処理実施日
-	 */
-	@JsonSerialize(using = JsonDateSerializer.class)
-	Date dueDate;
-	/**
-	 * 未納保険料
-	 */
-	Integer totalPremiumAmount;
+  /**
+   * 保険料収納処理実施日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date dueDate;
+  /**
+   * 未納保険料
+   */
+  Integer totalPremiumAmount;
 
-	/**
-	 * 未納分保険料月
-	 */
-	@JsonSerialize(using = JsonDateSerializer.class)
-	Date premiumDueDate;
+  /**
+   * 未納分保険料月
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date premiumDueDate;
 
-	// TODO OD-00101 保険料充当不可理由取得
+  // TODO OD-00101 保険料充当不可理由取得
 
-	/**
-	 * 猶予期間満了日
-	 */
-	@JsonSerialize(using = JsonDateSerializer.class)
-	Date gracePeriodExpriration;
+  /**
+   * 猶予期間満了日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date gracePeriodExpriration;
 
-	@JsonIgnore
-	Date createdAt;
+  @JsonIgnore
+  Date createdAt;
 
-	@JsonIgnore
-	String createdBy;
+  @JsonIgnore
+  String createdBy;
 
-	@JsonIgnore
-	Date updatedAt;
+  @JsonIgnore
+  Date updatedAt;
 
-	@JsonIgnore
-	String updatedBy;
+  @JsonIgnore
+  String updatedBy;
 
 }
