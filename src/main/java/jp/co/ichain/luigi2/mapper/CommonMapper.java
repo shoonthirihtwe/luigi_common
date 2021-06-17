@@ -27,8 +27,6 @@ public interface CommonMapper {
 
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
-  Date selectTenantLastUpdatedAt();
-
   List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);
 
   Date selectLastUpdatedAt(@Param("table") String table);

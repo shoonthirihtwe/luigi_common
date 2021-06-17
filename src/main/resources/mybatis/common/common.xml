@@ -21,7 +21,7 @@
 	<select id="selectServiceInstances" parameterType="map"
 		resultType="ServiceInstancesVo">
 		SELECT * from service_instances WHERE status='1'
-		<if test="updatedAt != null">AND updated_at > #{updatedAt}</if>
+		<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
 		ORDER BY updated_at DESC
 	</select>
 
@@ -36,13 +36,8 @@
 		FROM
 			tenants
 		<where>
-			<if test="updatedAt != null">AND updated_at > #{updatedAt}</if>
+			<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
 		</where>
 		ORDER BY updated_at DESC
-	</select>
-	<select id="selectTenantLastUpdatedAt" resultType="java.util.Date">
-		SELECT
-			  max(updated_at) as updatedAt
-		FROM tenants
 	</select>
 </mapper>
