@@ -9,8 +9,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.dto.ResultWebDto;
+import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
 import jp.co.ichain.luigi2.service.CommonService;
+import jp.co.ichain.luigi2.vo.TenantsVo;
 import lombok.val;
 
 /**
@@ -28,6 +30,9 @@ public class ControllerUtils {
 
   @Autowired
   CommonService commonService;
+
+  @Autowired
+  TenantResources tenantResources;
 
   /**
    * Controller Function
@@ -117,9 +122,22 @@ public class ControllerUtils {
       Map<String, Object> paramMap) throws Exception {
 
     val curUser = authService.getCurrentUser();
-    paramMap.put("tenantId", curUser.getTenantId());
-    paramMap.put("updatedBy", curUser.getId());
+    if (curUser != null) {
+      paramMap.put("tenantId", curUser.getTenantId());
+      paramMap.put("updatedBy", curUser.getId());
+    } else {
+      String domain = request.getHeader("x-frontend-domain");
+      TenantsVo tenantVo = null;
+      if (domain.indexOf(":") == -1) {
+        tenantVo = tenantResources.get(domain);
+      } else {
+        tenantVo = tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]);
+      }
+
+      if (tenantVo != null) {
+        paramMap.put("tenantId", tenantVo.getId());
+      }
+    }
     commonService.validate(paramMap, endpoint);
   }
-
 }

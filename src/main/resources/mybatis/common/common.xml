@@ -36,7 +36,6 @@
 		FROM
 			tenants
 		<where>
-			<if test="id != null">id = #{id}</if>
 			<if test="updatedAt != null">AND updated_at > #{updatedAt}</if>
 		</where>
 		ORDER BY updated_at DESC

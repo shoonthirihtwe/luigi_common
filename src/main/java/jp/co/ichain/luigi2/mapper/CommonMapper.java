@@ -25,7 +25,7 @@ public interface CommonMapper {
   String selectIncrementNumber(@Param("tableInfo") Map<String, Object> map,
       @Param("tenantId") Integer tenantId);
 
-  List<TenantsVo> selectTenants(TenantsVo tenantVo);
+  List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
   Date selectTenantLastUpdatedAt();
 

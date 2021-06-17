@@ -24,15 +24,17 @@ import lombok.Setter;
 public class TenantsVo extends ObjectVo {
 
   Integer id;
-  
+
   String tenantName;
-  
+
+  String siteUrl;
+
   String entryRedirectUrl;
-  
+
   Date batchDate;
-  
+
   String compensationGroupCode;
-  
+
   @JsonIgnore
   Date createdAt;
 
