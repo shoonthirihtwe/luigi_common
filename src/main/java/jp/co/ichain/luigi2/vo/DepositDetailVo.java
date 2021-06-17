@@ -5,7 +5,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,51 +25,34 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepositDetailVo {
-
-	Integer id;
-
-	Integer tenantId;
-
-	Date entryDate;
-
-	Integer batchNo;
-
-	Integer cashDetailNo;
-
+	/**
+	 * 証券番号
+	 */
 	String contractNo;
 
-	String applicationNo;
-
+	/**
+	 * 保険料収納処理実施日
+	 */
+	@JsonSerialize(using = JsonDateSerializer.class)
 	Date dueDate;
-
+	/**
+	 * 未納保険料
+	 */
 	Integer totalPremiumAmount;
 
-	Integer depositAmount;
-
-	Integer commissionWithheld;
-
-	Integer compensationTax;
-
-	Date clearingDate;
-
-	Date suspenceDate;
-
-	Date deleteDate;
-
-	Date cashMatchingDate;
-
-	String cashDetailDtatus;
-
-	String paymentResultCode;
-
-	String comment;
-
+	/**
+	 * 未納分保険料月
+	 */
+	@JsonSerialize(using = JsonDateSerializer.class)
 	Date premiumDueDate;
 
-	Integer premiumSequenceNo;
+	// TODO OD-00101 保険料充当不可理由取得
 
-	@JsonIgnore
-	Integer updateCount;
+	/**
+	 * 猶予期間満了日
+	 */
+	@JsonSerialize(using = JsonDateSerializer.class)
+	Date gracePeriodExpriration;
 
 	@JsonIgnore
 	Date createdAt;
@@ -81,11 +65,5 @@ public class DepositDetailVo {
 
 	@JsonIgnore
 	String updatedBy;
-
-	@JsonIgnore
-	Date deletedAt;
-
-	@JsonIgnore
-	String deletedBy;
 
 }
