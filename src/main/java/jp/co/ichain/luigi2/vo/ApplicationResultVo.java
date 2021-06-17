@@ -24,11 +24,11 @@ import lombok.Setter;
 public class ApplicationResultVo extends ObjectVo {
 
   String contractNo;
- 
+
   String cardCustNumber;
-  
+
   String contractorCustomerId;
-  
+
   String insuredCustomerId;
 
   @JsonIgnore

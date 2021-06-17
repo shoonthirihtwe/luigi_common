@@ -26,6 +26,7 @@ public class AuthService {
   public UsersVo getCurrentUser() {
     val result = new UsersVo();
     result.setTenantId(1);
+    result.setId(1);
     result.setEmail("test@aot.co.jp");
     return result;
   }
