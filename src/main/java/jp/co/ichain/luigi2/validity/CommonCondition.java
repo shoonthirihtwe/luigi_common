@@ -21,13 +21,13 @@ import lombok.val;
 public class CommonCondition {
 
 
-  Map<String, Object> METHOD_CONDITION_MAP;
-  Map<String, Method> METHOD_MAP;
+  Map<String, Object> methodConditionMap;
+  Map<String, Method> methodMap;
 
   @PostConstruct
   void initialize() {
-    METHOD_CONDITION_MAP = new HashMap<String, Object>();
-    METHOD_MAP = new HashMap<String, Method>();
+    methodConditionMap = new HashMap<String, Object>();
+    methodMap = new HashMap<String, Method>();
 
     for (val condition : BeanUtils.getBeanByAnnotation(Condition.class)) {
       settingCondition(condition);
@@ -50,8 +50,8 @@ public class CommonCondition {
    */
   public boolean validate(String methodName, Object data, List<Object> args)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    val condition = METHOD_CONDITION_MAP.get(methodName);
-    val method = METHOD_MAP.get(methodName);
+    val condition = methodConditionMap.get(methodName);
+    val method = methodMap.get(methodName);
 
     return (boolean) method.invoke(condition, data, args);
   }
@@ -68,8 +68,8 @@ public class CommonCondition {
   private void settingCondition(Object condition) {
     for (val method : condition.getClass().getMethods()) {
       val methodName = method.getName();
-      METHOD_CONDITION_MAP.put(methodName, condition);
-      METHOD_MAP.put(methodName, method);
+      methodConditionMap.put(methodName, condition);
+      methodMap.put(methodName, method);
     }
   }
 }

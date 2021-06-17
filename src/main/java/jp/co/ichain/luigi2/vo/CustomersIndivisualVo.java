@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * PolicyInfoVo
+ * CustomersVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -23,102 +23,65 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class PolicyInfoVo extends ObjectVo {
+public class CustomersIndivisualVo extends ObjectVo {
 
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date effectiveDate;
-
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date applicationDate;
-
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date receivedDate;
-
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date inceptionDate;
-
+  Integer id;
+  
+  Integer tenantId;
+  
+  String customerId;
+  
   String nameKanaSei;
-
+  
   String nameKanaMei;
-
+  
   String nameKnjSei;
-
+  
   String nameKnjMei;
-
-  String addrZipNo;
-
-  String addrKnjPref;
-
-  String addrKnj1;
-
-  String addrKnj2;
-
-  String addrTel1;
-
-  String addrTel2;
-
+  
+  String sex;
+  
   @JsonSerialize(using = JsonDateSerializer.class)
   Date dateOfBirth;
-
-  String sex;
-
-  String emailAddress;
-
-  String occupation;
-
+  
+  String addrZipCode;
+  
+  String addrKanaPref;
+  
+  String addrKana1;
+  
+  String addrKana2;
+  
+  String addrKnjPref;
+  
+  String addrKnj1;
+  
+  String addrKnj2;
+  
+  String addrTel1;
+  
+  String addrTel2;
+  
   String companyNameKana;
-
+  
   String companyNameKanji;
-
+  
   String placeOfWorkKana;
-
+  
   String placeOfWorkKanji;
-
+  
   String placeOfWorkCode;
-
+  
   String groupColumn;
-
-  String materialRepresentation;
-
-  String understandingIntent;
-
-  String confirmApplication;
-
-  String repNameKanaSei;
-
-  String repNameKanaMei;
-
-  String repNameKnjSei;
-
-  String repNameKnjMei;
-
-  String repAddrZipNo;
-
-  String repAddrKnjPref;
-
-  String repAddrKnj1;
-
-  String repAddrKnj2;
-
-  String staffNameKanaSei;
-
-  String staffNameKanaMei;
-
-  String staffNameKnjSei;
-
-  String staffNameKnjMei;
-
-  String staffAddrZipNo;
-
-  String staffAddrKnjPref;
-
-  String staffAddrKnj1;
-
-  String staffAddrKnj2;
-
-  String staffAddrTel1;
-
-  String staffEmailAddress;
+  
+  String email;
+  
+  String occupation;
+  
+  String occupationCode;
+  
+  @JsonIgnore
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
@@ -131,4 +94,10 @@ public class PolicyInfoVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 }

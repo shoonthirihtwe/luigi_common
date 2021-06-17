@@ -16,6 +16,7 @@ public class Luigi2TableInfo {
   }
 
   private static final Map<TableInfo, Map<String, Object>> TABLE_INFO_MAP;
+  
   static {
     TABLE_INFO_MAP = new HashMap<TableInfo, Map<String, Object>>();
     // contracts

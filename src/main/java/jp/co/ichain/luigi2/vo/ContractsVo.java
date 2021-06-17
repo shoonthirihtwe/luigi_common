@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,42 +41,58 @@ public class ContractsVo extends ObjectVo {
 
   String newContractId;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date applicationDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date receivedDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date entryDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date inceptionDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date completeDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date firstPremiumDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date effectiveDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date issueDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date expirationDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date terminationDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date freeLockDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date insuranceStartDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date insuranceEndDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumStartDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumEndDate;
-
+  
   Integer numberOfInsured;
 
   Integer coverageYear;
 
   String cardCustNumber;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date cardUnavailableFlag;
 
   String frequency;
@@ -121,6 +139,7 @@ public class ContractsVo extends ObjectVo {
 
   Integer agentShare2;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date mypageLinkDate;
 
   String paymentPattern;
