@@ -118,7 +118,7 @@ public class ControllerUtils {
 
     val curUser = authService.getCurrentUser();
     paramMap.put("tenantId", curUser.getTenantId());
-    paramMap.put("updatedBy", curUser.getEmail());
+    paramMap.put("updatedBy", curUser.getId());
     commonService.validate(paramMap, endpoint);
   }
 
