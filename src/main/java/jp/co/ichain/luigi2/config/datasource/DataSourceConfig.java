@@ -134,7 +134,7 @@ public class DataSourceConfig {
    * @return
    */
   @Bean(name = "luigi2SqlSession")
-  public SqlSession SqlSession(
+  public SqlSession sqlSession(
       @Autowired @Qualifier("luigi2SqlSessionFactory") SqlSessionFactory luigi2SqlSessionFactory) {
     return new SqlSessionTemplate(luigi2SqlSessionFactory);
   }
@@ -149,7 +149,7 @@ public class DataSourceConfig {
    * @return
    */
   @Bean(name = "luigi2TransactionManager")
-  public DataSourceTransactionManager TransactionManager(
+  public DataSourceTransactionManager transactionManager(
       @Autowired @Qualifier("luigi2DataSource") DataSource dataSource) {
     return new DataSourceTransactionManager(dataSource);
   }

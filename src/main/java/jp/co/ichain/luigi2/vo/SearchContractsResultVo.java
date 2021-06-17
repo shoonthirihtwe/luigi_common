@@ -4,13 +4,15 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * BeneficialiesVo
+ * SearchContractsResultVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -21,33 +23,25 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class BeneficialiesVo extends ObjectVo {
+public class SearchContractsResultVo extends ObjectVo {
 
-  Integer id;
-  
   Integer tenantId;
-  
-  String beneficiaryCode;
-  
+
   String contractNo;
+
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date applicationDate;
+
+  String contractStatus;
   
-  String contractBranchNo;
+  String agencyName;
   
-  String roleType;
-
-  String personType;
-
-  String nameKanaSei;
-
-  String nameKanaMei;
-
-  String nameKnjSei;
-
-  String nameKnjMei;
-
-  String share;
-
-  String relShipToInsured;
+  String applicantNameKnj;
+  
+  String applicantNameKana;
+  
+  @JsonIgnore
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
@@ -60,4 +54,10 @@ public class BeneficialiesVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 }

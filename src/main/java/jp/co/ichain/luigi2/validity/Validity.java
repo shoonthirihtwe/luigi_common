@@ -38,7 +38,7 @@ public class Validity {
    * @createdAt : 2021-06-08
    * @updatedAt : 2021-06-08
    */
-  enum VType {
+  enum Vtype {
     STRING, BOOL, INT, DATE, FRACTION, OBJECT
   }
 
@@ -53,19 +53,20 @@ public class Validity {
     EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA
   }
 
-  private final Map<String, String> FORMAT_REGEX_MAP;
+  private final Map<String, String> formatRegexMap;
+  
   {
-    FORMAT_REGEX_MAP = new HashMap<String, String>();
-    FORMAT_REGEX_MAP.put("EMAIL",
+    formatRegexMap = new HashMap<String, String>();
+    formatRegexMap.put("EMAIL",
         "^[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*@[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*$");
-    FORMAT_REGEX_MAP.put("TEL", "^\\d{3,4}-?\\d{3,4}-?\\d{4}$");
-    FORMAT_REGEX_MAP.put("HIRA", "\\u3040-\\u309F");
-    FORMAT_REGEX_MAP.put("NUM", "0-9");
-    FORMAT_REGEX_MAP.put("ZENNUM", "０-９");
-    FORMAT_REGEX_MAP.put("KANA", "\\u30a0-\\u30ff");
-    FORMAT_REGEX_MAP.put("HANKANA", "\\uFF65-\\uFF9F");
-    FORMAT_REGEX_MAP.put("KANJI", "\\u4E00-\\u9FFF");
-    FORMAT_REGEX_MAP.put("ALPHA", "a-zA-Z");
+    formatRegexMap.put("TEL", "^\\d{3,4}-?\\d{3,4}-?\\d{4}$");
+    formatRegexMap.put("HIRA", "\\u3040-\\u309F");
+    formatRegexMap.put("NUM", "0-9");
+    formatRegexMap.put("ZENNUM", "０-９");
+    formatRegexMap.put("KANA", "\\u30a0-\\u30ff");
+    formatRegexMap.put("HANKANA", "\\uFF65-\\uFF9F");
+    formatRegexMap.put("KANJI", "\\u4E00-\\u9FFF");
+    formatRegexMap.put("ALPHA", "a-zA-Z");
   }
 
 
@@ -116,7 +117,7 @@ public class Validity {
       if (validity instanceof Map) {
         val objValidityMap = (Map<String, Object>) validity;
         val validityVo = validityMap.get(objValidityMap.get("param-key"));
-        val type = VType.valueOf(validityVo.getType());
+        val type = Vtype.valueOf(validityVo.getType());
 
         // Required
         if (validityVo.getRequired() && data == null) {
@@ -127,7 +128,7 @@ public class Validity {
         validateCondition(validityVo, key, data, exList);
 
         // type validate
-        if (type != VType.OBJECT) {
+        if (type != Vtype.OBJECT) {
           exList.add(new WebParameterException(Luigi2Code.V0005, key));
         } else if (data != null) {
           // Object recursive call
@@ -155,7 +156,7 @@ public class Validity {
 
         if (validityVo.getArray()) {
           if (data instanceof List) {
-            if (VType.valueOf(validityVo.getType()) != VType.OBJECT) {
+            if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
               List<String> list = (List<String>) data;
               for (val map : list) {
                 validate(validityVo, serviceInstanceMap, exList, key, map);
@@ -194,7 +195,7 @@ public class Validity {
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       List<WebException> exList, String key, Object data) throws UnsupportedEncodingException {
-    val type = VType.valueOf(validityVo.getType());
+    val type = Vtype.valueOf(validityVo.getType());
 
     // Required
     if (validityVo.getRequired() && data == null) {
@@ -205,18 +206,17 @@ public class Validity {
       // type
       if (validateType(type, data) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0005, key));
-      }
-      // type is string
-      else if (VType.STRING.toString().equals(validityVo.getType())) {
-        String sData = (String) data;
+        // type is string
+      } else if (Vtype.STRING.toString().equals(validityVo.getType())) {
+        String strData = (String) data;
 
         // min max
         if (validityVo.getMin() != null || validityVo.getMax() != null) {
           int length = 0;
           if (validityVo.getIsBinaryLength()) {
-            length = sData.getBytes("UTF-8").length;
+            length = strData.getBytes("UTF-8").length;
           } else {
-            length = sData.length();
+            length = strData.length();
           }
           // min
           if (validityVo.getMin() != null && validityVo.getMin() > length) {
@@ -230,7 +230,7 @@ public class Validity {
 
         // formats
         if (validityVo.getFormats() != null) {
-          validateFormat(key, validityVo.getFormats(), sData, exList);
+          validateFormat(key, validityVo.getFormats(), strData, exList);
         }
       }
 
@@ -287,14 +287,15 @@ public class Validity {
    * @updatedAt : 2021-06-09
    * @param key
    * @param format
-   * @param sData
+   * @param strData
    * @param exList
    */
   @SuppressWarnings("unchecked")
-  private void validateFormat(String key, Object formats, String sData, List<WebException> exList) {
+  private void validateFormat(String key, Object formats, String strData,
+      List<WebException> exList) {
     if (formats instanceof String) {
       if (FormatType.valueOf((String) formats) != null) {
-        if (sData.matches(FORMAT_REGEX_MAP.get(formats)) == false) {
+        if (strData.matches(formatRegexMap.get(formats)) == false) {
           exList.add(new WebParameterException(Luigi2Code.V0004, key));
         }
       } else {
@@ -305,13 +306,13 @@ public class Validity {
       sb.append("^[");
       for (val format : (List<String>) formats) {
         if (FormatType.valueOf(format) != null) {
-          sb.append(FORMAT_REGEX_MAP.get(format));
+          sb.append(formatRegexMap.get(format));
         } else {
           exList.add(new WebParameterException(Luigi2Code.V0006, key, formats));
         }
       }
       sb.append("]+$");
-      if (sData.matches(sb.toString()) == false) {
+      if (strData.matches(sb.toString()) == false) {
         exList.add(new WebParameterException(Luigi2Code.V0004, key));
       }
     }
@@ -327,7 +328,7 @@ public class Validity {
    * @param data
    * @return
    */
-  private boolean validateType(VType type, Object data) {
+  private boolean validateType(Vtype type, Object data) {
     switch (type) {
       case STRING:
         return data instanceof String;

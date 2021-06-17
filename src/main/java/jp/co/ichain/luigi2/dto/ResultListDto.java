@@ -31,11 +31,11 @@ public class ResultListDto<T> extends ResultOneDto<T> {
   /**
    * ページ番号
    */
-  private Integer page = null;;
+  private Integer page = null;
   /**
    * ページ別表示数
    */
-  private Integer pageRowCount = null;;
+  private Integer pageRowCount = null;
 
   /**
    * リストを説明＆親情報

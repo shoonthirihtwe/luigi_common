@@ -55,7 +55,7 @@ public class TenantResources {
     this.tenantMap = new ConcurrentHashMap<Integer, TenantsVo>();
     this.tenantToDomainMap = new ConcurrentHashMap<String, TenantsVo>();
 
-    this.initialize(mapper.selectTenants(null));
+    this.initializeTenants(mapper.selectTenants(null));
   }
 
   /**
@@ -160,7 +160,7 @@ public class TenantResources {
       this.initialize();
     }
 
-    this.initialize(mapper.selectTenants(this.updatedAt));
+    this.initializeTenants(mapper.selectTenants(this.updatedAt));
   }
 
   /**
@@ -174,7 +174,7 @@ public class TenantResources {
    * @throws IllegalAccessException
    * @throws SecurityException
    */
-  private void initialize(List<TenantsVo> list)
+  private void initializeTenants(List<TenantsVo> list)
       throws InstantiationException, IllegalAccessException, SecurityException {
     if (this.tenantMap == null) {
       this.initialize();
