@@ -40,10 +40,15 @@
 		</where>
 		ORDER BY updated_at DESC
 	</select>
-	<select id="getBatchDate" resultType="Date" parameterType="hashmap">
+	<select id="getBatchDate" resultType="TenantsVo" parameterType="hashmap">
 		SELECT 
-			batch_date
+			id, batch_date
 		FROM
 			tenants
+		WHERE
+			id IN 
+			<foreach item="tenantId" collection="tenantIds" separator="," open="(" close=")">
+		        #{tenantId}
+		    </foreach>
 	</select>
 </mapper>

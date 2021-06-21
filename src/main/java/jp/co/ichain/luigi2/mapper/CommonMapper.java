@@ -32,5 +32,5 @@ public interface CommonMapper {
   Date selectLastUpdatedAt(@Param("table") String table);
 
   // バッチ日付を取得
-  Date getBatchDate();
+  List<TenantsVo> getBatchDate(Map<String, Object> param);
 }
