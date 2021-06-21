@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +35,13 @@ public class UnderWritingsVo extends ObjectVo {
 
   String rejectFlag;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date applicationDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date receivedDate;
 
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date effectiveDate;
 
   String sumingUpCheck = "0";
