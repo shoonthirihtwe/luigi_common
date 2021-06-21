@@ -30,4 +30,7 @@ public interface CommonMapper {
   List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);
 
   Date selectLastUpdatedAt(@Param("table") String table);
+
+  // バッチ日付を取得
+  Date getBatchDate();
 }
