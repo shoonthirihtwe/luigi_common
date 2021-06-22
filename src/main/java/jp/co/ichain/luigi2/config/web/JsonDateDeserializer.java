@@ -1,4 +1,4 @@
-package jp.co.ichain.luigi2.web.config;
+package jp.co.ichain.luigi2.config.web;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
