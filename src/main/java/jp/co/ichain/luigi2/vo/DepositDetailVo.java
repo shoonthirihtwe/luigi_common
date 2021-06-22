@@ -46,7 +46,10 @@ public class DepositDetailVo {
   @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumDueDate;
 
-  // TODO OD-00101 保険料充当不可理由取得
+  /**
+   * 保険料充当不可理由取得
+   */
+  String reasonDontApply;
 
   /**
    * 猶予期間満了日
