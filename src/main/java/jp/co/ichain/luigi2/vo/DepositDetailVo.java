@@ -1,10 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
 import lombok.AllArgsConstructor;
@@ -21,13 +18,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepositDetailVo {
-  /**
-   * 証券番号
-   */
+
   String contractNo;
 
   /**
@@ -35,9 +29,7 @@ public class DepositDetailVo {
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date dueDate;
-  /**
-   * 未納保険料
-   */
+
   Integer totalPremiumAmount;
 
   /**
@@ -46,7 +38,10 @@ public class DepositDetailVo {
   @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumDueDate;
 
-  // TODO OD-00101 保険料充当不可理由取得
+  /**
+   * 保険料充当不可理由取得
+   */
+  String reasonDontApply;
 
   /**
    * 猶予期間満了日
