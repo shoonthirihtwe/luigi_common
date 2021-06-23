@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
+import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
 
@@ -28,6 +29,8 @@ public interface CommonMapper {
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
   List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);
+  
+  List<CodeMasterVo> selectCodeMaster(@Param("updatedAt") Date updatedAt);
 
   Date selectLastUpdatedAt(@Param("table") String table);
 

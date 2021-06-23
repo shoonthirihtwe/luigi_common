@@ -24,6 +24,13 @@
 		<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
 		ORDER BY updated_at DESC
 	</select>
+	
+	<select id="selectCodeMaster" parameterType="map"
+		resultType="CodeMasterVo">
+		SELECT * from code_master 
+		<if test="updatedAt != null">WHERE CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
+		ORDER BY updated_at DESC
+	</select>
 
 	<select id="selectLastUpdatedAt" parameterType="map" resultType="java.util.Date">
 		SELECT
