@@ -25,7 +25,7 @@ import jp.co.ichain.luigi2.vo.GmoPaymentVo;
  * @updatedAt : 2021-06-22
  */
 @Service
-public class GmoPaymentService {
+public class PaymentService {
 
   @Value("${gmo.site-id}")
   private String siteId;
