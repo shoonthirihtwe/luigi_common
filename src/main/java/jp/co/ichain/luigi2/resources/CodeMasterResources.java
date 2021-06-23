@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -16,13 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.ichain.luigi2.exception.WebDataException;
-import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
-import jp.co.ichain.luigi2.util.StringUtils;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
-import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
 
 /**
@@ -87,7 +82,7 @@ public class CodeMasterResources {
           .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
           .orElseThrow(() -> new WebDataException(Luigi2Code.D0002));
       updatedAtMap.put(tenantId, maxValue);
-       
+
     }
   }
 
