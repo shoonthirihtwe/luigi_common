@@ -4,42 +4,77 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /***
- * NewBusinessDocumentsVo 
+ * NotificationsVo
  *
- * @author : [AOT] g.kim
- * @createdAt : 2021-05-31
- * @updatedAt : 2021-05-31
+ * @author : [VJP] n.huy.hoang
+ * @createdAt : 2021-06-23
+ * @updatedAt : 2021-06-23
  */
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewBusinessDocumentsVo extends ObjectVo {
+public class NotificationsVo extends ObjectVo {
 
-  @JsonIgnore
   Integer id;
 
-  @JsonIgnore
+  /**
+   * テナントID
+   */
   Integer tenantId;
 
-  @JsonIgnore
+  /**
+   * 通知予定日
+   */
+  Date notificationDate;
+  /**
+   * 証券番号
+   */
   String contractNo;
 
-  String documentTitle;
-  
-  String documentUrl;
-  
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date uploadDate;
+  /**
+   * テンプレートナンバー
+   */
+  String templateNunber;
+
+  /**
+   * 通知実施
+   */
+  String notificationImplementation;
+
+  //TODO comment ?
+  /**
+   * 通信欄コメント
+   */
+  String coment;
+
+  /**
+   * 通知対象者
+   */
+  String sendee;
+
+  /**
+   * 通知方法
+   */
+  String nitificationMethod;
+
+  /**
+   * 通知対象・Eメールアドレス
+   */
+  String email;
+
+  /**
+   * エラーフラグ
+   */
+  String errorFlag;
+
 
   @JsonIgnore
   Integer updateCount;
@@ -61,4 +96,5 @@ public class NewBusinessDocumentsVo extends ObjectVo {
 
   @JsonIgnore
   String deletedBy;
+
 }

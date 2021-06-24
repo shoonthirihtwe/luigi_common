@@ -53,5 +53,25 @@
     "name": "spring.luigi2.datasource.slave.platform",
     "type": "java.lang.String",
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.site-id",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.site-pass",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.shop-id",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.shop-pass",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
   }
 ]}

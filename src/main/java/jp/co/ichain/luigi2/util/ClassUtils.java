@@ -2,9 +2,18 @@ package jp.co.ichain.luigi2.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * クレス操作 Utils
+ * 
+ * @author : [AOT] s.paku
+ * @createdAt : 2021-06-22
+ * @updatedAt : 2021-06-22
+ */
 public class ClassUtils {
 
 
@@ -30,4 +39,33 @@ public class ClassUtils {
     return arrFields;
   }
 
+  /**
+   * MapにObjectのフィールド：値を入れる
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-22
+   * @updatedAt : 2021-06-22
+   * @param map
+   * @param object
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
+   * @throws ParseException
+   */
+  public static void setFieldValueAndConvert(Map<String, String> map, Object object)
+      throws IllegalArgumentException, IllegalAccessException, ParseException {
+    Class<?> cls = object.getClass();
+    Field[] fields = cls.getDeclaredFields();
+
+    Convert convert = new Convert();
+    for (Field field : fields) {
+      field.setAccessible(true);
+      int modifier = field.getModifiers();
+      if (Modifier.isFinal(modifier) || Modifier.isStatic(modifier)) {
+        continue;
+      }
+
+      String key = field.getName();
+      field.set(object, convert.toType(field.getType(), map.get(key)));
+    }
+  }
 }

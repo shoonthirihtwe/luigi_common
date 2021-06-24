@@ -10,30 +10,33 @@ import java.util.Date;
  * 文字列を特定のタイプにコンバート
  * 
  * @author : [AOT] s.paku
- * @createdAt : 2021-05-25
- * @updatedAt : 2021-05-25
+ * @createdAt : 2021-06-22
+ * @updatedAt : 2021-06-22
  */
 public class Convert {
 
   private SimpleDateFormat format;
   private String nullDateFormat;
 
+  public Convert() {
+    this.format = new SimpleDateFormat("yyyy-MM-dd");
+  }
+
   /**
    * @author : [AOT] s.park
-   * @createdAt : 2021-05-25
-   * @updatedAt : 2021-05-25
+   * @createdAt : 2021-06-22
+   * @updatedAt : 2021-06-22
    */
-  public Convert(String format, String nullDateFormat) {
+  public Convert(String format) {
     this.format = new SimpleDateFormat(format);
-    this.nullDateFormat = nullDateFormat;
   }
 
   /**
    * 文字列に変換
    *
    * @author : [AOT] s.park
-   * @createdAt : 2021-05-25
-   * @updatedAt : 2021-05-25
+   * @createdAt : 2021-06-22
+   * @updatedAt : 2021-06-22
    * @param value
    * @return
    */
@@ -54,8 +57,8 @@ public class Convert {
    * 文字列を該当するタイプに変換
    *
    * @author : [AOT] s.park
-   * @createdAt : 2021-05-25
-   * @updatedAt : 2021-05-25
+   * @createdAt : 2021-06-22
+   * @updatedAt : 2021-06-22
    * @param type
    * @param value
    * @return
@@ -156,8 +159,8 @@ public class Convert {
    * 基本系に変換
    *
    * @author : [AOT] s.paku
-   * @createdAt : 2021-05-25
-   * @updatedAt : 2021-05-25
+   * @createdAt : 2021-06-22
+   * @updatedAt : 2021-06-22
    * @param type
    * @return
    */

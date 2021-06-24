@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.web.config.JsonDateSerializer;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,7 +46,10 @@ public class DepositDetailVo {
   @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumDueDate;
 
-  // TODO OD-00101 保険料充当不可理由取得
+  /**
+   * 保険料充当不可理由取得
+   */
+  String reasonDontApply;
 
   /**
    * 猶予期間満了日
