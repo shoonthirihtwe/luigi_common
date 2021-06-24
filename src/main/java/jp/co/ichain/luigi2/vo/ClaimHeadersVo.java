@@ -423,17 +423,17 @@ public class ClaimHeadersVo extends ObjectVo {
    */
   @JsonIgnore
   String deletedBy;
-  
+
   /**
    * 商品名
    */
   String salesPlanName;
-  
+
   /**
    * 請求者氏名
    */
   String claimantNameKnj;
-  
+
   /**
    * 請求者氏名（カナ）
    */
