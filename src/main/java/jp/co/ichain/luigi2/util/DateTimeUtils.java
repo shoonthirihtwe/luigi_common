@@ -5,17 +5,16 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * DateTimeUtil
+ * DateTimeUtils
  * 
  * @author : [VJP] n.h.hoang
  * @createdAt : 2021-06-22
  * @updatedAt : 2021-06-22
  */
-public class DateTimeUtil {
-  @Autowired
+public class DateTimeUtils {
+
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
   /**
