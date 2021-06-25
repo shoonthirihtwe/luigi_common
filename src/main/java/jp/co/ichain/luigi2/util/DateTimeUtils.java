@@ -35,7 +35,7 @@ public class DateTimeUtils {
    * @return
    * @throws ParseException
    */
-  public static String addDateToYearMOnth(String dateString, int addMonth) {
+  public static String addDateToYearMonth(String dateString, int addMonth) {
     dateString += "01";
     LocalDate localDate = toDate(dateString);
     localDate = localDate.plusMonths(3);
