@@ -3,6 +3,7 @@ package jp.co.ichain.luigi2.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -27,6 +28,10 @@ public class DateTimeUtils {
     return date == null ? null : formatter.format(date).substring(0, 6);
   }
 
+  public static String convertDateToDay(Date date) {
+    return date == null ? null : formatter.format(date).substring(6, 8);
+  }
+
   /**
    * add month to Date(Date with format yyyyMM)
    * 
@@ -35,11 +40,21 @@ public class DateTimeUtils {
    * @return
    * @throws ParseException
    */
-  public static String addDateToYearMonth(String dateString, int addMonth) {
+  public static String addMonthToYearMonth(String dateString, int addMonth) {
     dateString += "01";
     LocalDate localDate = toDate(dateString);
-    localDate = localDate.plusMonths(3);
+    localDate = localDate.plusMonths(addMonth);
     return toString(localDate).substring(0, 6);
+  }
+
+  public static Date addDayToYearMonth(String yyyyMm, Integer dd) {
+    yyyyMm += "01";
+    LocalDate currentDate = toDate(yyyyMm);
+    LocalDate nextDate = currentDate.plusDays(dd - 1);
+    if (currentDate.getMonthValue() != nextDate.getMonthValue()) {
+      return convertLocalDateToDate(nextDate.plusDays(1 - nextDate.getDayOfMonth()));
+    }
+    return convertLocalDateToDate(nextDate);
   }
 
   /**
@@ -51,6 +66,14 @@ public class DateTimeUtils {
   public static LocalDate toDate(String date) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     return LocalDate.parse(date, formatter);
+  }
+
+  public static Date convertLocalDateToDate(LocalDate localdate) {
+    // default time zone
+    ZoneId defaultZoneId = ZoneId.systemDefault();
+
+    // local date + atStartOfDay() + default time zone + toInstant() = Date
+    return Date.from(localdate.atStartOfDay(defaultZoneId).toInstant());
   }
 
   /**
