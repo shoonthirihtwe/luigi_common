@@ -64,4 +64,41 @@ public class PaymentService {
     return result;
   }
 
+  /**
+   * 決済取り消し
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-28
+   * @updatedAt : 2021-06-28
+   * @param contractNo
+   * @param accessId
+   * @param accessPassword
+   * @param suspenceDate
+   * @return
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
+   * @throws GmoPaymentException
+   * @throws IOException
+   * @throws ParseException
+   */
+  PaymentVo cancel(String contractNo, String accessId, String accessPassword, Date suspenceDate)
+      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
+      ParseException {
+
+    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(contractNo);
+
+    if (factoringCompanyCode == null) {
+      throw new WebDataException(Luigi2Code.D0001);
+    }
+
+    PaymentVo result = null;
+    switch (factoringCompanyCode) {
+      case "CARD01":
+        result = gmoPaymentService.cancel(accessId, accessPassword, suspenceDate);
+        break;
+    }
+
+    return result;
+  }
+
 }
