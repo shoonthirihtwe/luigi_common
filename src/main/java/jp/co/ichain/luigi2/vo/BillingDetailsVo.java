@@ -103,4 +103,9 @@ public class BillingDetailsVo extends ObjectVo {
    * カード番号(トークン)
    */
   String tokenNo;
+  
+  /**
+   * カード登録顧客番号 ※証券番号または親証券番号
+   */
+  String cardCustNumber;
 }

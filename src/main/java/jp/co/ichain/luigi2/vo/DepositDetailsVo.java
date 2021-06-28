@@ -120,6 +120,16 @@ public class DepositDetailsVo extends ObjectVo {
   String paymentResultCode;
   
   /**
+   * 取引ID
+   */
+  String accessId;
+
+  /**
+   * 取引パスワード
+   */
+  String accessPass;
+  
+  /**
    * 備考
    */
   String comment;
