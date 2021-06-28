@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * GMO Error Vo
+ * Error Vo
  * 
  * @author : [AOT] s.paku
  * @createdAt : 2021-06-22
@@ -19,7 +19,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GmoPaymentErrorVo {
+public class PaymentErrorVo {
 
   String errCode;
 

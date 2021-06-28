@@ -77,6 +77,6 @@ public class GmoPaymentVo extends ObjectVo {
 
   Boolean gmoMemberRegist;
 
-  Map<String, GmoPaymentErrorVo> errorMap = null;
+  Map<String, PaymentErrorVo> errorMap = null;
 }
 // CHECKSTYLE:ON: checkstyle:AbbreviationAsWordInName
