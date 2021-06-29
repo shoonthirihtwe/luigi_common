@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
-import jp.co.ichain.luigi2.vo.GmoPaymentErrorVo;
+import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
 /**
@@ -145,11 +145,11 @@ public class GmoPaymentApiUtils {
 
         String errCode = responseParamMap.get("errCode");
         if (StringUtils.isEmpty(errCode) == false) {
-          Map<String, GmoPaymentErrorVo> errorMap = new HashMap<String, GmoPaymentErrorVo>();
+          Map<String, PaymentErrorVo> errorMap = new HashMap<String, PaymentErrorVo>();
           String[] errorCodes = errCode.split("\\|");
           String[] errorInfos = responseParamMap.get("errInfo").split("\\|");
           for (int i = 0; i < errorCodes.length; i++) {
-            errorMap.put(errorCodes[i], new GmoPaymentErrorVo(errorCodes[i], errorInfos[i]));
+            errorMap.put(errorCodes[i], new PaymentErrorVo(errorCodes[i], errorInfos[i]));
           }
           result.setErrorMap(errorMap);
         }
