@@ -3,10 +3,8 @@ package jp.co.ichain.luigi2.advice;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import lombok.val;
@@ -28,6 +26,10 @@ public class LoggingAspect {
   @Pointcut("execution(* jp.co.ichain.luigi2..*.*(..))")
   private void publicLog() {}
 
+  /** adviceポイントカット. システムエラーログ出力 */
+  @Pointcut("execution(* jp.co.ichain.luigi2.advice..*.*(..))")
+  private void adviceLog() {}
+
   /** Controllerアノテーションのポイントカット. */
   @Pointcut("@within(org.springframework.stereotype.Controller)")
   private void controllerLog() {}
@@ -41,39 +43,6 @@ public class LoggingAspect {
   private void serviceLog() {}
 
   /**
-   * メソッド実行前にログ出力
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-05-27
-   * @updatedAt : 2021-05-27
-   * @param jp
-   */
-  @Before("publicLog() && (restControllerLog() || controllerLog() || serviceLog())")
-  public void doBefore(JoinPoint jp) {
-    val sig = jp.getSignature();
-    log.info("【操作開始】クラス名：" + jp.getTarget().getClass().toString() + "." + "メソッド："
-        + sig.getDeclaringTypeName());
-  }
-
-  /**
-   * メソッド実行後にログ出力
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-05-27
-   * @updatedAt : 2021-05-27
-   * @param jp
-   * @param returnValue
-   */
-  @AfterReturning(
-      pointcut = "publicLog() && (restControllerLog() || controllerLog() || serviceLog())",
-      returning = "returnValue")
-  public void doAfterReturning(JoinPoint jp, Object returnValue) {
-    val sig = jp.getSignature();
-    log.info("【操作終了】クラス名：" + jp.getTarget().getClass().toString() + "." + "メソッド："
-        + sig.getDeclaringTypeName() + "." + sig.getName() + "#戻り値：" + returnValue);
-  }
-
-  /**
    * エラーが発生した場合、ログ出力
    * 
    * @author : [AOT] s.paku
@@ -83,7 +52,7 @@ public class LoggingAspect {
    * @param ex
    */
   @AfterThrowing(
-      pointcut = "publicLog() && (restControllerLog() || controllerLog() || serviceLog())",
+      pointcut = "adviceLog() && (restControllerLog() || controllerLog() || serviceLog())",
       throwing = "ex")
   public void doAfterThrowing(JoinPoint jp, Exception ex) {
     val sig = jp.getSignature();

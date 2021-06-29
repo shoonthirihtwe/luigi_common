@@ -58,4 +58,15 @@
 		        #{tenantId}
 		    </foreach>
 	</select>
+	<select id="selectFactoringCompanyCode" resultType="string" parameterType="hashmap">
+		SELECT factoring_company_code
+		FROM factoring_companies
+		WHERE deleted_at is null AND 
+			factoring_company_start_date <![CDATA[<= now() AND now() <= factoring_company_end_date]]> AND
+			factoring_company_code = (
+			SELECT 
+			factoring_company_code
+			FROM policy_holders_pay_method
+			WHERE tenant_id=1 AND contract_no=#{contractNo} AND start_date <![CDATA[<= now() AND now() <= end_date]]> AND status = 'A')
+	</select>
 </mapper>

@@ -1,7 +1,7 @@
 package jp.co.ichain.luigi2.exception;
 
 import java.util.Map;
-import jp.co.ichain.luigi2.vo.GmoPaymentErrorVo;
+import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
 /**
@@ -41,10 +41,10 @@ public class GmoPaymentException extends Exception {
   @Override
   public String getMessage() {
     StringBuffer result = new StringBuffer();
-    Map<String, GmoPaymentErrorVo> map = gmoPaymentVo.getErrorMap();
+    Map<String, PaymentErrorVo> map = gmoPaymentVo.getErrorMap();
     if (gmoPaymentVo != null && map != null) {
       for (String key : map.keySet()) {
-        GmoPaymentErrorVo errorVo = map.get(key);
+        PaymentErrorVo errorVo = map.get(key);
         result.append(errorVo.getErrCode()).append(":").append(errorVo.getErrInfo()).append(", ");
       }
     } else {

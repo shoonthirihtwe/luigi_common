@@ -29,11 +29,14 @@ public interface CommonMapper {
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
   List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);
-  
+
   List<CodeMasterVo> selectCodeMaster(@Param("updatedAt") Date updatedAt);
 
   Date selectLastUpdatedAt(@Param("table") String table);
 
   // バッチ日付を取得
   List<TenantsVo> getBatchDate(@Param("tenantIds") List<Integer> tenantIds);
+
+  // 決済方法取得
+  String selectFactoringCompanyCode(@Param("contractNo") String contractNo);
 }
