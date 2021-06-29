@@ -51,7 +51,7 @@ public class PaymentService {
     String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(contractNo);
 
     if (factoringCompanyCode == null) {
-      throw new WebDataException(Luigi2Code.D0001);
+      throw new WebDataException(Luigi2Code.D0002, "contractNo");
     }
 
     PaymentVo result = null;
@@ -59,6 +59,8 @@ public class PaymentService {
       case "CARD01":
         result = gmoPaymentService.pay(contractNo, cardCustNumber, dueDate, premiumDueAmount);
         break;
+      default:
+        throw new WebDataException(Luigi2Code.D0001, "factoringCompanyCode");
     }
 
     return result;
@@ -96,6 +98,8 @@ public class PaymentService {
       case "CARD01":
         result = gmoPaymentService.cancel(accessId, accessPassword, suspenceDate);
         break;
+      default:
+        throw new WebDataException(Luigi2Code.D0001, "factoringCompanyCode");
     }
 
     return result;
