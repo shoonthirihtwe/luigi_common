@@ -8,7 +8,7 @@
 	</appender>
 
 	<logger name="jdbc" level="OFF"/>
-	<logger name="jdbc.sqlonly" level="OFF"/>
+	<logger name="jdbc.sqlonly" level="debug"/>
 	<logger name="jdbc.sqltiming" level="OFF"/>
 	<logger name="jdbc.audit" level="OFF"/>
 	<logger name="jdbc.resultset" level="OFF"/>
