@@ -55,6 +55,11 @@ public class DepositDetailsVo extends ObjectVo {
   String contractNo;
   
   /**
+   * 証券番号枝番
+   */
+  String contractBranchNo;
+  
+  /**
    * 申込番号
    */
   String applicationNo;
