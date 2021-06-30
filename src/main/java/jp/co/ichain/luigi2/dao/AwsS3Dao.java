@@ -1,7 +1,7 @@
 package jp.co.ichain.luigi2.dao;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.amazonaws.AmazonServiceException;
@@ -12,16 +12,21 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import jp.co.ichain.luigi2.exception.WebAwsException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
 import lombok.val;
-import lombok.extern.slf4j.Slf4j;
 
-
-@Slf4j
+/**
+ * AWS S3 dao
+ * 
+ * @author : [AOT] s.paku
+ * @createdAt : 2021-06-30
+ * @updatedAt : 2021-06-30
+ */
 @Service
 public class AwsS3Dao {
 
@@ -40,11 +45,11 @@ public class AwsS3Dao {
    * @return
    * @throws IOException
    */
-  public PutObjectResult upload(String directoryName, String id, File file) throws IOException {
+  public PutObjectResult upload(String directoryName, String id, InputStream inputStream,
+      ObjectMetadata meta) throws IOException {
     val key = directoryName + id;
-    logBucketAndKey(key);
 
-    return s3Client.putObject(bucketName, key, file);
+    return s3Client.putObject(bucketName, key, inputStream, meta);
   }
 
   /**
@@ -95,9 +100,5 @@ public class AwsS3Dao {
     this.s3Client = AmazonS3ClientBuilder.standard().withRegion(region)
         .withCredentials(credentialsProvider).build();
     this.bucketName = bucket;
-  }
-
-  private void logBucketAndKey(String key) {
-    log.debug(String.format("\tbucketName: %s, key: %s", bucketName, key));
   }
 }

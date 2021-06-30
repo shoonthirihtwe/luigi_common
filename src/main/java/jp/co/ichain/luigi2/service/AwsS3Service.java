@@ -1,16 +1,20 @@
 package jp.co.ichain.luigi2.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
+import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
 
 /**
@@ -48,8 +52,32 @@ public class AwsS3Service {
    * @param file
    * @throws IOException
    */
-  public void upload(Documents documents, String id, File file) throws IOException {
-    awsS3Dao.upload(documents.name, id, file);
+  public void upload(Documents documents, String id, MultipartFile file) throws IOException {
+
+    InputStream inputStream = file.getInputStream();
+    ObjectMetadata meta = new ObjectMetadata();
+    meta.setContentLength(inputStream.available());
+    meta.setContentType(new Tika().detect(inputStream));
+
+    awsS3Dao.upload(documents.name, id, inputStream, meta);
+  }
+
+  /**
+   * S3にファイルをアップロードする
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-30
+   * @updatedAt : 2021-06-30
+   * @param documents
+   * @param id
+   * @param fileList
+   * @throws IOException
+   */
+  public void upload(Documents documents, String id, List<MultipartFile> fileList)
+      throws IOException {
+    for (val file : CollectionUtils.safe(fileList)) {
+      this.upload(documents, id, file);
+    }
   }
 
   /**
@@ -69,12 +97,9 @@ public class AwsS3Service {
       throws AmazonServiceException, SdkClientException, Exception {
     val s3stream = awsS3Dao.download(documents, id);
 
-    String mimeType = new Tika().detect(s3stream);
-    if (mimeType == null) {
-      mimeType = "application/octet-stream";
-    }
-
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-        String.format("attachment; filename=\"profile.%s\"", mimeType)).body(s3stream);
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION,
+            String.format("attachment; filename=\"profile.%s\"", new Tika().detect(s3stream)))
+        .body(s3stream);
   }
 }
