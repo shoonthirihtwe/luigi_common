@@ -34,10 +34,21 @@ public class DepositVo extends ObjectVo {
   Integer tenantId;
 
   /**
+   * DepositDetails ID
+   */
+  Integer idDepositDetails;
+
+  /**
    * 証券番号
    */
   String contractNo;
 
+  /**
+   * batch date
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date batchDate;
+  
   /**
    * 未納分保険料月
    */
@@ -48,12 +59,12 @@ public class DepositVo extends ObjectVo {
    * 引き去り結果コード
    */
   String paymentResultCode;
-  
+
   /**
    * 合計保険料金額
    */
   Integer totalPremiumAmount;
-  
+
   /**
    * 入力日
    */
