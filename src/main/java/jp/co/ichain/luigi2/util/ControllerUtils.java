@@ -138,6 +138,15 @@ public class ControllerUtils {
         paramMap.put("tenantId", tenantVo.getId());
       }
     }
+
+    if (paramMap.get("page") != null) {
+      Integer rowCount = (Integer) paramMap.get("rowCount");
+      if (rowCount == null) {
+        rowCount = 50;
+        paramMap.put("rowCount", rowCount);
+      }
+      paramMap.put("page", ((int) paramMap.get("page") - 1) * rowCount);
+    }
     commonService.validate(paramMap, endpoint);
   }
 }
