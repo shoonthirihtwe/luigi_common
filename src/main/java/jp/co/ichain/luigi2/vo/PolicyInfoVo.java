@@ -99,6 +99,10 @@ public class PolicyInfoVo extends ObjectVo {
   String repAddrKnj1;
 
   String repAddrKnj2;
+  
+  String repAddrTel1;
+  
+  String repAddrTel2;
 
   String staffNameKanaSei;
 
