@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,31 +26,47 @@ import lombok.Setter;
 public class PremiumHeadersVo extends ObjectVo {
 
   Integer id;
-  
+
   Integer tenantId;
-  
+
   String contractNo;
-  
+
   String contractBranchNo;
-  
+
   Date premiumDueDate;
-  
+
   String firstPremium;
-  
+
   Integer premiumSequenceNo;
-  
+
   String premiumBillingPeriod;
-  
+
   String premiumNo;
-  
+
   Date effectiveDate;
-  
+
   Integer totalGrossPremium;
-  
+
+  /**
+   * 保険料払込回数
+   */
+  Integer frequency;
+
+  /**
+   * 返金日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date refundeDate;
+  /**
+   * 取消日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date canceledDate;
+
   Integer waiverAmout;
-  
+
   Integer depositAmount;
-  
+
   String premiumStatus;
 
   @JsonIgnore
