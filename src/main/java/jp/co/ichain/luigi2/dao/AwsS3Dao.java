@@ -2,6 +2,14 @@ package jp.co.ichain.luigi2.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.amazonaws.AmazonServiceException;
@@ -18,7 +26,6 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import jp.co.ichain.luigi2.exception.WebAwsException;
 import jp.co.ichain.luigi2.resources.Luigi2Code;
-import lombok.val;
 
 /**
  * AWS S3 dao
@@ -44,34 +51,39 @@ public class AwsS3Dao {
    * @param directoryName
    * @return
    * @throws IOException
+   * @throws DecoderException
+   * @throws InvalidKeySpecException
+   * @throws NoSuchPaddingException
+   * @throws InvalidAlgorithmParameterException
+   * @throws BadPaddingException
+   * @throws IllegalBlockSizeException
+   * @throws NoSuchAlgorithmException
+   * @throws InvalidKeyException
    */
-  public PutObjectResult upload(String directoryName, String id, InputStream inputStream,
-      ObjectMetadata meta) throws IOException {
-    val key = directoryName + id;
-
-    return s3Client.putObject(bucketName, key, inputStream, meta);
+  public PutObjectResult upload(String url, InputStream inputStream, ObjectMetadata meta)
+      throws IOException {
+    return s3Client.putObject(bucketName, url, inputStream, meta);
   }
 
   /**
    * S3にからファイルダウンロード
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-30
-   * @updatedAt : 2021-06-30
+   * @createdAt : 2021-07-01
+   * @updatedAt : 2021-07-01
    * @param directoryName
-   * @param id
+   * @param fileName
    * @return
    * @throws AmazonServiceException
    * @throws SdkClientException
-   * @throws Exception
    */
-  public S3ObjectInputStream download(String directoryName, String id)
-      throws AmazonServiceException, SdkClientException, Exception {
+  public S3ObjectInputStream download(String url)
+      throws AmazonServiceException, SdkClientException {
     S3Object s3Object = null;
     try {
-      s3Object = s3Client.getObject(new GetObjectRequest(bucketName, directoryName + id));
+      s3Object = s3Client.getObject(new GetObjectRequest(bucketName, url));
     } catch (AmazonS3Exception e) {
-      throw new WebAwsException(Luigi2Code.D0002, id);
+      throw new WebAwsException(Luigi2Code.D0002, url);
     }
 
     return s3Object.getObjectContent();
@@ -92,7 +104,6 @@ public class AwsS3Dao {
       throws AmazonServiceException, SdkClientException {
     this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, directoryName + key));
   }
-
 
   AwsS3Dao(@Value("${aws.s3.region}") String region, @Value("${aws.s3.bucket}") String bucket,
       AWSCredentialsProvider credentialsProvider) {

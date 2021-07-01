@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.DocumentsMapper">
+	<insert id="insertDocuments" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO ${table}
+			(
+			id,
+			tenant_id,
+			${key},
+			<if test ="table == 'maintenance_documents'">sequence_no,</if>
+			document_title,
+			document_url,
+			upload_date,
+			created_by
+			)
+		SELECT
+			IFNULL(max(id),0)+1,
+			#{tenantId},
+			#{ownerCode},
+			<if test ="table == 'maintenance_documents'">IFNULL(max(sequence_no),0)+1,</if>
+			#{documentTitle},
+			concat(#{document},(IFNULL(max(id),0)+1),'_', #{fileName}),
+			now(),
+			#{updatedBy}
+		FROM ${table}
+		WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
+	</insert>
+</mapper>

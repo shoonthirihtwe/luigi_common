@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,5 +68,35 @@ public class ClassUtils {
       String key = field.getName();
       field.set(object, convert.toType(field.getType(), map.get(key)));
     }
+  }
+
+  /**
+   * VoをMapに変換
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-01
+   * @updatedAt : 2021-07-01
+   * @param object
+   * @return
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
+   */
+  public static Map<String, Object> getUseFullFieldValue(Object object)
+      throws IllegalArgumentException, IllegalAccessException {
+    Map<String, Object> map = new HashMap<String, Object>();
+    Class<?> cls = object.getClass();
+    Field[] fields = cls.getDeclaredFields();
+
+    for (Field field : fields) {
+      field.setAccessible(true);
+      int modifier = field.getModifiers();
+      if (Modifier.isFinal(modifier) || Modifier.isStatic(modifier))
+        continue;
+
+      String key = field.getName();
+      map.put(key, field.get(object));
+    }
+
+    return map;
   }
 }

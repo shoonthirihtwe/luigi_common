@@ -28,7 +28,7 @@ import lombok.val;
  */
 public class EncryptUtils {
 
-  static final String DEFAULT_IV = "be1c0ce9c2b373264d01ad3093952h71";
+  static final String DEFAULT_IV = "be1a0ce9c2b375264d06ad3090952f51";
   static final int DEFAULT_ITERATION_COUNT = 1000;
   static final int DEFAULT_KEY_SIZE = 128;
 

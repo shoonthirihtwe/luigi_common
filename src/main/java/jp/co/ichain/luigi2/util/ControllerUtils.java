@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.util;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartRequest;
 import jp.co.ichain.luigi2.dto.ResultWebDto;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
@@ -70,6 +73,19 @@ public class ControllerUtils {
   }
 
   /**
+   * Throwing Supplier
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-05-31
+   * @updatedAt : 2021-05-31
+   * @param <T>
+   */
+  @FunctionalInterface
+  public interface ThrowingSupplierInParameterMap<T> {
+    T get(Map<String, Object> map) throws Exception;
+  }
+
+  /**
    * Controller 設定など
    * 
    * @author : [AOT] s.paku
@@ -82,6 +98,7 @@ public class ControllerUtils {
       throws Exception {
     return (request, endpoint, paramMap, supplier) -> {
       this.controllerFunction(request, endpoint, paramMap);
+      commonService.validate(paramMap, endpoint);
       val result = supplier.get();
 
       result.setCode("OK");
@@ -90,7 +107,51 @@ public class ControllerUtils {
   }
 
   /**
-   * Controller 設定など
+   * File upload時
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-05-31
+   * @updatedAt : 2021-05-31
+   * @return
+   * @throws Exception
+   */
+  public ControllerFunction<HttpServletRequest, String, MultipartRequest, ThrowingSupplierInParameterMap<ResultWebDto>, ? extends ResultWebDto> makeFileControllerHandler()
+      throws Exception {
+    return (request, endpoint, mulr, supplier) -> {
+      val paramMap = new HashMap<String, Object>();
+      val fileMap = mulr.getMultiFileMap();
+      val requestMap = request.getParameterMap();
+
+      // File
+      for (val key : CollectionUtils.safe(fileMap.keySet())) {
+        val list = fileMap.get(key);
+        if (key.contains("List")) {
+          paramMap.put(key, list);
+        } else if (list != null && list.size() > 0) {
+          paramMap.put(key, list.get(0));
+        }
+      }
+
+      // Data
+      for (String key : CollectionUtils.safe(requestMap.keySet())) {
+        val list = requestMap.get(key);
+        if (key.contains("List")) {
+          paramMap.put(key, Arrays.asList(list));
+        } else if (list != null && list.length > 0) {
+          paramMap.put(key, list[0]);
+        }
+      }
+      this.controllerFunction(request, endpoint, paramMap);
+      commonService.validate(paramMap, endpoint);
+      val result = supplier.get(paramMap);
+
+      result.setCode("OK");
+      return result;
+    };
+  }
+
+  /**
+   * 返還タイプがResponseEntity場合の処理
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-05-31
@@ -147,6 +208,5 @@ public class ControllerUtils {
       }
       paramMap.put("page", ((int) paramMap.get("page") - 1) * rowCount);
     }
-    commonService.validate(paramMap, endpoint);
   }
 }
