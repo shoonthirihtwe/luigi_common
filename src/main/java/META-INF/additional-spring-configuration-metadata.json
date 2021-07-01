@@ -93,5 +93,10 @@
     "name": "aws.s3.bucket",
     "type": "java.lang.String",
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.s3.salt",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
   }
 ]}

@@ -8,15 +8,15 @@ import java.util.Map;
  * 
  * @author : [AOT] s.paku
  * @createdAt : 2021-05-26
- * @updatedAt : 2021-05-26
+ * @updatedAt : 2021-07-01
  */
 public class Luigi2TableInfo {
   public enum TableInfo {
-    Contracts, Customers
+    Contracts, Customers, NewBusinessDocuments, ClaimDocuments, MaintenanceDocuments
   }
 
   private static final Map<TableInfo, Map<String, Object>> TABLE_INFO_MAP;
-  
+
   static {
     TABLE_INFO_MAP = new HashMap<TableInfo, Map<String, Object>>();
     // contracts
@@ -32,6 +32,24 @@ public class Luigi2TableInfo {
     map.put("key", "customer_id");
     map.put("size", 12);
     TABLE_INFO_MAP.put(TableInfo.Customers, map);
+
+    // new_business_documents
+    map = new HashMap<String, Object>();
+    map.put("table", "new_business_documents");
+    map.put("key", "contract_no");
+    TABLE_INFO_MAP.put(TableInfo.NewBusinessDocuments, map);
+
+    // claim_documents
+    map = new HashMap<String, Object>();
+    map.put("table", "claim_documents");
+    map.put("key", "claim_trxs_id");
+    TABLE_INFO_MAP.put(TableInfo.ClaimDocuments, map);
+
+    // maintenance_documents
+    map = new HashMap<String, Object>();
+    map.put("table", "maintenance_documents");
+    map.put("key", "request_no");
+    TABLE_INFO_MAP.put(TableInfo.MaintenanceDocuments, map);
 
   }
 

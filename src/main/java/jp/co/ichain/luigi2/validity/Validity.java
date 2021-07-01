@@ -54,7 +54,7 @@ public class Validity {
   }
 
   private final Map<String, String> formatRegexMap;
-  
+
   {
     formatRegexMap = new HashMap<String, String>();
     formatRegexMap.put("EMAIL",
@@ -168,11 +168,12 @@ public class Validity {
               }
             }
 
-          } else {
+          } else if (data != null) {
             exList.add(new WebParameterException(Luigi2Code.V0005, key));
           }
         } else {
-          validate(validityVo, serviceInstanceMap, exList, key, data);
+          val vdata = validate(validityVo, serviceInstanceMap, exList, key, data);
+          paramMap.put(key, vdata);
         }
       }
     }
@@ -193,7 +194,7 @@ public class Validity {
    * @param data
    * @throws UnsupportedEncodingException
    */
-  private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
+  private Object validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       List<WebException> exList, String key, Object data) throws UnsupportedEncodingException {
     val type = Vtype.valueOf(validityVo.getType());
 
@@ -204,7 +205,8 @@ public class Validity {
 
     if (data != null) {
       // type
-      if (validateType(type, data) == false) {
+      data = validateType(type, data);
+      if (data == null) {
         exList.add(new WebParameterException(Luigi2Code.V0005, key));
         // type is string
       } else if (Vtype.STRING.toString().equals(validityVo.getType())) {
@@ -243,6 +245,7 @@ public class Validity {
       }
     }
 
+    return data;
   }
 
   /**
@@ -328,20 +331,50 @@ public class Validity {
    * @param data
    * @return
    */
-  private boolean validateType(Vtype type, Object data) {
+  private Object validateType(Vtype type, Object data) {
     switch (type) {
       case STRING:
-        return data instanceof String;
+        if (data instanceof String) {
+          return data;
+        }
+        return null;
       case BOOL:
-        return data instanceof Boolean;
+        if (data instanceof Boolean) {
+          return data;
+        } else if (data instanceof String) {
+          try {
+            return Boolean.valueOf((String) data);
+          } catch (Exception e) {
+            return null;
+          }
+        }
+        return null;
       case DATE:
       case INT:
-        return data instanceof Integer || data instanceof Long || data instanceof Short
-            || data instanceof Byte || data instanceof BigInteger;
+        if (data instanceof Integer || data instanceof Long || data instanceof Short
+            || data instanceof Byte || data instanceof BigInteger) {
+          return data;
+        } else if (data instanceof String) {
+          try {
+            return Long.valueOf((String) data);
+          } catch (Exception e) {
+            return null;
+          }
+        }
+        return null;
       case FRACTION:
-        return data instanceof Double || data instanceof Float || data instanceof BigDecimal;
+        if (data instanceof Double || data instanceof Float || data instanceof BigDecimal) {
+          return data;
+        } else if (data instanceof String) {
+          try {
+            return Long.valueOf((String) data);
+          } catch (Exception e) {
+            return null;
+          }
+        }
+        return null;
       default:
-        return true;
+        return data;
     }
   }
 
