@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.config.JsonDateSerializer;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import jp.co.ichain.luigi2.config.web.JsonTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
