@@ -83,7 +83,7 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo cancel(String contractNo, String accessId, String accessPassword, Date suspenceDate)
+  public PaymentVo cancel(String contractNo, String accessId, String accessPassword, Date suspenceDate)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
 

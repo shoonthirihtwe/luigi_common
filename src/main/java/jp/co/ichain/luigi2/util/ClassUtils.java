@@ -90,8 +90,9 @@ public class ClassUtils {
     for (Field field : fields) {
       field.setAccessible(true);
       int modifier = field.getModifiers();
-      if (Modifier.isFinal(modifier) || Modifier.isStatic(modifier))
+      if (Modifier.isFinal(modifier) || Modifier.isStatic(modifier)) {
         continue;
+      }
 
       String key = field.getName();
       map.put(key, field.get(object));
