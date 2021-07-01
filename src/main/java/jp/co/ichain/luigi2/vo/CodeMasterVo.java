@@ -22,13 +22,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CodeMasterVo extends ObjectVo {
-
+  
+  @JsonIgnore
   Integer id;
   
+  @JsonIgnore
   Integer tenantId;
   
+  @JsonIgnore
   String field;
   
+  @JsonIgnore
   String tbl;
   
   String codeValue;

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebDataException;
+import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import lombok.val;
@@ -31,7 +32,7 @@ import lombok.val;
 @Service
 public class CodeMasterResources {
 
-  private Map<Integer, Map<String, Map<String, List<CodeMasterVo>>>> map = null;
+  private Map<Integer, Map<String, List<CodeMasterVo>>> map = null;
   private Map<Integer, Date> updatedAtMap = null;
 
   @Autowired
@@ -49,7 +50,7 @@ public class CodeMasterResources {
   @Lock(LockType.WRITE)
   @PostConstruct
   public void initialize() throws JsonMappingException, JsonProcessingException {
-    this.map = new HashMap<Integer, Map<String, Map<String, List<CodeMasterVo>>>>();
+    this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
     this.updatedAtMap = new HashMap<Integer, Date>();
 
     val list = commonMapper.selectCodeMaster(null);
@@ -60,22 +61,6 @@ public class CodeMasterResources {
     for (val tenantId : tenantGroupMap.keySet()) {
       val listByTenant = tenantGroupMap.get(tenantId);
 
-      Map<String, List<CodeMasterVo>> tableGroupMap =
-          listByTenant.stream().collect(Collectors.groupingBy(vo -> vo.getTbl()));
-
-      val fieldMap = new HashMap<String, Map<String, List<CodeMasterVo>>>();
-      for (val tbl : tableGroupMap.keySet()) {
-        val listByTable = tableGroupMap.get(tbl);
-
-
-        Map<String, List<CodeMasterVo>> fieldGroupMap =
-            listByTable.stream().collect(Collectors.groupingBy(vo -> vo.getField()));
-
-        fieldMap.put(tbl, fieldGroupMap);
-      }
-      this.map.put(tenantId, fieldMap);
-
-
       // last updatedAt
       Date maxValue = listByTenant.stream()
           .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
@@ -83,6 +68,10 @@ public class CodeMasterResources {
           .orElseThrow(() -> new WebDataException(Luigi2Code.D0002));
       updatedAtMap.put(tenantId, maxValue);
 
+      Map<String, List<CodeMasterVo>> tableGroupMap =
+          listByTenant.stream().collect(Collectors.groupingBy(vo -> vo.getTbl()));
+
+      this.map.put(tenantId, tableGroupMap);
     }
   }
 
@@ -97,13 +86,13 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public List<CodeMasterVo> get(Integer tenantId, String table, String field)
+  public List<CodeMasterVo> get(Integer tenantId, String key)
       throws JsonMappingException, JsonProcessingException {
     if (this.map == null) {
       this.initialize();
     }
 
-    return this.map.get(tenantId).get(table).get(field);
+    return this.map.get(tenantId).get(key);
   }
 
   /**
@@ -117,21 +106,13 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public String getCodeValue(Integer tenantId, String table, String field, String codeValue)
+  public Map<String, List<CodeMasterVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
     if (this.map == null) {
       this.initialize();
     }
 
-    val list = this.map.get(tenantId).get(table).get(field);
-
-    for (val vo : list) {
-      if (vo.getCodeValue().equals(codeValue)) {
-        return vo.getCodeName();
-      }
-    }
-
-    return null;
+    return this.map.get(tenantId);
   }
 
   /**
@@ -163,6 +144,43 @@ public class CodeMasterResources {
    */
   public Date getUpdatedAt(Integer tenantId) {
     return updatedAtMap.get(tenantId);
+  }
+
+  /**
+   * 最後更新日以降取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-01
+   * @updatedAt : 2021-07-01
+   * @param updatedAt
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public Map<String, List<CodeMasterVo>> getAllLastUpdatedDateAfter(Integer tenantId,
+      Date updatedAt) throws JsonMappingException, JsonProcessingException {
+    if (this.map == null) {
+      this.initialize();
+    }
+
+    Date lastUpdatedAt = updatedAtMap.get(tenantId);
+    val mapByTenant = this.get(tenantId);
+
+    if (updatedAt == null || lastUpdatedAt == null
+        || updatedAt.getTime() == lastUpdatedAt.getTime()) {
+      return this.get(tenantId);
+    } else if (updatedAt.getTime() < lastUpdatedAt.getTime()) {
+      val result = new HashMap<String, List<CodeMasterVo>>();
+      for (val key : mapByTenant.keySet()) {
+        val list = mapByTenant.get(key);
+        result.put(key,
+            list.stream().filter(vo -> updatedAt.getTime() < vo.getUpdatedAt().getTime())
+                .collect(Collectors.toList()));
+      }
+      return result;
+    } else {
+      throw new WebException(Luigi2Code.S0000);
+    }
   }
 
 }
