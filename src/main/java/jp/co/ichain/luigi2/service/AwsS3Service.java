@@ -1,7 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.IOUtils;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.exception.WebDataException;
@@ -123,12 +121,7 @@ public class AwsS3Service {
     documentsMapper.insertDocuments(dataMap);
 
     // file upload
-    InputStream inputStream = file.getInputStream();
-    ObjectMetadata meta = new ObjectMetadata();
-    meta.setContentLength(inputStream.available());
-    meta.setContentType(file.getContentType());
-
-    awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + fileName, inputStream, meta);
+    awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + fileName, file.getInputStream());
   }
 
   /**

@@ -2,14 +2,7 @@ package jp.co.ichain.luigi2.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import org.apache.commons.codec.DecoderException;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.amazonaws.AmazonServiceException;
@@ -44,24 +37,18 @@ public class AwsS3Dao {
    * ファイルをS3にアップロード
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-30
-   * @updatedAt : 2021-06-30
-   * @param id
-   * @param file
-   * @param directoryName
+   * @createdAt : 2021-07-01
+   * @updatedAt : 2021-07-01
+   * @param url
+   * @param inputStream
    * @return
    * @throws IOException
-   * @throws DecoderException
-   * @throws InvalidKeySpecException
-   * @throws NoSuchPaddingException
-   * @throws InvalidAlgorithmParameterException
-   * @throws BadPaddingException
-   * @throws IllegalBlockSizeException
-   * @throws NoSuchAlgorithmException
-   * @throws InvalidKeyException
    */
-  public PutObjectResult upload(String url, InputStream inputStream, ObjectMetadata meta)
-      throws IOException {
+  public PutObjectResult upload(String url, InputStream inputStream) throws IOException {
+    ObjectMetadata meta = new ObjectMetadata();
+    meta.setContentLength(inputStream.available());
+    meta.setContentType(new Tika().detect(inputStream));
+
     return s3Client.putObject(bucketName, url, inputStream, meta);
   }
 
@@ -100,9 +87,8 @@ public class AwsS3Dao {
    * @throws AmazonServiceException
    * @throws SdkClientException
    */
-  public void deleteAttachFile(String directoryName, String key)
-      throws AmazonServiceException, SdkClientException {
-    this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, directoryName + key));
+  public void delete(String url) throws AmazonServiceException, SdkClientException {
+    this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, url));
   }
 
   AwsS3Dao(@Value("${aws.s3.region}") String region, @Value("${aws.s3.bucket}") String bucket,
