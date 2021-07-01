@@ -471,7 +471,7 @@ public class ClaimHeadersVo extends ObjectVo {
   /**
    * 受取人情報
    */
-  ArrayList<BeneficialiesVo> beneficialies;
+  ArrayList<BeneficialiesInfoVo> beneficialies;
   
   /**
    * 保険金・給付金請求資料
@@ -479,7 +479,7 @@ public class ClaimHeadersVo extends ObjectVo {
   ArrayList<ClaimDocumentsVo> claimDocuments;
   
   public ClaimHeadersVo() {
-    beneficialies = new ArrayList<BeneficialiesVo>();
+    beneficialies = new ArrayList<BeneficialiesInfoVo>();
     claimDocuments = new ArrayList<ClaimDocumentsVo>();
   }
 }
