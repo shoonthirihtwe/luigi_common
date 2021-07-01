@@ -437,49 +437,49 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者氏名（カナ）
    */
   String claimantNameKana;
-  
+
   /**
    * 固有データ
    */
   String data;
-  
+
   /**
    * 請求内容
    */
   String claimDetailInfo;
-  
+
   /**
    * 請求額
    */
   Integer claimAmount;
-  
+
   /**
    * 受診回数
    */
   Integer treatmentTimes;
-  
+
   /**
    * 支払対象額
    */
   Integer benefitAmount;
-  
+
   /**
    * 他保険
    */
   String otherInsuerer;
-  
+
   /**
    * 受取人情報
    */
-  ArrayList<BeneficialiesInfoVo> beneficialies;
-  
+  ArrayList<BeneficialiesVo> beneficialies;
+
   /**
    * 保険金・給付金請求資料
    */
   ArrayList<ClaimDocumentsVo> claimDocuments;
-  
+
   public ClaimHeadersVo() {
-    beneficialies = new ArrayList<BeneficialiesInfoVo>();
+    beneficialies = new ArrayList<BeneficialiesVo>();
     claimDocuments = new ArrayList<ClaimDocumentsVo>();
   }
 }
