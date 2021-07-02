@@ -39,4 +39,7 @@ public interface CommonMapper {
 
   // 決済方法取得
   String selectFactoringCompanyCode(@Param("contractNo") String contractNo);
+  
+  // 営業日取得
+  Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date, @Param("count") Integer count);
 }

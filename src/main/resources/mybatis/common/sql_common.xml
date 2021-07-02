@@ -76,4 +76,17 @@
 			FROM policy_holders_pay_method
 			WHERE tenant_id=1 AND contract_no=#{contractNo} AND start_date <![CDATA[<= now() AND now() <= end_date]]> AND status = 'A')
 	</select>
+	<select id="selectOpenDate" resultType="Date" parameterType="hashmap">
+		SELECT
+			date
+		FROM
+			calendars
+		WHERE
+			tenant_id = #{tenantId}
+			AND date > #{date}
+			AND holiday_flag = 0
+		ORDER BY
+			date ASC
+		LIMIT #{count},1
+	</select>
 </mapper>
