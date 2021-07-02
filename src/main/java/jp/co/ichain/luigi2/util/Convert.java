@@ -180,4 +180,57 @@ public class Convert {
     }
     return type;
   }
+
+  /**
+   * 左側にゼロ追加
+   *
+   * @author : [VJP] タン
+   * @createdAt : 2021-07-02
+   * @updatedAt : 2021-07-02
+   * @param inputString
+   * @param length
+   * @return
+   */
+  public static String padLeftZeros(String inputString, int length) {
+    if (inputString == null) {
+      inputString = "";
+    }
+    if (inputString.length() >= length) {
+      return inputString;
+    }
+    StringBuilder sb = new StringBuilder();
+    while (sb.length() < length - inputString.length()) {
+      sb.append('0');
+    }
+    sb.append(inputString);
+
+    return sb.toString();
+  }
+
+  /**
+   * 右側にスペース追加
+   *
+   * @author : [VJP] タン
+   * @createdAt : 2021-07-02
+   * @updatedAt : 2021-07-02
+   * @param inputString
+   * @param length
+   * @return
+   */
+  public static String padRightSpaces(String inputString, int length) {
+    if (inputString == null) {
+      inputString = "";
+    }
+    if (inputString.length() >= length) {
+      return inputString;
+    }
+    StringBuilder output = new StringBuilder();
+    StringBuilder input = new StringBuilder(inputString);
+    while (output.length() < length - inputString.length()) {
+      output.append(' ');
+    }
+    input.append(output.toString());
+
+    return input.toString();
+  }
 }

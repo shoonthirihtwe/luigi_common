@@ -29,6 +29,11 @@ public class ContractLogVo extends ObjectVo {
   
   String contractNo;
   
+  /**
+   * 証券番号枝番
+   */
+  String contractBranchNo;
+  
   Integer sequenceNo;
   
   String logType;
