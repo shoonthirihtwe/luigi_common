@@ -44,11 +44,16 @@ public class DepositVo extends ObjectVo {
   String contractNo;
 
   /**
+   * 証券番号枝番
+   */
+  String contractBranchNo;
+
+  /**
    * batch date
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date batchDate;
-  
+
   /**
    * 未納分保険料月
    */
