@@ -3,7 +3,6 @@ package jp.co.ichain.luigi2.config.security.cognito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-import com.google.protobuf.InvalidProtocolBufferException;
 import jp.co.ichain.luigi2.resources.TenantResources;
 
 /**
@@ -31,21 +30,21 @@ public class JwtConfiguration {
 
   public JwtConfiguration() {}
 
-  public String getJwkUrl(Integer tenantId) throws InstantiationException, IllegalAccessException,
-      SecurityException, InvalidProtocolBufferException {
+  public String getJwkUrl(Integer tenantId)
+      throws InstantiationException, IllegalAccessException, SecurityException {
     return this.jwkUrl != null && !this.jwkUrl.isEmpty() ? this.jwkUrl
         : String.format("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json",
             this.region, tenantResources.get(tenantId).getUserPoolId());
   }
 
-  public String getCognitoIdentityPoolUrl(Integer tenantId) throws InstantiationException,
-      IllegalAccessException, SecurityException, InvalidProtocolBufferException {
+  public String getCognitoIdentityPoolUrl(Integer tenantId)
+      throws InstantiationException, IllegalAccessException, SecurityException {
     return String.format("https://cognito-idp.%s.amazonaws.com/%s", this.region,
         tenantResources.get(tenantId).getUserPoolId());
   }
 
-  public String getUserPoolId(Integer tenantId) throws InstantiationException,
-      IllegalAccessException, SecurityException, InvalidProtocolBufferException {
+  public String getUserPoolId(Integer tenantId)
+      throws InstantiationException, IllegalAccessException, SecurityException {
     return tenantResources.get(tenantId).getUserPoolId();
   }
 

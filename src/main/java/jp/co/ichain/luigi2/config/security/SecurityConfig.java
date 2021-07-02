@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import com.google.protobuf.InvalidProtocolBufferException;
 import jp.co.ichain.luigi2.config.security.cognito.AwsCognitoIdTokenProcessor;
 import jp.co.ichain.luigi2.config.security.cognito.AwsCognitoJwtAuthFilter;
 import jp.co.ichain.luigi2.resources.TenantResources;
@@ -75,8 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public CorsConfigurationSource corsConfigurationSource() throws InstantiationException,
-      IllegalAccessException, SecurityException, InvalidProtocolBufferException {
+  public CorsConfigurationSource corsConfigurationSource()
+      throws InstantiationException, IllegalAccessException, SecurityException {
 
     CorsConfiguration configuration = new CorsConfiguration();
     // CORS

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.JWSKeySelector;
@@ -36,7 +35,7 @@ public class CognitoConfig {
   @Scope(value = "prototype")
   public ConfigurableJWTProcessor<SecurityContext> configurableJwtProcessor(Integer tenantId)
       throws MalformedURLException, InstantiationException, IllegalAccessException,
-      SecurityException, InvalidProtocolBufferException {
+      SecurityException {
     ResourceRetriever resourceRetriever = new DefaultResourceRetriever(
         jwtConfiguration.getConnectionTimeout(), jwtConfiguration.getReadTimeout());
     URL jwkSetUrl = new URL(jwtConfiguration.getJwkUrl(tenantId));
