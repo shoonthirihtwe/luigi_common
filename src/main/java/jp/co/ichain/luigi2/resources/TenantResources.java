@@ -11,6 +11,7 @@ import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.google.protobuf.InvalidProtocolBufferException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
@@ -184,7 +185,7 @@ public class TenantResources {
       this.updatedAt =
           list.stream().map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
               .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
-              .orElseThrow(() -> new WebDataException(Luigi2Code.D0002));
+              .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
 
       for (val tenantVo : CollectionUtils.safe(list)) {
         this.tenantMap.put(tenantVo.getId(), tenantVo);
@@ -219,7 +220,7 @@ public class TenantResources {
     } else if (updatedAt.getTime() < this.updatedAt.getTime()) {
       return mapper.selectTenants(updatedAt);
     } else {
-      throw new WebException(Luigi2Code.S0000);
+      throw new WebException(Luigi2ErrorCode.S0000);
     }
   }
 }

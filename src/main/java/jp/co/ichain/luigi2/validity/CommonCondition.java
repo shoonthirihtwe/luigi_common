@@ -48,12 +48,12 @@ public class CommonCondition {
    * @throws IllegalArgumentException
    * @throws InvocationTargetException
    */
-  public boolean validate(String methodName, Object data, List<Object> args)
+  public boolean validate(String methodName, Integer tenantId, Object data, List<Object> args)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     val condition = methodConditionMap.get(methodName);
     val method = methodMap.get(methodName);
 
-    return (boolean) method.invoke(condition, data, args);
+    return (boolean) method.invoke(condition, data, tenantId, args);
   }
 
 

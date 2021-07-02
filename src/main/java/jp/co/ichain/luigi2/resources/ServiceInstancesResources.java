@@ -76,7 +76,7 @@ public class ServiceInstancesResources {
       Date maxValue = listByTenant.stream()
           .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
           .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
-          .orElseThrow(() -> new WebDataException(Luigi2Code.D0002));
+          .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
       updatedAtMap.put(tenantId, maxValue);
 
       // sourceKey Group
@@ -211,7 +211,7 @@ public class ServiceInstancesResources {
       }
       return result;
     } else {
-      throw new WebException(Luigi2Code.S0000);
+      throw new WebException(Luigi2ErrorCode.S0000);
     }
   }
 }

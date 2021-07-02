@@ -17,6 +17,11 @@
 		LPAD(IFNULL(max(${tableInfo.key}),0)+1,#{tableInfo.size},'0')
 		FROM ${tableInfo.table} WHERE tenant_id=#{tenantId}
 	</select>
+	
+	<select id="selectIsExistKey" parameterType="map" resultType="boolean">
+		SELECT 1 FROM ${tableInfo.table} WHERE
+		tenant_id=#{tenantId} AND ${tableInfo.key}=#{data}
+	</select>
 
 	<select id="selectServiceInstances" parameterType="map"
 		resultType="ServiceInstancesVo">

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
-import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.resources.ValidityResources;
 import jp.co.ichain.luigi2.validity.Validity;
@@ -64,7 +64,7 @@ public class CommonService {
 
     // sourceKeyが存在しない場合
     if (optional.isEmpty()) {
-      throw new WebDataException(Luigi2Code.D0002, "sourceKey",
+      throw new WebDataException(Luigi2ErrorCode.D0002, "sourceKey",
           validity.getValiditySourceKey(endpoint));
     }
     val serviceInstanceMap = optional.get().getInherentMap();
@@ -75,12 +75,12 @@ public class CommonService {
     if (serviceInstanceMap.get("param-key") != null) {
       // Condition
       validity.validateCondition(validityMap.get(serviceInstanceMap.get("param-key")), "this",
-          paramMap, exList);
+          paramMap, tenantId, exList);
     }
     validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
 
     if (exList.size() > 0) {
-      throw new WebParameterException(Luigi2Code.V0000, exList);
+      throw new WebParameterException(Luigi2ErrorCode.V0000, exList);
     }
   }
 }

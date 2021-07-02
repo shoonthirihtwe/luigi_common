@@ -35,6 +35,8 @@ public class TenantsVo extends ObjectVo {
 
   String compensationGroupCode;
 
+  String userPoolId;
+
   @JsonIgnore
   Date createdAt;
 
