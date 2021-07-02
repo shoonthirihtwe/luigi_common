@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import jp.co.ichain.luigi2.dto.ResultListDto;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
-import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.ErrorVo;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -54,7 +54,7 @@ public class WebControllerErrorAdvice {
 
     try {
       e.printStackTrace();
-      result.setCode(Luigi2Code.S0000);
+      result.setCode(Luigi2ErrorCode.S0000);
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
       ex.printStackTrace();
@@ -84,7 +84,7 @@ public class WebControllerErrorAdvice {
       result.setItems((List<Object>) e.getErrArgs());
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S0000);
+      result.setCode(Luigi2ErrorCode.S0000);
     }
 
     return result;
@@ -114,7 +114,7 @@ public class WebControllerErrorAdvice {
       }
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S0000);
+      result.setCode(Luigi2ErrorCode.S0000);
     }
 
     return result;
@@ -139,15 +139,15 @@ public class WebControllerErrorAdvice {
     try {
       val rootEx = e.getRootCause();
       if (rootEx instanceof FileSizeLimitExceededException) {
-        result.setCode(Luigi2Code.S0000);
+        result.setCode(Luigi2ErrorCode.S0000);
       } else if (rootEx instanceof SizeLimitExceededException) {
-        result.setCode(Luigi2Code.S0000);
+        result.setCode(Luigi2ErrorCode.S0000);
       } else {
-        result.setCode(Luigi2Code.S0000);
+        result.setCode(Luigi2ErrorCode.S0000);
       }
     } catch (Exception ex) {
       log.error(ex.getLocalizedMessage());
-      result.setCode(Luigi2Code.S0000);
+      result.setCode(Luigi2ErrorCode.S0000);
     }
 
     return result;

@@ -26,6 +26,19 @@ public interface CommonMapper {
   String selectIncrementNumber(@Param("tableInfo") Map<String, Object> map,
       @Param("tenantId") Integer tenantId);
 
+  /**
+   * キーに値するデータが存在するかチェック
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-02
+   * @updatedAt : 2021-07-02
+   * @param map
+   * @param tenantId
+   * @return
+   */
+  Boolean selectIsExistKey(@Param("tableInfo") Map<String, Object> map,
+      @Param("tenantId") Integer tenantId, @Param("data") Object data);
+
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
   List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);

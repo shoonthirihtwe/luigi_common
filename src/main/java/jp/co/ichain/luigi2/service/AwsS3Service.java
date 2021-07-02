@@ -30,7 +30,7 @@ import com.amazonaws.util.IOUtils;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.mapper.DocumentsMapper;
-import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
 import jp.co.ichain.luigi2.util.CollectionUtils;
@@ -116,7 +116,7 @@ public class AwsS3Service {
         dataMap.putAll(Luigi2TableInfo.getLockTable(TableInfo.MaintenanceDocuments));
         break;
       default:
-        throw new WebDataException(Luigi2Code.D0001, documents.name);
+        throw new WebDataException(Luigi2ErrorCode.D0001, documents.name);
     }
     documentsMapper.insertDocuments(dataMap);
 

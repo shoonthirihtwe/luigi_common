@@ -47,7 +47,9 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     
     // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.7'
     
     // jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.12.3'

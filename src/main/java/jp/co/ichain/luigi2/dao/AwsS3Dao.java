@@ -18,7 +18,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import jp.co.ichain.luigi2.exception.WebAwsException;
-import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 
 /**
  * AWS S3 dao
@@ -70,7 +70,7 @@ public class AwsS3Dao {
     try {
       s3Object = s3Client.getObject(new GetObjectRequest(bucketName, url));
     } catch (AmazonS3Exception e) {
-      throw new WebAwsException(Luigi2Code.D0002, url);
+      throw new WebAwsException(Luigi2ErrorCode.D0002, url);
     }
 
     return s3Object.getObjectContent();

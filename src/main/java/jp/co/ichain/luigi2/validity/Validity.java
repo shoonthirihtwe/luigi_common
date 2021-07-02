@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebConditionException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
-import jp.co.ichain.luigi2.resources.Luigi2Code;
+import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.ValidityVo;
 import lombok.val;
 
@@ -108,6 +108,9 @@ public class Validity {
       throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
+    // tenantId
+    val tenantId = (Integer) paramMap.get("tenantId");
+
     // validate
     for (val key : serviceInstanceMap.keySet()) {
       val validity = serviceInstanceMap.get(key);
@@ -121,15 +124,15 @@ public class Validity {
 
         // Required
         if (validityVo.getRequired() && data == null) {
-          exList.add(new WebParameterException(Luigi2Code.V0001, key));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key));
         }
 
         // Condition
-        validateCondition(validityVo, key, data, exList);
+        validateCondition(validityVo, key, data, tenantId, exList);
 
         // type validate
         if (type != Vtype.OBJECT) {
-          exList.add(new WebParameterException(Luigi2Code.V0005, key));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
         } else if (data != null) {
           // Object recursive call
           if (validityVo.getArray()) {
@@ -139,20 +142,20 @@ public class Validity {
                 validate(validityMap, objValidityMap, map, exList);
               }
             } else {
-              exList.add(new WebParameterException(Luigi2Code.V0005, key));
+              exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
           } else {
             if (data instanceof Map) {
               validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
             } else {
-              exList.add(new WebParameterException(Luigi2Code.V0005, key));
+              exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
           }
         }
       } else if ("param-key".equals(key) == false) {
         val validityVo = validityMap.get(validity);
         // Condition
-        validateCondition(validityVo, key, data, exList);
+        validateCondition(validityVo, key, data, tenantId, exList);
 
         if (validityVo.getArray()) {
           if (data instanceof List) {
@@ -169,7 +172,7 @@ public class Validity {
             }
 
           } else if (data != null) {
-            exList.add(new WebParameterException(Luigi2Code.V0005, key));
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
         } else {
           val vdata = validate(validityVo, serviceInstanceMap, exList, key, data);
@@ -200,14 +203,14 @@ public class Validity {
 
     // Required
     if (validityVo.getRequired() && data == null) {
-      exList.add(new WebParameterException(Luigi2Code.V0001, key));
+      exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key));
     }
 
     if (data != null) {
       // type
       data = validateType(type, data);
       if (data == null) {
-        exList.add(new WebParameterException(Luigi2Code.V0005, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
         // type is string
       } else if (Vtype.STRING.toString().equals(validityVo.getType())) {
         String strData = (String) data;
@@ -222,11 +225,11 @@ public class Validity {
           }
           // min
           if (validityVo.getMin() != null && validityVo.getMin() > length) {
-            exList.add(new WebParameterException(Luigi2Code.V0002, key, validityVo.getMin()));
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0002, key, validityVo.getMin()));
           }
           // max
           if (validityVo.getMax() != null && validityVo.getMax() < length) {
-            exList.add(new WebParameterException(Luigi2Code.V0003, key, validityVo.getMax()));
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0003, key, validityVo.getMax()));
           }
         }
 
@@ -238,10 +241,10 @@ public class Validity {
 
       // fixed
       if (validiateFixedList(validityVo.getFixedList(), data) == false) {
-        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
       if (validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
-        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
     }
 
@@ -261,7 +264,7 @@ public class Validity {
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  public void validateCondition(ValidityVo validityVo, String key, Object data,
+  public void validateCondition(ValidityVo validityVo, String key, Object data, Integer tenantId,
       List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
@@ -271,7 +274,7 @@ public class Validity {
       for (String conditionMethod : conditionMap.keySet()) {
         Map<String, Object> argsMap = (Map<String, Object>) conditionMap.get(conditionMethod);
         try {
-          if (commonCondition.validate(conditionMethod, data,
+          if (commonCondition.validate(conditionMethod, tenantId, data,
               (List<Object>) argsMap.get("args")) == false) {
             exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
           }
@@ -299,10 +302,10 @@ public class Validity {
     if (formats instanceof String) {
       if (FormatType.valueOf((String) formats) != null) {
         if (strData.matches(formatRegexMap.get(formats)) == false) {
-          exList.add(new WebParameterException(Luigi2Code.V0004, key));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
         }
       } else {
-        exList.add(new WebParameterException(Luigi2Code.V0006, key, formats));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats));
       }
     } else if (formats instanceof List) {
       val sb = new StringBuffer();
@@ -311,12 +314,12 @@ public class Validity {
         if (FormatType.valueOf(format) != null) {
           sb.append(formatRegexMap.get(format));
         } else {
-          exList.add(new WebParameterException(Luigi2Code.V0006, key, formats));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats));
         }
       }
       sb.append("]+$");
       if (strData.matches(sb.toString()) == false) {
-        exList.add(new WebParameterException(Luigi2Code.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
     }
   }
