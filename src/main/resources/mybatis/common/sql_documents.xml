@@ -16,12 +16,12 @@
 			created_by
 			)
 		SELECT
-			IFNULL(max(id),0)+1,
+			(SELECT IFNULL(max(id),0)+1 FROM ${table}),
 			#{tenantId},
 			#{ownerCode},
 			<if test ="table == 'maintenance_documents'">IFNULL(max(sequence_no),0)+1,</if>
 			#{documentTitle},
-			concat(#{document},(IFNULL(max(id),0)+1),'_', #{fileName}),
+			concat(#{document},(SELECT IFNULL(max(id),0)+1 FROM ${table}),'_', #{fileName}),
 			now(),
 			#{updatedBy}
 		FROM ${table}
