@@ -157,34 +157,33 @@ public class Validity {
         val validityVo = validityMap.get(validity);
         // type
         val type = Vtype.valueOf(validityVo.getType());
-        val vData = validateType(type, data);
-        if (data != null && vData == null) {
-          exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
-        } else {
-          paramMap.put(key, vData);
+
+        if (validityVo.getArray()) {
           // Condition
-          validateCondition(validityVo, key, vData, tenantId, exList);
-
-          if (validityVo.getArray()) {
-            if (vData instanceof List) {
-              if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
-                List<String> list = (List<String>) vData;
-                for (val map : list) {
-                  validate(validityVo, serviceInstanceMap, exList, key, map);
-                }
-              } else {
-                List<Map<String, Object>> list = (List<Map<String, Object>>) vData;
-                for (val map : list) {
-                  validate(validityVo, serviceInstanceMap, exList, key, map);
-                }
+          validateCondition(validityVo, key, data, tenantId, exList);
+          if (data instanceof List) {
+            if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
+              List<String> list = (List<String>) data;
+              for (val map : list) {
+                validate(validityVo, serviceInstanceMap, exList, key, map);
               }
-
-            } else if (vData != null) {
-              exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
+            } else {
+              List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+              for (val map : list) {
+                validate(validityVo, serviceInstanceMap, exList, key, map);
+              }
             }
-          } else {
-            validate(validityVo, serviceInstanceMap, exList, key, vData);
+
+          } else if (data != null) {
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
+        } else {
+          val vData = validateType(type, data);
+          paramMap.put(key, vData);
+          if (data != null && vData == null) {
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
+          }
+          validate(validityVo, serviceInstanceMap, exList, key, vData);
         }
       }
     }

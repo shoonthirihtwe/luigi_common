@@ -220,12 +220,20 @@ public class ControllerUtils {
     }
 
     if (paramMap.get("page") != null) {
-      Integer rowCount = (Integer) paramMap.get("rowCount");
+      var rowCount = paramMap.get("rowCount");
+      var page = paramMap.get("page");
+      if (rowCount instanceof String) {
+        rowCount = Integer.valueOf((String) rowCount);
+        paramMap.put("rowCount", rowCount);
+      }
+      if (page instanceof String) {
+        page = Integer.valueOf((String) page);
+      }
       if (rowCount == null) {
         rowCount = 50;
         paramMap.put("rowCount", rowCount);
       }
-      paramMap.put("page", ((int) paramMap.get("page") - 1) * rowCount);
+      paramMap.put("page", (((int) page) - 1) * (int) rowCount);
     }
   }
 }
