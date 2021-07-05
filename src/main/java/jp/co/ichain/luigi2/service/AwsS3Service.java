@@ -33,6 +33,7 @@ import jp.co.ichain.luigi2.mapper.DocumentsMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
+import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
 
@@ -46,6 +47,8 @@ import lombok.val;
 @Service
 public class AwsS3Service {
 
+  private static final String FREE_DOCUMENTS = "documents";
+
   public enum Documents {
     CLAIM("claim_documents/"), NEW_BUSINESS("new_business_documents/"), MAINTENANCE(
         "maintenance_documents/");
@@ -53,6 +56,16 @@ public class AwsS3Service {
     String name;
 
     Documents(String name) {
+      this.name = name;
+    }
+  }
+
+  public enum FreeDocumentsType {
+    Text("text");
+
+    String name;
+
+    FreeDocumentsType(String name) {
       this.name = name;
     }
   }
@@ -65,6 +78,9 @@ public class AwsS3Service {
 
   @Autowired
   DocumentsMapper documentsMapper;
+
+  @Autowired
+  ServiceInstancesResources serviceInstancesResources;
 
   /**
    * S3にファイルをアップロードする
@@ -122,6 +138,56 @@ public class AwsS3Service {
 
     // file upload
     awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + fileName, file.getInputStream());
+  }
+
+  /**
+   * フリーファイルアップロード
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-05
+   * @updatedAt : 2021-07-05
+   * @param file
+   * @param documentsType
+   * @param tenantId
+   * @param year
+   * @param month
+   * @throws IOException
+   */
+  public void upload(MultipartFile file, FreeDocumentsType documentsType, int tenantId, int year,
+      int month) throws IOException {
+
+    val serviceMap = serviceInstancesResources.get(tenantId, FREE_DOCUMENTS);
+    val folder = serviceMap.get(0).getInherentMap().get(documentsType.name);
+
+    // file name
+    val fileName = file.getOriginalFilename();
+
+    StringBuffer sb = new StringBuffer();
+    sb.append(folder).append(tenantId).append("/").append(year).append("/").append(month)
+        .append("/").append(fileName);
+
+    // file upload
+    awsS3Dao.upload(new String(sb), file.getInputStream());
+  }
+
+  /**
+   * フリーファイルアップロード
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-05
+   * @updatedAt : 2021-07-05
+   * @param fileList
+   * @param documentsType
+   * @param tenantId
+   * @param year
+   * @param month
+   * @throws IOException
+   */
+  public void upload(List<MultipartFile> fileList, FreeDocumentsType documentsType, int tenantId,
+      int year, int month) throws IOException {
+    for (val file : CollectionUtils.safe(fileList)) {
+      this.upload(file, documentsType, tenantId, year, month);
+    }
   }
 
   /**

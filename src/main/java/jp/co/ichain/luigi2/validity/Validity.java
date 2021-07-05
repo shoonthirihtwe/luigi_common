@@ -127,13 +127,14 @@ public class Validity {
           exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key));
         }
 
-        // Condition
-        validateCondition(validityVo, key, data, tenantId, exList);
-
         // type validate
         if (type != Vtype.OBJECT) {
           exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
         } else if (data != null) {
+
+          // condition
+          validateCondition(validityVo, key, data, tenantId, exList);
+
           // Object recursive call
           if (validityVo.getArray()) {
             if (data instanceof List) {
@@ -154,29 +155,36 @@ public class Validity {
         }
       } else if ("param-key".equals(key) == false) {
         val validityVo = validityMap.get(validity);
-        // Condition
-        validateCondition(validityVo, key, data, tenantId, exList);
-
-        if (validityVo.getArray()) {
-          if (data instanceof List) {
-            if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
-              List<String> list = (List<String>) data;
-              for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map);
-              }
-            } else {
-              List<Map<String, Object>> list = (List<Map<String, Object>>) data;
-              for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map);
-              }
-            }
-
-          } else if (data != null) {
-            exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
-          }
+        // type
+        val type = Vtype.valueOf(validityVo.getType());
+        val vData = validateType(type, data);
+        if (data != null && vData == null) {
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
         } else {
-          val vdata = validate(validityVo, serviceInstanceMap, exList, key, data);
-          paramMap.put(key, vdata);
+          paramMap.put(key, vData);
+          // Condition
+          validateCondition(validityVo, key, vData, tenantId, exList);
+
+          if (validityVo.getArray()) {
+            if (vData instanceof List) {
+              if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
+                List<String> list = (List<String>) vData;
+                for (val map : list) {
+                  validate(validityVo, serviceInstanceMap, exList, key, map);
+                }
+              } else {
+                List<Map<String, Object>> list = (List<Map<String, Object>>) vData;
+                for (val map : list) {
+                  validate(validityVo, serviceInstanceMap, exList, key, map);
+                }
+              }
+
+            } else if (vData != null) {
+              exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
+            }
+          } else {
+            validate(validityVo, serviceInstanceMap, exList, key, vData);
+          }
         }
       }
     }
@@ -197,9 +205,8 @@ public class Validity {
    * @param data
    * @throws UnsupportedEncodingException
    */
-  private Object validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
+  private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       List<WebException> exList, String key, Object data) throws UnsupportedEncodingException {
-    val type = Vtype.valueOf(validityVo.getType());
 
     // Required
     if (validityVo.getRequired() && data == null) {
@@ -207,12 +214,8 @@ public class Validity {
     }
 
     if (data != null) {
-      // type
-      data = validateType(type, data);
-      if (data == null) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
-        // type is string
-      } else if (Vtype.STRING.toString().equals(validityVo.getType())) {
+      // type is string
+      if (Vtype.STRING.toString().equals(validityVo.getType())) {
         String strData = (String) data;
 
         // min max
@@ -247,8 +250,6 @@ public class Validity {
         exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
     }
-
-    return data;
   }
 
   /**

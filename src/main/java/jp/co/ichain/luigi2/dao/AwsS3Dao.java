@@ -16,7 +16,6 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import jp.co.ichain.luigi2.exception.WebAwsException;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 
@@ -46,7 +45,7 @@ public class AwsS3Dao {
    */
   public PutObjectResult upload(String url, InputStream inputStream) throws IOException {
     ObjectMetadata meta = new ObjectMetadata();
-    meta.setContentLength(inputStream.available());
+    // meta.setContentLength(inputStream.available());
     meta.setContentType(new Tika().detect(inputStream));
 
     return s3Client.putObject(bucketName, url, inputStream, meta);
@@ -64,8 +63,7 @@ public class AwsS3Dao {
    * @throws AmazonServiceException
    * @throws SdkClientException
    */
-  public S3ObjectInputStream download(String url)
-      throws AmazonServiceException, SdkClientException {
+  public InputStream download(String url) throws AmazonServiceException, SdkClientException {
     S3Object s3Object = null;
     try {
       s3Object = s3Client.getObject(new GetObjectRequest(bucketName, url));
