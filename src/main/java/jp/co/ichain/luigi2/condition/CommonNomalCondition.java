@@ -53,7 +53,7 @@ public class CommonNomalCondition {
    * @return
    */
   public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
-    return ((long) data) > new Date().getTime();
+    return ((long) data) <= new Date().getTime();
   }
 
   /**
