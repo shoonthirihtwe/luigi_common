@@ -81,7 +81,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     
     // AWS
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.1021'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.12.17'
     
     // file
     implementation group: 'org.apache.tika', name: 'tika-parsers', version: '1.26'
