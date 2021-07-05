@@ -119,16 +119,18 @@ public class ControllerUtils {
       throws Exception {
     return (request, endpoint, mulr, supplier) -> {
       val paramMap = new HashMap<String, Object>();
-      val fileMap = mulr.getMultiFileMap();
       val requestMap = request.getParameterMap();
 
-      // File
-      for (val key : CollectionUtils.safe(fileMap.keySet())) {
-        val list = fileMap.get(key);
-        if (key.contains("List")) {
-          paramMap.put(key, list);
-        } else if (list != null && list.size() > 0) {
-          paramMap.put(key, list.get(0));
+      if (mulr != null) {
+        // File
+        val fileMap = mulr.getMultiFileMap();
+        for (val key : CollectionUtils.safe(fileMap.keySet())) {
+          val list = fileMap.get(key);
+          if (key.contains("List")) {
+            paramMap.put(key, list);
+          } else if (list != null && list.size() > 0) {
+            paramMap.put(key, list.get(0));
+          }
         }
       }
 
@@ -148,6 +150,23 @@ public class ControllerUtils {
       result.setCode("OK");
       return result;
     };
+  }
+
+  /**
+   * Get時
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-05
+   * @updatedAt : 2021-07-05
+   * @param request
+   * @param endpoint
+   * @param supplier
+   * @return
+   * @throws Exception
+   */
+  public ResultWebDto makeGetControllerHandler(HttpServletRequest request, String endpoint,
+      ThrowingSupplierInParameterMap<ResultWebDto> supplier) throws Exception {
+    return makeFileControllerHandler().apply(request, endpoint, null, supplier);
   }
 
   /**
