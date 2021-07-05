@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -68,6 +69,12 @@ public class DateTimeUtils {
     return LocalDate.parse(date, formatter);
   }
 
+  /**
+   * covert localdate to Date
+   * 
+   * @param localdate
+   * @return
+   */
   public static Date convertLocalDateToDate(LocalDate localdate) {
     // default time zone
     ZoneId defaultZoneId = ZoneId.systemDefault();
@@ -86,5 +93,44 @@ public class DateTimeUtils {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
     String formattedString = localDate.format(formatter);
     return formattedString;
+  }
+
+  /**
+   * get the first day of the month
+   * 
+   * @param date
+   * @return String yyyyMMdd
+   */
+  public static String getFirstDayOfMonth(Date date) {
+    return convertDateToYearMonth(date) + "01";
+  }
+
+  /**
+   * get the last day of the month
+   * 
+   * @param date
+   * @return String yyyyMMdd
+   */
+  public static String getLastDayOfMonth(Date date) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+
+    calendar.add(Calendar.MONTH, 1);
+    calendar.set(Calendar.DAY_OF_MONTH, 1);
+    calendar.add(Calendar.DATE, -1);
+
+    Date lastDayOfMonth = calendar.getTime();
+    return formatter.format(lastDayOfMonth).substring(0, 8);
+
+  }
+
+  /**
+   * convert date to local date
+   * 
+   * @param dateToConvert
+   * @return
+   */
+  public static LocalDate convertDateToLocalDate(Date dateToConvert) {
+    return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
   }
 }
