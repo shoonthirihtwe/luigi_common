@@ -131,6 +131,36 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String communicationColumn;
 
   /**
+   * 払込方法コード
+   */
+  String paymentMethodCode;
+
+  /**
+   * 銀行コード
+   */
+  String bankCode;
+
+  /**
+   * 支店コード
+   */
+  String bankBranchCode;
+
+  /**
+   * 口座種別
+   */
+  String bankAccountType;
+
+  /**
+   * 口座番号
+   */
+  String bankAccountNo;
+
+  /**
+   * 口座名義人
+   */
+  String bankAccountName;
+
+  /**
    * 適用日
    */
   @JsonSerialize(using = JsonTimeSerializer.class)
