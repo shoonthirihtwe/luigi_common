@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * BeneficialiesVo
  *
  * @author : [AOT] g.kim

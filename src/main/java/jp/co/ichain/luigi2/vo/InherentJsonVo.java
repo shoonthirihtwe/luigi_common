@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * InherentJsonVo
  *
  * @author : [AOT] g.kim

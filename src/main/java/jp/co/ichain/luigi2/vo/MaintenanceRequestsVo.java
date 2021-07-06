@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -54,12 +55,12 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 契約者名（漢字）
    */
-  String nameKnj;
+  String contractNameKnj;
 
   /**
    * 契約者名（カナ）
    */
-  String nameKana;
+  String contractNameKana;
 
   /**
    * 有効/無効フラグ
@@ -96,7 +97,7 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 商品タイプ
    */
-  @JsonSerialize(using = JsonTimeSerializer.class)
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date receivedDate;
 
   /**
@@ -145,6 +146,16 @@ public class MaintenanceRequestsVo extends ObjectVo {
    * 処理起票区分
    */
   String entryType;
+
+  /**
+   * 契約者メールアドレス
+   */
+  String contractEmail;
+
+  /**
+   * 文書
+   */
+  List<DocumentsVo> documentsList;
 
   /**
    * ロック用

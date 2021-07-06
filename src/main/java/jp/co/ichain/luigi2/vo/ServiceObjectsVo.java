@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * ServiceObjectsVo
  *
  * @author : [AOT] g.kim

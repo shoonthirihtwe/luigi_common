@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * TenantsVo
  *
  * @author : [AOT] g.kim

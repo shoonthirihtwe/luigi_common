@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * DepositDetailVo
  *
  * @author : [VJP] n.huy.hoang

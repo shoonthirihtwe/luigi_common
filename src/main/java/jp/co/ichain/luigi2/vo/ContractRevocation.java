@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * ContractRevocation
  *
  * @author : [VJP] n.h.hoang

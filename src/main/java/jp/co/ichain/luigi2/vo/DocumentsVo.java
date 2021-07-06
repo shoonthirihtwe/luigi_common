@@ -1,7 +1,6 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,52 +11,66 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * SearchContractsResultVo
+ * Documents Vo
  *
- * @author : [AOT] g.kim
- * @createdAt : 2021-05-31
- * @updatedAt : 2021-05-31
+ * @author : [VJP] タン
+ * @createdAt : 2021-06-18
+ * @updatedAt : 2021-06-18
  */
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchContractsResultVo extends ObjectVo {
+public class DocumentsVo extends ObjectVo {
+  /**
+   * ID
+   */
+  Integer id;
 
+  /**
+   * テナントID
+   */
   Integer tenantId;
 
-  String contractNo;
+  /**
+   * キー
+   */
+  String ownerCode;
 
+  /**
+   * 連番
+   */
+  Integer sequenceNo;
+
+  /**
+   * タイトル
+   */
+  String documentTitle;
+
+  /**
+   * URL
+   */
+  String documentUrl;
+
+  /**
+   * 登録日
+   */
   @JsonSerialize(using = JsonDateSerializer.class)
-  Date applicationDate;
+  Date uploadDate;
 
-  String contractStatus;
-  
-  String agencyName;
-  
-  String applicantNameKnj;
-  
-  String applicantNameKana;
-  
-  @JsonIgnore
+  /**
+   * ロック用
+   */
   Integer updateCount;
 
-  @JsonIgnore
-  Date createdAt;
-
-  @JsonIgnore
+  /**
+   * 作成者
+   */
   String createdBy;
 
-  @JsonIgnore
-  Date updatedAt;
-
-  @JsonIgnore
+  /**
+   * 最終更新者
+   */
   String updatedBy;
-
-  @JsonIgnore
-  Date deletedAt;
-
-  @JsonIgnore
-  String deletedBy;
 }
