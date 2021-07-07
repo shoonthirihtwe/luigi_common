@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebConditionException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
+import jp.co.ichain.luigi2.resources.CodeMasterResources;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.ValidityVo;
 import lombok.val;
@@ -30,6 +31,9 @@ public class Validity {
 
   @Autowired
   CommonCondition commonCondition;
+
+  @Autowired
+  CodeMasterResources codeMasterResources;
 
   /**
    * パラメータータイプ
@@ -165,12 +169,12 @@ public class Validity {
             if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
               List<String> list = (List<String>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map);
+                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId);
               }
             } else {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map);
+                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId);
               }
             }
 
@@ -183,7 +187,7 @@ public class Validity {
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          validate(validityVo, serviceInstanceMap, exList, key, vdata);
+          validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId);
         }
       }
     }
@@ -203,9 +207,12 @@ public class Validity {
    * @param key
    * @param data
    * @throws UnsupportedEncodingException
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
-      List<WebException> exList, String key, Object data) throws UnsupportedEncodingException {
+      List<WebException> exList, String key, Object data, Integer tenantId)
+      throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
 
     // Required
     if (validityVo.getRequired() && data == null) {
@@ -239,6 +246,11 @@ public class Validity {
         if (validityVo.getFormats() != null) {
           validateFormat(key, validityVo.getFormats(), strData, exList);
         }
+      }
+
+      // codeMaster
+      if (validiateCodeMaster(tenantId, validityVo.getCodeMaster(), data) == false) {
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
 
       // fixed
@@ -409,6 +421,40 @@ public class Validity {
     }
     return false;
   }
+
+  /**
+   * コードマスターで検証する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-07
+   * @updatedAt : 2021-07-07
+   * @param tenantId
+   * @param codeMasterKey
+   * @param data
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  private boolean validiateCodeMaster(Integer tenantId, String codeMasterKey, Object data)
+      throws JsonMappingException, JsonProcessingException {
+
+    if (codeMasterKey == null || data == null) {
+      return true;
+    }
+    val fixedList = codeMasterResources.get(tenantId).get(codeMasterKey);
+    if (fixedList == null || fixedList.getValues() == null || fixedList.getValues().size() == 0) {
+      return true;
+    }
+
+    for (val item : fixedList.getValues()) {
+      if (data.equals(item.getCodeValue())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 
   /**
    * 決められた値検証
