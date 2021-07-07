@@ -29,6 +29,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.util.IOUtils;
 import jp.co.ichain.luigi2.exception.WebAwsException;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.DownloadFileVo;
@@ -60,7 +61,7 @@ public class AwsS3Dao {
    */
   public PutObjectResult upload(String url, InputStream inputStream) throws IOException {
     ObjectMetadata meta = new ObjectMetadata();
-    // meta.setContentLength(inputStream.available());
+    meta.setContentLength(IOUtils.toByteArray(inputStream).length);
     meta.setContentType(new Tika().detect(inputStream));
 
     return s3Client.putObject(bucketName, url, inputStream, meta);
