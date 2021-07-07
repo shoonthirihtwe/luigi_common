@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * InsuredVo ApplicationVoのした階層
  *
  * @author : [AOT] g.kim

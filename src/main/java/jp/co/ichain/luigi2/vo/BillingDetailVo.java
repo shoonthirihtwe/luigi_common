@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * BillingDetailVo
  *
  * @author : [VJP] n.h.hoang

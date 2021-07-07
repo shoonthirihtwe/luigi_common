@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/***
+/**
  * PolicyHoldersPayMethodVo
  *
  * @author : [AOT] g.kim

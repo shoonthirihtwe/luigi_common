@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -54,12 +55,12 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 契約者名（漢字）
    */
-  String nameKnj;
+  String contractNameKnj;
 
   /**
    * 契約者名（カナ）
    */
-  String nameKana;
+  String contractNameKana;
 
   /**
    * 有効/無効フラグ
@@ -96,7 +97,7 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 商品タイプ
    */
-  @JsonSerialize(using = JsonTimeSerializer.class)
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date receivedDate;
 
   /**
@@ -130,6 +131,36 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String communicationColumn;
 
   /**
+   * 払込方法コード
+   */
+  String paymentMethodCode;
+
+  /**
+   * 銀行コード
+   */
+  String bankCode;
+
+  /**
+   * 支店コード
+   */
+  String bankBranchCode;
+
+  /**
+   * 口座種別
+   */
+  String bankAccountType;
+
+  /**
+   * 口座番号
+   */
+  String bankAccountNo;
+
+  /**
+   * 口座名義人
+   */
+  String bankAccountName;
+
+  /**
    * 適用日
    */
   @JsonSerialize(using = JsonTimeSerializer.class)
@@ -145,6 +176,16 @@ public class MaintenanceRequestsVo extends ObjectVo {
    * 処理起票区分
    */
   String entryType;
+
+  /**
+   * 契約者メールアドレス
+   */
+  String contractEmail;
+
+  /**
+   * 文書
+   */
+  List<DocumentsVo> documentsList;
 
   /**
    * ロック用

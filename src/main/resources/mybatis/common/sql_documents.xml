@@ -27,4 +27,14 @@
 		FROM ${table}
 		WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
 	</insert>
+	
+	<select id="selectDocuments"  resultType="DocumentsVo" parameterType="hashmap">
+		SELECT
+			<if test ="table == 'maintenance_documents'">sequence_no as sequenceNo,</if>
+			document_title as documentIitle,
+			document_url as documentUrl,
+			upload_date as uploadDate
+		FROM ${table} WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
+		ORDER BY <if test ="table == 'maintenance_documents'">sequenceNo,</if>created_at
+	</select>
 </mapper>

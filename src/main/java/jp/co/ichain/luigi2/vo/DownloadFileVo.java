@@ -1,18 +1,16 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * SearchContractsResultVo
+/***
+ * DownloadFileVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -22,42 +20,22 @@ import lombok.Setter;
 @Setter
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
-@AllArgsConstructor
-public class SearchContractsResultVo extends ObjectVo {
+public class DownloadFileVo extends ObjectVo {
 
-  Integer tenantId;
+  String key;
 
-  String contractNo;
+  String fileName;
 
   @JsonSerialize(using = JsonDateSerializer.class)
-  Date applicationDate;
-
-  String contractStatus;
-  
-  String agencyName;
-  
-  String applicantNameKnj;
-  
-  String applicantNameKana;
-  
-  @JsonIgnore
-  Integer updateCount;
-
-  @JsonIgnore
   Date createdAt;
 
-  @JsonIgnore
-  String createdBy;
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date lastModified;
 
-  @JsonIgnore
-  Date updatedAt;
-
-  @JsonIgnore
-  String updatedBy;
-
-  @JsonIgnore
-  Date deletedAt;
-
-  @JsonIgnore
-  String deletedBy;
+  public DownloadFileVo(String key, String fileName, Date createdAt, Date lastModifiedDate) {
+    this.key = key;
+    this.fileName = fileName;
+    this.createdAt = createdAt;
+    this.lastModified = lastModifiedDate;
+  }
 }
