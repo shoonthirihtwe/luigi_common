@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.util.BeanUtils;
 import lombok.val;
@@ -24,12 +25,15 @@ public class CommonCondition {
   Map<String, Object> methodConditionMap;
   Map<String, Method> methodMap;
 
+  @Autowired
+  BeanUtils beanUtils;
+
   @PostConstruct
   void initialize() {
     methodConditionMap = new HashMap<String, Object>();
     methodMap = new HashMap<String, Method>();
 
-    for (val condition : BeanUtils.getBeanByAnnotation(Condition.class)) {
+    for (val condition : beanUtils.getBeanByAnnotation(Condition.class)) {
       settingCondition(condition);
     }
   }
