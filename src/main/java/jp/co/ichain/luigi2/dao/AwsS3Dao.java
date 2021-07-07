@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.dao;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -61,10 +62,12 @@ public class AwsS3Dao {
    */
   public PutObjectResult upload(String url, InputStream inputStream) throws IOException {
     ObjectMetadata meta = new ObjectMetadata();
-    meta.setContentLength(IOUtils.toByteArray(inputStream).length);
+    // size
+    byte[] f = IOUtils.toByteArray(inputStream);
+    meta.setContentLength(f.length);
     meta.setContentType(new Tika().detect(inputStream));
 
-    return s3Client.putObject(bucketName, url, inputStream, meta);
+    return s3Client.putObject(bucketName, url, new ByteArrayInputStream(f), meta);
   }
 
   /**
