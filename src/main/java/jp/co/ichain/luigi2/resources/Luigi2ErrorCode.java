@@ -63,4 +63,8 @@ public class Luigi2ErrorCode {
    * 登録情報不正
    */
   public static final String D0004 = "D0004";
+  /**
+   * 他で更新ずみ
+   */
+  public static final String D0005 = "D0005";
 }
