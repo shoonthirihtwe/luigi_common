@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,6 +40,8 @@ public class ServiceInstancesVo extends ObjectVo {
   String inherentJson;
 
   Map<String, Object> inherentMap;
+
+  List<Object> inherentList;
 
   String inherentText;
 

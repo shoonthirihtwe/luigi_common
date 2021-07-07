@@ -68,7 +68,11 @@ public class ServiceInstancesResources {
       for (val vo : listByTenant) {
         if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
           ObjectMapper mapper = new ObjectMapper();
-          vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
+          if (vo.getInherentJson().charAt(0) == '[') {
+            vo.setInherentList(mapper.readValue(vo.getInherentJson(), List.class));
+          } else {
+            vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
+          }
         }
       }
 
