@@ -158,25 +158,24 @@ public class AwsS3Dao {
 
 
     SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-    List<DownloadFileVo> fileList = objSummaries.stream()
-        .filter(s3ObjectSummary -> s3ObjectSummary.getSize() != 0).filter(s3ObjectSummary -> {
-          for (val tag : fileTags) {
-            if (s3ObjectSummary.getKey().indexOf(tag) != -1) {
-              return true;
-            }
-          }
-          return false;
-        }).map(s -> {
-          String key = s.getKey();
-          try {
-            return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1),
-                format.parse(s.getKey().split("_")[2]), s.getLastModified());
-          } catch (ParseException e) {
-            e.printStackTrace();
-          }
-          return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1), null,
-              s.getLastModified());
-        }).collect(Collectors.toList());
+    List<DownloadFileVo> fileList = objSummaries.stream().filter(s3ObjectSummary -> {
+      for (val tag : fileTags) {
+        if (s3ObjectSummary.getKey().indexOf(tag) != -1) {
+          return true;
+        }
+      }
+      return false;
+    }).map(s -> {
+      String key = s.getKey();
+      try {
+        return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1),
+            format.parse(s.getKey().split("_")[2]), s.getLastModified());
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1), null,
+          s.getLastModified());
+    }).collect(Collectors.toList());
 
 
     Collections.sort(fileList, new Comparator<DownloadFileVo>() {
@@ -203,7 +202,7 @@ public class AwsS3Dao {
    */
   private List<S3ObjectSummary> getS3ObjectList(String preDir, Map<String, Object> paramMap)
       throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy/M");
 
     val summaryList = new ArrayList<S3ObjectSummary>();
     Date fromDate = new Date();
