@@ -178,12 +178,12 @@ public class Validity {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
         } else {
-          val vData = validateType(type, data);
-          paramMap.put(key, vData);
-          if (data != null && vData == null) {
+          val vdata = validateType(type, data);
+          paramMap.put(key, vdata);
+          if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          validate(validityVo, serviceInstanceMap, exList, key, vData);
+          validate(validityVo, serviceInstanceMap, exList, key, vdata);
         }
       }
     }
@@ -276,7 +276,12 @@ public class Validity {
         try {
           if (commonCondition.validate(conditionMethod, tenantId, data,
               (List<Object>) argsMap.get("args")) == false) {
-            exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+            val errArgs = (List<Object>) argsMap.get("errArgs");
+            if (errArgs != null && errArgs.size() > 0) {
+              exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs));
+            } else {
+              exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+            }
           }
         } catch (Exception e) {
           exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
