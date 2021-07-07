@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -25,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.util.IOUtils;
@@ -38,7 +38,6 @@ import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
-import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.vo.DownloadFileVo;
 import lombok.val;
 
@@ -130,19 +129,20 @@ public class AwsS3Service {
    * @throws IOException
    */
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
-  public void upload(Documents documents, MultipartFile file, Integer tenantId, Object ownerCode,
-      Object updatedBy) throws InvalidKeyException, NoSuchAlgorithmException,
-      IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException,
-      NoSuchPaddingException, InvalidKeySpecException, DecoderException, IOException {
+  public void upload(Documents documents, InputStream inputStream, String fileName,
+      Integer tenantId, Object ownerCode, Object updatedBy)
+      throws InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException,
+      BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException,
+      InvalidKeySpecException, DecoderException, IOException {
 
     // file name
-    val fileName = Base64.encodeBase64String(file.getOriginalFilename().getBytes("UTF-8"));
+    val encodeFileName = Base64.encodeBase64String(fileName.getBytes("UTF-8"));
 
     // db insert
     Map<String, Object> dataMap = new HashMap<String, Object>();
     dataMap.put("document", documents.name);
-    dataMap.put("fileName", fileName);
-    dataMap.put("documentTitle", file.getOriginalFilename());
+    dataMap.put("encodeFileName", encodeFileName);
+    dataMap.put("documentTitle", fileName);
     dataMap.put("tenantId", tenantId);
     dataMap.put("ownerCode", ownerCode);
     dataMap.put("updatedBy", updatedBy);
@@ -163,7 +163,7 @@ public class AwsS3Service {
     documentsMapper.insertDocuments(dataMap);
 
     // file upload
-    awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + fileName, file.getInputStream());
+    awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + encodeFileName, inputStream);
   }
 
   /**
@@ -179,71 +179,18 @@ public class AwsS3Service {
    * @param month
    * @throws IOException
    */
-  public void upload(MultipartFile file, FreeDocumentsType documentsType, int tenantId, int year,
-      int month) throws IOException {
+  public void upload(InputStream inputsteam, String fileName, FreeDocumentsType documentsType,
+      int tenantId, int year, int month) throws IOException {
 
     val serviceMap = serviceInstancesResources.get(tenantId, FREE_DOCUMENTS);
     val folder = serviceMap.get(0).getInherentMap().get(documentsType.name);
-
-    // file name
-    val fileName = file.getOriginalFilename();
 
     StringBuffer sb = new StringBuffer();
     sb.append(folder).append(tenantId).append("/").append(year).append("/").append(month)
         .append("/").append(fileName);
 
     // file upload
-    awsS3Dao.upload(new String(sb), file.getInputStream());
-  }
-
-  /**
-   * フリーファイルアップロード
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-07-05
-   * @updatedAt : 2021-07-05
-   * @param fileList
-   * @param documentsType
-   * @param tenantId
-   * @param year
-   * @param month
-   * @throws IOException
-   */
-  public void upload(List<MultipartFile> fileList, FreeDocumentsType documentsType, int tenantId,
-      int year, int month) throws IOException {
-    for (val file : CollectionUtils.safe(fileList)) {
-      this.upload(file, documentsType, tenantId, year, month);
-    }
-  }
-
-  /**
-   * S3にファイルをアップロードする
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-07-01
-   * @updatedAt : 2021-07-01
-   * @param documents
-   * @param fileList
-   * @param tenantId
-   * @param ownerCode
-   * @param updatedBy
-   * @throws InvalidKeyException
-   * @throws NoSuchAlgorithmException
-   * @throws IllegalBlockSizeException
-   * @throws BadPaddingException
-   * @throws InvalidAlgorithmParameterException
-   * @throws NoSuchPaddingException
-   * @throws InvalidKeySpecException
-   * @throws DecoderException
-   * @throws IOException
-   */
-  public void upload(Documents documents, List<MultipartFile> fileList, Integer tenantId,
-      Object ownerCode, Object updatedBy) throws InvalidKeyException, NoSuchAlgorithmException,
-      IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException,
-      NoSuchPaddingException, InvalidKeySpecException, DecoderException, IOException {
-    for (val file : CollectionUtils.safe(fileList)) {
-      this.upload(documents, file, tenantId, ownerCode, updatedBy);
-    }
+    awsS3Dao.upload(new String(sb), inputsteam);
   }
 
   /**
@@ -332,6 +279,4 @@ public class AwsS3Service {
 
     return awsS3Dao.searchFile(paramMap, documentDir, fileTags);
   }
-
-
 }

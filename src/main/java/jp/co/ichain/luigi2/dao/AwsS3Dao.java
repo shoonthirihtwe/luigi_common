@@ -170,15 +170,15 @@ public class AwsS3Dao {
           } catch (ParseException e) {
             e.printStackTrace();
           }
-          return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1),
-              null, s.getLastModified());
+          return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1), null,
+              s.getLastModified());
         }).collect(Collectors.toList());
 
 
     Collections.sort(fileList, new Comparator<DownloadFileVo>() {
       @Override
       public int compare(DownloadFileVo df1, DownloadFileVo df2) {
-          return (int) (df2.getCreatedAt().getTime() - df1.getCreatedAt().getTime());
+        return (int) (df2.getCreatedAt().getTime() - df1.getCreatedAt().getTime());
       }
     });
 
@@ -202,16 +202,16 @@ public class AwsS3Dao {
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
 
     val summaryList = new ArrayList<S3ObjectSummary>();
-    Date fDate = new Date();
-    Date tDate = new Date();
+    Date fromDate = new Date();
+    Date toDate = new Date();
     Calendar cal = Calendar.getInstance();
     if (paramMap.get("from") instanceof String) {
-      fDate = new Date(Long.parseLong(paramMap.get("from").toString()));
-      cal.setTime(fDate);
+      fromDate = new Date(Long.parseLong(paramMap.get("from").toString()));
+      cal.setTime(fromDate);
     }
 
     if (paramMap.get("to") instanceof String) {
-      tDate = new Date(Long.parseLong(paramMap.get("to").toString()));
+      toDate = new Date(Long.parseLong(paramMap.get("to").toString()));
     }
 
     do {
@@ -221,7 +221,7 @@ public class AwsS3Dao {
       summaryList.addAll(result.getObjectSummaries());
       cal.add(Calendar.MONTH, 1);
 
-    } while (cal.getTimeInMillis() <= tDate.getTime());
+    } while (cal.getTimeInMillis() <= toDate.getTime());
 
     return summaryList;
   }
