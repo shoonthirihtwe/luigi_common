@@ -42,6 +42,11 @@ public class ClaimDocumentsVo extends ObjectVo {
   Integer claimTrxsId;
   
   /**
+   * 連番
+   */
+  Integer sequenceNo;
+  
+  /**
    * タイトル
    */
   String documentTitle;
@@ -60,7 +65,6 @@ public class ClaimDocumentsVo extends ObjectVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**

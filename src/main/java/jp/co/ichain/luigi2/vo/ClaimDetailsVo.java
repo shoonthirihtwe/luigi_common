@@ -200,7 +200,6 @@ public class ClaimDetailsVo extends ObjectVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**
