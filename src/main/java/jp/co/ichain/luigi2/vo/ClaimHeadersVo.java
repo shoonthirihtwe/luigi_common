@@ -384,7 +384,6 @@ public class ClaimHeadersVo extends ObjectVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**
@@ -446,26 +445,31 @@ public class ClaimHeadersVo extends ObjectVo {
   /**
    * 請求内容
    */
+  @JsonIgnore
   String claimDetailInfo;
 
   /**
    * 請求額
    */
+  @JsonIgnore
   Integer claimAmount;
 
   /**
    * 受診回数
    */
+  @JsonIgnore
   Integer treatmentTimes;
 
   /**
    * 支払対象額
    */
+  @JsonIgnore
   Integer benefitAmount;
 
   /**
    * 他保険
    */
+  @JsonIgnore
   String otherInsuerer;
 
   /**
@@ -477,9 +481,21 @@ public class ClaimHeadersVo extends ObjectVo {
    * 保険金・給付金請求資料
    */
   ArrayList<ClaimDocumentsVo> claimDocuments;
+  
+  /**
+   * 保険金・給付金請求詳細
+   */
+  ClaimDetailsVo claimDetails;
+  
+  /**
+   * ロック用
+   */
+  @JsonIgnore
+  Integer claimDetailsUpdateCount;
 
   public ClaimHeadersVo() {
     beneficialies = new ArrayList<BeneficialiesVo>();
     claimDocuments = new ArrayList<ClaimDocumentsVo>();
+    claimDetails = new ClaimDetailsVo();
   }
 }

@@ -60,4 +60,9 @@ public class BeneficialiesVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+  
+  /**
+   * ロック用
+   */
+  Integer updateCount;
 }
