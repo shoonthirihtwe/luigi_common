@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -12,10 +11,9 @@ import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.ichain.luigi2.vo.CodeInfoVo;
+import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import lombok.val;
 
 /**
@@ -29,7 +27,7 @@ import lombok.val;
 @Service
 public class CodeMasterResources {
 
-  private Map<Integer, Map<String, CodeInfoVo>> map = null;
+  private Map<Integer, Map<String, List<CodeMasterVo>>> map = null;
 
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
@@ -46,19 +44,15 @@ public class CodeMasterResources {
   @Lock(LockType.WRITE)
   @PostConstruct
   public void initialize() throws JsonMappingException, JsonProcessingException {
-    this.map = new HashMap<Integer, Map<String, CodeInfoVo>>();
+    this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
 
     ObjectMapper objMapper = new ObjectMapper();
     for (val tenantId : serviceInstancesResources.getTenantList()) {
       val codeList = serviceInstancesResources.get(tenantId, "code_master");
-      val codeInfoVoList = objMapper.readValue(codeList.get(0).getInherentJson(),
-          new TypeReference<List<CodeInfoVo>>() {});
-
-      Map<String, CodeInfoVo> keyMap = new ConcurrentHashMap<String, CodeInfoVo>();
-      for (val codeInfo : codeInfoVoList) {
-        keyMap.put(codeInfo.getKey(), codeInfo);
-      }
-      this.map.put(tenantId, keyMap);
+      @SuppressWarnings("unchecked")
+      Map<String, List<CodeMasterVo>> codeMap =
+          objMapper.readValue(codeList.get(0).getInherentJson(), Map.class);
+      this.map.put(tenantId, codeMap);
     }
 
   }
@@ -74,7 +68,7 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public CodeInfoVo get(Integer tenantId, String key)
+  public List<CodeMasterVo> get(Integer tenantId, String key)
       throws JsonMappingException, JsonProcessingException {
     if (this.map == null) {
       this.initialize();
@@ -94,7 +88,7 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public Map<String, CodeInfoVo> get(Integer tenantId)
+  public Map<String, List<CodeMasterVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
     if (this.map == null) {
       this.initialize();

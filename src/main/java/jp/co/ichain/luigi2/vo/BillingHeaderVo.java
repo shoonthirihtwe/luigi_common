@@ -88,7 +88,6 @@ public class BillingHeaderVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**

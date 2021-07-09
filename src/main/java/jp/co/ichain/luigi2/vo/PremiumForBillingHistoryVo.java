@@ -43,7 +43,6 @@ public class PremiumForBillingHistoryVo extends ObjectVo {
   
   String status;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

@@ -41,7 +41,6 @@ public class NewBusinessDocumentsVo extends ObjectVo {
   @JsonSerialize(using = JsonDateSerializer.class)
   Date uploadDate;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

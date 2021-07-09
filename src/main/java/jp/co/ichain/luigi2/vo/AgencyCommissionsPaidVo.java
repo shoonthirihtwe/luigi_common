@@ -110,7 +110,6 @@ public class AgencyCommissionsPaidVo extends ObjectVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**

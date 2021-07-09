@@ -53,7 +53,6 @@ public class PolicyHoldersPayMethodVo extends ObjectVo {
   
   String tokenNo;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

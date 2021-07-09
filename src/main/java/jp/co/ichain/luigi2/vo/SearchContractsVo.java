@@ -35,7 +35,6 @@ public class SearchContractsVo extends ObjectVo {
 
   String contractStatus;
   
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

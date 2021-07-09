@@ -281,7 +281,6 @@ public class AgenciesVo extends ObjectVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**

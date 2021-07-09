@@ -73,7 +73,6 @@ public class RiskHeadersVo extends ObjectVo {
   
   String otherInsuranceYn;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore
