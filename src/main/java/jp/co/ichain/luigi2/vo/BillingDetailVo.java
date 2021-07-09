@@ -144,7 +144,6 @@ public class BillingDetailVo {
   /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**

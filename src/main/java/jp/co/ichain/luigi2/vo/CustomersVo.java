@@ -159,7 +159,6 @@ public class CustomersVo extends ObjectVo {
   
   String notificationFlag;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

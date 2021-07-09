@@ -103,7 +103,6 @@ public class RenewalInfoForNoticationVo {
    */
   String email;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

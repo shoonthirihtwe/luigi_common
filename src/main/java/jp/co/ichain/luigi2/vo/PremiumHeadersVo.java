@@ -69,7 +69,6 @@ public class PremiumHeadersVo extends ObjectVo {
 
   String premiumStatus;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

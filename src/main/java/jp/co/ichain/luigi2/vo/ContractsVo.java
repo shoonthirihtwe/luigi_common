@@ -146,7 +146,6 @@ public class ContractsVo extends ObjectVo {
 
   Integer paymentDateOrder;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

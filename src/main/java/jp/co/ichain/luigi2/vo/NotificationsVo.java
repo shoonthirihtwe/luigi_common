@@ -76,7 +76,6 @@ public class NotificationsVo extends ObjectVo {
   String errorFlag;
 
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore
