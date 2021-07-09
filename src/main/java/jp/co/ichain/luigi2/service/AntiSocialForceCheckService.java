@@ -78,8 +78,6 @@ public class AntiSocialForceCheckService {
     // Convert JSON File to Java Object
     AntiSocialForceCheckVo asfcheck = gsonObj.fromJson(body, AntiSocialForceCheckVo.class);
     client.close();
-    System.out.println(asfcheck.getResultReords().get(0).getAge());
-
     return asfcheck;
   }
 }
