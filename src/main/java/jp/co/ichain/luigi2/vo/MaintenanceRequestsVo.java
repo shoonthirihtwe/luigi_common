@@ -188,9 +188,18 @@ public class MaintenanceRequestsVo extends ObjectVo {
   List<DocumentsVo> documentsList;
 
   /**
+   * 保険料返金額
+   */
+  Integer refundAmount;
+
+  /**
+   * 解約払戻金額
+   */
+  Integer cashValue;
+
+  /**
    * ロック用
    */
-  @JsonIgnore
   Integer updateCount;
 
   /**
