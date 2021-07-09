@@ -20,16 +20,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AntiSocialForceResultReordVo {
-  String RecordNumber;
-  String Delivered;
-  String Publication;
-  String Name1;
-  String Name1Kana;
-  String Name2;
-  String Name2Kana;
-  Integer Age;
-  String Gender;
-  String Address;
-  String Property;
-  String Charge;
+  String recordNumber;
+  String delivered;
+  String publication;
+  String name1;
+  String name1Kana;
+  String name2;
+  String name2Kana;
+  String age;
+  String gender;
+  String address;
+  String property;
+  String charge;
 }

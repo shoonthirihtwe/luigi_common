@@ -29,11 +29,6 @@ import jp.co.ichain.luigi2.vo.AntiSocialForceCheckVo;
  */
 @Service
 public class AntiSocialForceCheckService {
-
-  private static String ANTISOCIAL_URL = "https://dev.api.dis.ichain.co.jp/api/antiCompany";
-
-  private static String ANTISOCIAL_CODE = "ab1234567890";
-
   private static String ANTISOCIAL_DATE = "2019-11-03";
 
   /**
@@ -47,21 +42,20 @@ public class AntiSocialForceCheckService {
    * @throws IOException
    * @throws UnsupportedOperationException
    */
-  public static AntiSocialForceCheckVo antisocialCheck(String name, Date birtday, String address)
-      throws ClientProtocolException, IOException {
-
+  public static AntiSocialForceCheckVo antisocialCheck(String tenantsId, String name, Date birtday,
+      String address, String antisocialUrl) throws ClientProtocolException, IOException {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
     String dateOfbirthday = dateOfBirth.format(formatter);
 
     CloseableHttpClient client = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost(ANTISOCIAL_URL);
+    HttpPost httpPost = new HttpPost(antisocialUrl);
 
     Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
-    inputMap.put("InsurerCodeSeq", ANTISOCIAL_CODE);
+    inputMap.put("InsurerCodeSeq", tenantsId);
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
-    inputMap.put("RetrievalMethod", "0");
+    inputMap.put("RetrievalMethod", "1");
     inputMap.put("NameKanji", name);
     inputMap.put("DOB", dateOfbirthday);
     inputMap.put("Address", address);
@@ -75,8 +69,23 @@ public class AntiSocialForceCheckService {
     httpPost.setHeader("x-api-key", "8FXt7noqvF7umEYS4xfb11QNgpZ8fr1g3GHtkgQt");
     CloseableHttpResponse response = client.execute(httpPost);
     String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+
     // Convert JSON File to Java Object
-    AntiSocialForceCheckVo asfcheck = gsonObj.fromJson(body, AntiSocialForceCheckVo.class);
+    String convertBody = "";
+    Boolean flagQuotesFlag = true;
+    for (int i = 0; i < body.length(); i++) {
+      char text = body.charAt(i);
+      if (text == ',' || text == '{') {
+        flagQuotesFlag = true;
+      }
+      if ('A' <= text && text <= 'Z' && flagQuotesFlag) {
+        convertBody += Character.toLowerCase(text);
+        flagQuotesFlag = false;
+      } else {
+        convertBody += text;
+      }
+    }
+    AntiSocialForceCheckVo asfcheck = gsonObj.fromJson(convertBody, AntiSocialForceCheckVo.class);
     client.close();
     return asfcheck;
   }

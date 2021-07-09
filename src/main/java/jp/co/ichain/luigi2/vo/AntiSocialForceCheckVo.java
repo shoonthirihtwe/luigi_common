@@ -21,8 +21,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AntiSocialForceCheckVo {
-  String ResultCode;
-  String NumberOfRecord;
-  List<AntiSocialForceResultReordVo> ResultReords;
+  String resultCode;
+  String numberOfRecord;
+  List<AntiSocialForceResultReordVo> resultReords;
   
 }
