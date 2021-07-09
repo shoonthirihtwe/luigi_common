@@ -48,9 +48,6 @@ public class AntiSocialForceCheckService {
     LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
     String dateOfbirthday = dateOfBirth.format(formatter);
 
-    CloseableHttpClient client = HttpClients.createDefault();
-    HttpPost httpPost = new HttpPost(antisocialUrl);
-
     Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", tenantsId);
@@ -62,6 +59,9 @@ public class AntiSocialForceCheckService {
 
     // convert map to JSON String
     String jsonStr = gsonObj.toJson(inputMap);
+
+    HttpPost httpPost = new HttpPost(antisocialUrl);
+    CloseableHttpClient client = HttpClients.createDefault();
 
     StringEntity entity = new StringEntity(jsonStr, ContentType.APPLICATION_JSON);
     httpPost.setEntity(entity);

@@ -20,9 +20,11 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+// CHECKSTYLE:OFF: checkstyle:AbbreviationAsWordInName
 public class AntiSocialForceCheckVo {
   String resultCode;
   String numberOfRecord;
   List<AntiSocialForceResultReordVo> resultReords;
-  
+
 }
+// CHECKSTYLE:ON: checkstyle:AbbreviationAsWordInName
