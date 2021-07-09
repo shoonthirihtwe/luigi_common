@@ -52,7 +52,6 @@ public class ContractLogVo extends ObjectVo {
   
   String programName;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

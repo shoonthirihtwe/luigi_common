@@ -39,7 +39,6 @@ public class CodeMasterVo extends ObjectVo {
   
   String codeName;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

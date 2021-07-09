@@ -116,7 +116,6 @@ public class UnderWritingsVo extends ObjectVo {
 
   String substandardReply;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

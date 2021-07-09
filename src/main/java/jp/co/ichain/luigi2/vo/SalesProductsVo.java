@@ -51,7 +51,6 @@ public class SalesProductsVo extends ObjectVo {
   
   Integer sortNo;
   
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

@@ -80,7 +80,6 @@ public class CustomersIndivisualVo extends ObjectVo {
   
   String occupationCode;
   
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

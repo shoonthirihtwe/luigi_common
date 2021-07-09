@@ -108,7 +108,6 @@ public class CustomersCorporateVo extends ObjectVo {
   
   String contactEmail;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

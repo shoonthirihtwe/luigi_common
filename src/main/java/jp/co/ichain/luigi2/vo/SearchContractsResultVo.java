@@ -40,7 +40,6 @@ public class SearchContractsResultVo extends ObjectVo {
   
   String applicantNameKana;
   
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore

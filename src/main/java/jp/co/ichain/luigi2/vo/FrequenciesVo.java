@@ -37,7 +37,6 @@ public class FrequenciesVo extends ObjectVo {
   
   String frequency;
 
-  @JsonIgnore
   Integer updateCount;
 
   @JsonIgnore
