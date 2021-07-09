@@ -442,11 +442,11 @@ public class Validity {
       return true;
     }
     val fixedList = codeMasterResources.get(tenantId).get(codeMasterKey);
-    if (fixedList == null || fixedList.getValues() == null || fixedList.getValues().size() == 0) {
+    if (fixedList == null || fixedList.size() == 0) {
       return true;
     }
 
-    for (val item : fixedList.getValues()) {
+    for (val item : fixedList) {
       if (data.equals(item.getCodeValue())) {
         return true;
       }
