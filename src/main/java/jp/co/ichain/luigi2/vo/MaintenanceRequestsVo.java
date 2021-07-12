@@ -183,6 +183,11 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String contractEmail;
 
   /**
+   * 通知用メールアドレス
+   */
+  String emailForNotification;
+
+  /**
    * 文書
    */
   List<DocumentsVo> documentsList;

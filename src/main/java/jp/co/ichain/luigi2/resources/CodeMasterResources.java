@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
@@ -49,9 +50,9 @@ public class CodeMasterResources {
     ObjectMapper objMapper = new ObjectMapper();
     for (val tenantId : serviceInstancesResources.getTenantList()) {
       val codeList = serviceInstancesResources.get(tenantId, "code_master");
-      @SuppressWarnings("unchecked")
       Map<String, List<CodeMasterVo>> codeMap =
-          objMapper.readValue(codeList.get(0).getInherentJson(), Map.class);
+          objMapper.readValue(codeList.get(0).getInherentJson(),
+              new TypeReference<Map<String, List<CodeMasterVo>>>() {});
       this.map.put(tenantId, codeMap);
     }
 

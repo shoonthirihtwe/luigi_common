@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.NotificationMapper">
+	<insert id="insertNotification" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO notifications (
+			tenant_id,
+			notification_date,
+			contract_no,
+			template_nunber,
+		    notification_implementation,
+		    coment,
+		    sendee,
+		    nitification_method,
+		    email,
+		    error_flag,
+		  	created_by
+		) SELECT
+			#{tenantId},
+			#{notificationDate},
+			#{contractNo},
+			#{templateNunber},
+			'0',
+			#{coment},
+			CASE 
+				when cu.customer_type = '1' then concat(cui.name_knj_sei,' ',cui.name_knj_mei)
+				when cu.customer_type = '2' then cuc.corp_name_official
+				ELSE null
+			END,
+			#{nitificationMethod},
+			<if test ="email != null">#{email},</if>
+			<if test ="email == null">,CASE when cu.customer_type = '1' then cui.email
+				when cu.customer_type = '2' then cuc.contact_email
+				ELSE null END,</if>
+			#{errorFlag}
+			#{updatedBy}
+			)
+		FROM contracts co JOIN customers cu
+				ON co.contractor_customer_id = cu.customer_id
+			LEFT OUTER JOIN customers_indivisual cui
+				ON co.contractor_customer_id = cui.customer_id AND cu.customer_type=1
+			LEFT OUTER JOIN customers_corporate cuc
+				ON co.contractor_customer_id = cuc.customer_id AND cu.customer_type=2
+		WHERE co.contractNo=#{contractNo} ORDER BY co.contract_branch_no DESC LIMIT 1
+	</insert>
+</mapper>
