@@ -46,6 +46,11 @@ public class Luigi2ErrorCode {
    * 日付が現時刻以上
    */
   public static final String V0007 = "V0007";
+  
+  /**
+   * 項目のみで不正
+   */
+  public static final String V0008 = "V0008";
 
   /**
    * 一致なし
