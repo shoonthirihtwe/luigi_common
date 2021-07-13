@@ -10,7 +10,9 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import com.google.protobuf.InvalidProtocolBufferException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
@@ -27,6 +29,7 @@ import lombok.val;
  */
 @Singleton
 @Service
+@DependsOn(value = {"dataSourceInitializer"})
 public class TenantResources {
 
   private ConcurrentHashMap<Integer, TenantsVo> tenantMap = null;

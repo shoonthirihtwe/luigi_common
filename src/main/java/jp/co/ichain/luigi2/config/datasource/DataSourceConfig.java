@@ -17,8 +17,13 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.val;
 
@@ -37,6 +42,29 @@ public class DataSourceConfig {
   @Value("${mybatis.type-aliases-package}")
   private String typeAliasPackage;
 
+  @Autowired
+  Environment env;
+  
+  @Autowired
+  ResourceLoader resourceLoader;
+
+  @Bean("dataSourceInitializer")
+  public DataSourceInitializer dataSourceInitializer(
+      @Qualifier("luigi2DataSource") DataSource datasource) {
+    ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+    
+    if (env.acceptsProfiles(Profiles.of("test"))) {
+
+      resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
+      resourceDatabasePopulator.addScript(resourceLoader.getResource("classpath:sql/schema.sql"));
+      resourceDatabasePopulator.addScript(resourceLoader.getResource("classpath:sql/data.sql"));
+      
+    }
+    DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+    dataSourceInitializer.setDataSource(datasource);
+    dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+    return dataSourceInitializer;
+  }
 
   /**
    * Session Factory
