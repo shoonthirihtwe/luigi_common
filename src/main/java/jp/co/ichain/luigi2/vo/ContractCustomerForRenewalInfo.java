@@ -75,7 +75,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * email
    */
   String email;
-  
+
   /**
    * 契約者 生年月日
    */
@@ -110,7 +110,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * insEmail
    */
   String insEmail;
-  
+
   /**
    * 契約者 生年月日
    */
