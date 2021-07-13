@@ -38,6 +38,11 @@ public class NotificationsVo extends ObjectVo {
    * 証券番号
    */
   String contractNo;
+  
+  /**
+   * 証券番号枝番
+   */
+  String contractBranchNo;
 
   /**
    * テンプレートナンバー
