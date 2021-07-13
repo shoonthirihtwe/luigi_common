@@ -72,6 +72,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String insuredCustomerId;
 
   /**
+   * email
+   */
+  String email;
+
+  /**
    * 契約者 生年月日
    */
   Date dateOfBirth;
@@ -100,6 +105,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 住所漢字 2
    */
   String addrKnj2;
+
+  /**
+   * insEmail
+   */
+  String insEmail;
 
   /**
    * 契約者 生年月日
