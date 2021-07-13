@@ -74,6 +74,16 @@ public class RiskHeadersVo extends ObjectVo {
   String otherInsuranceYn;
 
   Integer updateCount;
+  
+  /**
+   * 基本給付額
+   */
+  Integer benefitBaseAmount;
+  
+  /**
+   * 基本給付額単位
+   */
+  String benefitBaseUnit;
 
   @JsonIgnore
   Date createdAt;

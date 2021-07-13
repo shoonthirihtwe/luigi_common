@@ -1,10 +1,11 @@
 package jp.co.ichain.luigi2.vo;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -17,18 +18,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
-@NoArgsConstructor
 @AllArgsConstructor
 public class ClaimContractSearchVo extends ObjectVo {
   /**
-   * 保険会社情報コード連番
+   * テナントID
    */
-  String insurerCodeSeq;
-
-  /**
-   * 保険会社情報コード開始日
-   */
-  long insurerInceptionDate;
+  Integer tenantId;
 
   /**
    * 証券番号
@@ -43,5 +38,9 @@ public class ClaimContractSearchVo extends ObjectVo {
   /**
    * 保障内容Vo
    */
-  RiskHeadersVo benefits;
+  List<RiskHeadersVo> benefits;
+
+  public ClaimContractSearchVo() {
+    benefits = new ArrayList<RiskHeadersVo>();
+  }
 }

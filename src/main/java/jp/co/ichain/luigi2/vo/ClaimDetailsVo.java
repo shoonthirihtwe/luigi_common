@@ -124,8 +124,7 @@ public class ClaimDetailsVo extends ObjectVo {
   /**
    * 請求日数
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date claimDays;
+  Integer claimDays;
   
   /**
    * 請求額
