@@ -37,6 +37,18 @@ public class AwsMailDao {
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
 
+  /**
+   * 直メール発送
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-13
+   * @updatedAt : 2021-07-13
+   * @param templateNumber
+   * @param to
+   * @param paramMap : tenantId必須
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
   public void send(String templateNumber, String to, Map<String, Object> paramMap)
       throws JsonMappingException, JsonProcessingException {
 
