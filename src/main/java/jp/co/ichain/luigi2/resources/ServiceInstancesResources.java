@@ -13,6 +13,7 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -33,6 +34,7 @@ import lombok.val;
  */
 @Singleton
 @Service
+@DependsOn(value = {"dataSourceInitializer"})
 public class ServiceInstancesResources {
 
   private Map<Integer, Map<String, List<ServiceInstancesVo>>> map = null;
