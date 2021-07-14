@@ -93,7 +93,8 @@ public class AwsMailDao {
       boolean dateConvertFg = false;
       boolean keyOpen = false;
     }
-    BodyFg bodyFg = new BodyFg();
+
+    val bodyFg = new BodyFg();
     val sbBody = new StringBuffer();
     val sbKey = new StringBuffer();
 
