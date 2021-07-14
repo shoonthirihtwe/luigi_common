@@ -53,7 +53,7 @@ public class DataSourceConfig {
     if (env.acceptsProfiles(Profiles.of("test"))) {
       
       resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
-      resourceDatabasePopulator.addScript(new ClassPathResource("sql/init_data.sql"));
+      resourceDatabasePopulator.addScript(new ClassPathResource("test_sql/init_data.sql"));
       resourceDatabasePopulator.addScript(new ClassPathResource("Service_instance/values.sql"));
       
     }

@@ -67,7 +67,7 @@ public class TestScriptUtils {
    * @throws ScriptException
    */
   public void cleanUpDatabase() throws ScriptException, SQLException {
-    executeSqlScript("sql/clear_data.sql");
+    executeSqlScript("test_sql/clear_data.sql");
   }
 
   /**
