@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
+import jp.co.ichain.luigi2.vo.NotificationsVo;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
 
@@ -55,4 +56,14 @@ public interface CommonMapper {
   
   // 営業日取得
   Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date, @Param("count") Integer count);
+
+  /**
+   * 通知登録
+   * 
+   * @author : [AOT] n.h.hoang
+   * @createdAt : 2021-07-13
+   * @updatedAt : 2021-07-13
+   * @param dataMap
+   */
+  void insertNotification(NotificationsVo notification);
 }

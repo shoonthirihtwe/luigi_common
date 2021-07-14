@@ -40,7 +40,7 @@ public class NotificationsVo extends ObjectVo {
   String contractNo;
   
   /**
-   * 証券番号枝番
+   * 前証券番号枝番
    */
   String contractBranchNo;
 
@@ -54,7 +54,6 @@ public class NotificationsVo extends ObjectVo {
    */
   String notificationImplementation;
 
-  //TODO comment ?
   /**
    * 通信欄コメント
    */

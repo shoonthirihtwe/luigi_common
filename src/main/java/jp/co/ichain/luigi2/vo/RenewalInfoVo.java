@@ -24,6 +24,9 @@ import lombok.Setter;
 public class RenewalInfoVo {
 
   Integer id;
+  
+  Integer tenantId;
+  
   /**
    * 更新前証券番号
    */
@@ -92,7 +95,7 @@ public class RenewalInfoVo {
   /**
    * 更新後年齢
    */
-  String renewalAge;
+  Integer renewalAge;
 
   /**
    * １回分保険料(現行)
