@@ -25,7 +25,6 @@ import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import com.zaxxer.hikari.HikariDataSource;
-import jp.co.ichain.luigi2.resources.TestSqlResources;
 import lombok.val;
 
 /**
@@ -45,23 +44,18 @@ public class DataSourceConfig {
 
   @Autowired
   Environment env;
-
-  @Value("${test.init.sql.path}")
-  String testInitDataPath;
-
-  @Autowired
-  TestSqlResources testSqlResource;
-
+  
   @Bean("dataSourceInitializer")
   public DataSourceInitializer dataSourceInitializer(
       @Qualifier("luigi2DataSource") DataSource datasource) {
     ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 
     if (env.acceptsProfiles(Profiles.of("test"))) {
-      resourceDatabasePopulator.setSeparator("^;");
+      
       resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
-      resourceDatabasePopulator.addScript(testSqlResource.getSchemaSqlResource());
-      resourceDatabasePopulator.addScript(new ClassPathResource(testInitDataPath));
+      resourceDatabasePopulator.addScript(new ClassPathResource("sql/init_data.sql"));
+      resourceDatabasePopulator.addScript(new ClassPathResource("Service_instance/values.sql"));
+      
     }
     DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
     dataSourceInitializer.setDataSource(datasource);

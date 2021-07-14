@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptException;
@@ -24,7 +23,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.ichain.luigi2.resources.TestSqlResources;
 
 /**
  * TestScriptUtils
@@ -35,12 +33,6 @@ import jp.co.ichain.luigi2.resources.TestSqlResources;
  */
 @Component
 public class TestScriptUtils {
-
-  @Autowired
-  TestSqlResources testSqlResources;
-
-  @Value("${test.init.sql.path}")
-  String testInitDataPath;
 
   @Autowired
   @Qualifier("luigi2DataSource")
@@ -75,11 +67,7 @@ public class TestScriptUtils {
    * @throws ScriptException
    */
   public void cleanUpDatabase() throws ScriptException, SQLException {
-    ScriptUtils.executeSqlScript(dataSource.getConnection(),
-        new EncodedResource(testSqlResources.getSchemaSqlResource()), true, true, "--", "^;", "/*",
-        "*/");
-
-    executeSqlScript(testInitDataPath);
+    executeSqlScript("sql/clear_data.sql");
   }
 
   /**
@@ -116,13 +104,14 @@ public class TestScriptUtils {
    * @throws SQLException
    * @throws ScriptException
    */
+  @SuppressWarnings("unchecked")
   public HashMap<String, String> loadJsonToHashMap(String path)
       throws JsonParseException, JsonMappingException, UnsupportedEncodingException, IOException {
 
     ObjectMapper mapper = new ObjectMapper();
     ClassPathResource resource = new ClassPathResource(path);
     return mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"),
-        new TypeReference<HashMap<String, String>>() {});
+        HashMap.class);
 
   }
 
