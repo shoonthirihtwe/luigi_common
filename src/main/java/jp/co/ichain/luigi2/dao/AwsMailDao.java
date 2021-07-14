@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.dao;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -53,12 +54,10 @@ public class AwsMailDao {
       throws JsonMappingException, JsonProcessingException {
 
     val contentInfo = serviceInstancesResources
-        .get((Integer) paramMap.get("tenantId"), templateNumber + "_notification").get(0)
-        .getInherentMap();
+        .get((Integer) paramMap.get("tenantId"), templateNumber + "_notification").get(0);
 
     // Get body
     Destination destination = new Destination().withToAddresses(to);
-    val body = (String) contentInfo.get("body");
 
     // Get signature
     val signature = (String) serviceInstancesResources
@@ -66,10 +65,10 @@ public class AwsMailDao {
         .get("signature");
 
     Message message = new Message()
-        .withSubject(
-            new Content().withCharset("UTF-8").withData((String) contentInfo.get("subject")))
-        .withBody(new Body().withHtml(
-            new Content().withCharset("UTF-8").withData(makeBody(body, signature, paramMap))));
+        .withSubject(new Content().withCharset("UTF-8")
+            .withData((String) contentInfo.getInherentMap().get("subject")))
+        .withBody(new Body().withHtml(new Content().withCharset("UTF-8")
+            .withData(makeBody(contentInfo.getInherentText(), signature, paramMap))));
 
     // Send the email
     client.sendEmail(new SendEmailRequest().withSource("no-reply@lg2.ichain.co.jp")
@@ -100,10 +99,15 @@ public class AwsMailDao {
 
     body.chars().forEach((ci) -> {
       val c = (char) ci;
-      if (c == '$') {
+      if (c == '\r') {
+        sbBody.append("<br/>");
+        return;
+      } else if (c == '\n') {
+        return;
+      } else if (c == '$') {
         bodyFg.keyFg = true;
         return;
-      } else if (bodyFg.keyFg && c == 'D') {
+      } else if (bodyFg.keyFg && !bodyFg.keyOpen && !bodyFg.dateConvertFg && c == 'D') {
         bodyFg.dateConvertFg = true;
         return;
       } else if (bodyFg.keyFg && c == '{') {
@@ -148,9 +152,9 @@ public class AwsMailDao {
 
   AwsMailDao(@Value("${aws.ses.region}") String region,
       @Value("${mail.date.format}") String mailDateFormat,
-      AWSCredentialsProvider credentialsProvider) {
+      AWSCredentialsProvider credentialsProvider) throws UnsupportedEncodingException {
     client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(region)
         .withCredentials(credentialsProvider).build();
-    dateFormat = new SimpleDateFormat(mailDateFormat);
+    dateFormat = new SimpleDateFormat(new String(mailDateFormat.getBytes("ISO-8859-1"), "UTF-8"));
   }
 }
