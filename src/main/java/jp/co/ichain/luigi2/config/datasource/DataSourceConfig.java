@@ -19,12 +19,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import com.zaxxer.hikari.HikariDataSource;
+import jp.co.ichain.luigi2.resources.TestSqlResources;
 import lombok.val;
 
 /**
@@ -44,21 +45,23 @@ public class DataSourceConfig {
 
   @Autowired
   Environment env;
-  
+
+  @Value("${test.init.sql.path}")
+  String testInitDataPath;
+
   @Autowired
-  ResourceLoader resourceLoader;
+  TestSqlResources testSqlResource;
 
   @Bean("dataSourceInitializer")
   public DataSourceInitializer dataSourceInitializer(
       @Qualifier("luigi2DataSource") DataSource datasource) {
     ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-    
-    if (env.acceptsProfiles(Profiles.of("test"))) {
 
+    if (env.acceptsProfiles(Profiles.of("test"))) {
+      resourceDatabasePopulator.setSeparator("^;");
       resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
-      resourceDatabasePopulator.addScript(resourceLoader.getResource("classpath:sql/schema.sql"));
-      resourceDatabasePopulator.addScript(resourceLoader.getResource("classpath:sql/data.sql"));
-      
+      resourceDatabasePopulator.addScript(testSqlResource.getSchemaSqlResource());
+      resourceDatabasePopulator.addScript(new ClassPathResource(testInitDataPath));
     }
     DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
     dataSourceInitializer.setDataSource(datasource);
