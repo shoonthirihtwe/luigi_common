@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +26,9 @@ import lombok.Setter;
 public class RenewalInfoVo {
 
   Integer id;
-  
+
   Integer tenantId;
-  
+
   /**
    * 更新前証券番号
    */
@@ -50,6 +52,7 @@ public class RenewalInfoVo {
   /**
    * 更新判定日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date renewalJudgeDate;
 
   /**
@@ -65,11 +68,13 @@ public class RenewalInfoVo {
   /**
    * 更新日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date renewalDate;
 
   /**
    * 更新後満期日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date renewalExpirationDate;
 
   /**
