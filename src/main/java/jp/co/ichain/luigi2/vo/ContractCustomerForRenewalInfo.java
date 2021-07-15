@@ -3,6 +3,8 @@ package jp.co.ichain.luigi2.vo;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,11 +41,13 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   /**
    * 現契約日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date issueDate;
 
   /**
    * 満期日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date expirationDate;
 
   /**
@@ -79,6 +83,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   /**
    * 契約者 生年月日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date dateOfBirth;
 
   /**
@@ -114,6 +119,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   /**
    * 契約者 生年月日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date insDateOfBirth;
   /**
    * 氏名漢字 姓
