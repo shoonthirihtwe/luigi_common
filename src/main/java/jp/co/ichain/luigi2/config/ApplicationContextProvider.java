@@ -22,7 +22,11 @@ public class ApplicationContextProvider implements ApplicationContextAware {
     applicationContext = ctx;
   }
 
-  public static ApplicationContext getApplicationContext() {
+  public static void setApplicationContextFonConsole(ApplicationContext ctx) throws BeansException {
+    applicationContext = ctx;
+  }
+
+  public ApplicationContext getApplicationContext() {
     return applicationContext;
   }
 

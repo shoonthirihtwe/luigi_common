@@ -30,7 +30,7 @@ import lombok.val;
 public class Validity {
 
   @Autowired
-  CommonCondition commonCondition;
+  ConditionUtils commonCondition;
 
   @Autowired
   CodeMasterResources codeMasterResources;

@@ -2,6 +2,7 @@ package jp.co.ichain.luigi2.util;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import jp.co.ichain.luigi2.config.ApplicationContextProvider;
@@ -16,6 +17,9 @@ import jp.co.ichain.luigi2.config.ApplicationContextProvider;
 @Component
 public class BeanUtils {
 
+  @Autowired
+  ApplicationContextProvider applicationContextProvider;
+
   /**
    * Bean nameでBean参照
    * 
@@ -26,7 +30,7 @@ public class BeanUtils {
    * @return
    */
   public Object getBean(String beanName) {
-    ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+    ApplicationContext applicationContext = applicationContextProvider.getApplicationContext();
     return applicationContext.getBean(beanName);
   }
 
@@ -40,7 +44,7 @@ public class BeanUtils {
    * @return
    */
   public Collection<Object> getBeanByAnnotation(Class<? extends Annotation> annotationCls) {
-    ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+    ApplicationContext applicationContext = applicationContextProvider.getApplicationContext();
     return applicationContext.getBeansWithAnnotation(annotationCls).values();
   }
 }
