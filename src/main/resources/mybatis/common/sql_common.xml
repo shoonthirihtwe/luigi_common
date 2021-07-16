@@ -94,34 +94,4 @@
 			date ASC
 		LIMIT #{count},1
 	</select>
-	<insert id="insertNotification" parameterType="NotificationsVo" keyProperty="id" useGeneratedKeys="true">
-		INSERT INTO notifications (
-			tenant_id,
-			notification_date,
-			contract_no,
-			contract_branch_no,
-			template_nunber,
-		    <if test="notificationImplementation != null">notification_implementation,</if>
-		    <if test="coment != null">coment,</if>
-		    sendee,
-		    nitification_method,
-		    email,
-		  	created_by
-		)
-		VALUES (
-			#{tenantId},
-			#{notificationDate},
-			#{contractNo},
-			#{contractBranchNo},
-			#{templateNunber},
-			
-			<if test="notificationImplementation != null">#{notificationImplementation},</if>
-			<if test="coment != null">#{coment},</if>
-			
-			#{sendee},
-			#{nitificationMethod},
-			#{email},
-			#{createdBy}
-		)
-	</insert>
 </mapper>
