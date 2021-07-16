@@ -107,6 +107,17 @@ public class RenewalInfoForNoticationVo {
    */
   String email;
 
+  /**
+   * 契約日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date issueDate;
+
+  /**
+   * 保険料
+   */
+  Integer totalPremium;
+
   Integer updateCount;
 
   @JsonIgnore
