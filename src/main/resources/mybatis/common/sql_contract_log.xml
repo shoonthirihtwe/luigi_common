@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.ContractLogMapper">
+		<select id="selectSequenceNo" resultType="Integer" parameterType="hashmap">
+		SELECT
+			CASE WHEN max(sequence_no) is null THEN 1
+	    	ELSE max(sequence_no) + 1
+	    	END as sequence_no
+		FROM
+			contract_log
+		WHERE
+			tenant_id = #{tenantId}
+		    AND contract_no = #{contractNo}
+		    AND contract_branch_no = #{contractBranchNo}
+	</select>
+	<insert id="insertContractLog" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO contract_log
+		(
+			tenant_id,
+			contract_no,
+			contract_branch_no,
+		  	sequence_no,
+		  	log_type,
+		  	message_code,
+		  	<if test="messageGroup != null">message_group,</if>
+		  	reason_group_code,
+		  	reason_code,
+		  	contact_transaction_code,
+		  	description,
+		  	program_name,
+		  	created_by
+		)
+		VALUES
+		(
+			#{tenantId},
+			#{contractNo},
+			#{contractBranchNo},
+			#{sequenceNo},
+			#{logType},
+			#{messageCode},
+			<if test="messageGroup != null">#{messageGroup},</if>
+			#{reasonGroupCode},
+			#{reasonCode},
+			#{contactTransactionCode},
+			#{description},
+			#{programName},
+			#{createdBy}
+		)
+	</insert>
+</mapper>
