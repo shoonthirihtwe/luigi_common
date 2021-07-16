@@ -122,6 +122,16 @@ public class RenewalInfoVo {
    */
   String renewalType;
 
+  /**
+   * 更新有無
+   */
+  String renewalRejection;
+
+  /**
+   * ロック用
+   */
+  String updateCount;
+
   @JsonIgnore
   Date createdAt;
 

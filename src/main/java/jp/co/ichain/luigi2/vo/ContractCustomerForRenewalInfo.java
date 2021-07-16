@@ -24,6 +24,28 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ContractCustomerForRenewalInfo extends ObjectVo {
   /**
+   * 保険期間
+   */
+  String coverageYear;
+
+  /**
+   * 更新後満期日
+   */
+  String renewalExpirationDate;
+
+  /**
+   * 更新前保険料
+   */
+  Integer premiumAmount;
+
+  /**
+   * 更新後保険料
+   */
+  String renewalPremiumAmount;
+
+  String updateCount;
+
+  /**
    * 証券番号
    */
   String contractNo;
