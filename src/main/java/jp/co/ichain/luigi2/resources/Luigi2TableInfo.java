@@ -33,7 +33,7 @@ public class Luigi2TableInfo {
     map.put("size", 12);
     TABLE_INFO_MAP.put(TableInfo.Customers, map);
 
-    // new_business_documents
+    // maintenance_requests
     map = new HashMap<String, Object>();
     map.put("table", "maintenance_requests");
     map.put("key", "request_no");

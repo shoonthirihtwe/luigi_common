@@ -13,7 +13,7 @@ import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
  */
 @Repository
 @Luigi2Mapper
-public interface NotificationsMapper {
+public interface NotificationMapper {
 
   /**
    * 通知登録

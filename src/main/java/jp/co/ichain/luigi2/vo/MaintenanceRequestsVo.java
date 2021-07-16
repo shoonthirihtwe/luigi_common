@@ -198,6 +198,11 @@ public class MaintenanceRequestsVo extends ObjectVo {
   Integer refundAmount;
 
   /**
+   * 保険料総返金額
+   */
+  Integer totalRefundAmount;
+
+  /**
    * 解約払戻金額
    */
   Integer cashValue;

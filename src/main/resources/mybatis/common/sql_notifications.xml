@@ -8,11 +8,13 @@
 			tenant_id,
 			notification_date,
 			contract_no,
+			contract_branch_no,
 			template_nunber,
 		    notification_implementation,
 		    coment,
+		    data,
 		    sendee,
-		    nitification_method,
+		    notification_method,
 		    email,
 		    error_flag,
 		  	created_by
@@ -20,28 +22,29 @@
 			#{tenantId},
 			#{notificationDate},
 			#{contractNo},
-			#{templateNunber},
+			max(co.contract_branch_no),
+			#{templateNumber},
 			'0',
 			#{coment},
-			CASE 
+			'${data}',
+			<if test ="sendee != null">#{sendee},</if>
+			<if test ="sendee == null">CASE 
 				when cu.customer_type = '1' then concat(cui.name_knj_sei,' ',cui.name_knj_mei)
 				when cu.customer_type = '2' then cuc.corp_name_official
-				ELSE null
-			END,
-			#{nitificationMethod},
+				ELSE null END,</if>
+			#{notificationMethod},
 			<if test ="email != null">#{email},</if>
-			<if test ="email == null">,CASE when cu.customer_type = '1' then cui.email
+			<if test ="email == null">CASE when cu.customer_type = '1' then cui.email
 				when cu.customer_type = '2' then cuc.contact_email
 				ELSE null END,</if>
-			#{errorFlag}
+			IFNULL(#{errorFlag},0),
 			#{updatedBy}
-			)
 		FROM contracts co JOIN customers cu
 				ON co.contractor_customer_id = cu.customer_id
 			LEFT OUTER JOIN customers_indivisual cui
 				ON co.contractor_customer_id = cui.customer_id AND cu.customer_type=1
 			LEFT OUTER JOIN customers_corporate cuc
 				ON co.contractor_customer_id = cuc.customer_id AND cu.customer_type=2
-		WHERE co.contractNo=#{contractNo} ORDER BY co.contract_branch_no DESC LIMIT 1
+		WHERE co.contract_no='${contractNo}' ORDER BY co.contract_branch_no DESC LIMIT 1
 	</insert>
 </mapper>
