@@ -100,7 +100,7 @@ public class AwsMailDao {
     val sbBody = new StringBuffer();
     val sbKey = new StringBuffer();
 
-    Boolean refundYn = (Boolean) contentInfo.getInherentMap().get("refund");
+    Boolean refundYn = (Boolean) contentInfo.getInherentMap().get("refundInfo");
     if (refundYn != null && refundYn) {
       paramMap.put("refundInfo", appendNotification.get("refundInfo"));
     }
