@@ -30,6 +30,8 @@ public class CodeMasterResources {
 
   private Map<Integer, Map<String, List<CodeMasterVo>>> map = null;
 
+  private Map<Integer, Integer> updateCountMap = null;
+
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
 
@@ -46,6 +48,7 @@ public class CodeMasterResources {
   @PostConstruct
   public void initialize() throws JsonMappingException, JsonProcessingException {
     this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
+    this.updateCountMap = new HashMap<Integer, Integer>();
 
     ObjectMapper objMapper = new ObjectMapper();
     for (val tenantId : serviceInstancesResources.getTenantList()) {
@@ -54,6 +57,7 @@ public class CodeMasterResources {
           objMapper.readValue(codeList.get(0).getInherentJson(),
               new TypeReference<Map<String, List<CodeMasterVo>>>() {});
       this.map.put(tenantId, codeMap);
+      this.updateCountMap.put(tenantId, codeList.get(0).getUpdateCount());
     }
 
   }
@@ -99,6 +103,31 @@ public class CodeMasterResources {
   }
 
   /**
+   * 情報取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-05-07
+   * @updatedAt : 2021-05-07
+   * @param vo
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public Map<String, List<CodeMasterVo>> get(Integer tenantId, Object updateCount)
+      throws JsonMappingException, JsonProcessingException {
+    if (this.map == null) {
+      this.initialize();
+    }
+
+    if (updateCount != null
+        && this.updateCountMap.get(tenantId) <= Integer.parseInt(updateCount.toString())) {
+      return null;
+    }
+
+    return this.map.get(tenantId);
+  }
+
+  /**
    * 全項目取得
    *
    * @author : [AOT] g.kim
@@ -116,4 +145,23 @@ public class CodeMasterResources {
     return this.map.keySet();
   }
 
+  /**
+   * UpdateCount情報取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-19
+   * @updatedAt : 2021-07-19
+   * @param tenantId
+   * @return updateCount
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public Integer getUpdateCount(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    if (this.updateCountMap == null) {
+      this.initialize();
+    }
+
+    return this.updateCountMap.get(tenantId);
+  }
 }
