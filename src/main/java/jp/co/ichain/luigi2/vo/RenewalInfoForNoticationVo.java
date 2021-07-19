@@ -117,6 +117,12 @@ public class RenewalInfoForNoticationVo {
    * 保険料
    */
   Integer totalPremium;
+  
+  /**
+   * 満了日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date expirationDate;
 
   Integer updateCount;
 
