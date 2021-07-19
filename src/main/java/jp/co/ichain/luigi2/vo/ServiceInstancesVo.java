@@ -50,6 +50,8 @@ public class ServiceInstancesVo extends ObjectVo {
   String status;
 
   Integer version;
+  
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;

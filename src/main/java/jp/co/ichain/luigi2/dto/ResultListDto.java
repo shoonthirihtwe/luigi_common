@@ -36,12 +36,6 @@ public class ResultListDto<T> extends ResultOneDto<T> {
    * ページ別表示数
    */
   private Integer pageRowCount = null;
-
-  /**
-   * リストを説明＆親情報
-   */
-  private Object info = null;
-
   /**
    * 取得情報リスト
    */

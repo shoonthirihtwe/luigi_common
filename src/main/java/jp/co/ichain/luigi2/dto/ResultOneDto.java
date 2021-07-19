@@ -23,6 +23,10 @@ public class ResultOneDto<T> extends ResultWebDto {
    * 返却値
    */
   public T item = null;
+  /**
+   * アイテムを説明＆親情報
+   */
+  private Object info = null;
 
   public ResultOneDto(String code, T item) {
     this.code = code;
