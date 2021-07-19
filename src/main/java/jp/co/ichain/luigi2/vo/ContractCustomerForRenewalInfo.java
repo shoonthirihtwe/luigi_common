@@ -142,7 +142,8 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 契約者 生年月日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
-  Date insDateOfBirth;
+  Date receivedDate;
+
   /**
    * 氏名漢字 姓
    */
@@ -167,4 +168,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 住所漢字 2
    */
   String insAddrKnj2;
+
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date insDateOfBirth;
 }
