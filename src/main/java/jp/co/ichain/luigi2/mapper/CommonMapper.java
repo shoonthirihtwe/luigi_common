@@ -57,13 +57,4 @@ public interface CommonMapper {
   // 営業日取得
   Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date, @Param("count") Integer count);
 
-  /**
-   * 通知登録
-   * 
-   * @author : [AOT] n.h.hoang
-   * @createdAt : 2021-07-13
-   * @updatedAt : 2021-07-13
-   * @param dataMap
-   */
-  void insertNotification(NotificationsVo notification);
 }
