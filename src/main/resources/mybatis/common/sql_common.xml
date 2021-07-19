@@ -124,4 +124,14 @@
 			#{createdBy}
 		)
 	</insert>
+	
+	<select id="selectSalesProducts" resultType="SalesProductsVo" parameterType="hashmap">
+		SELECT
+			*
+		FROM sales_products
+		WHERE
+			tenant_id = #{tenantId}
+			AND sales_plan_code = #{salesPlanCode}
+			AND sales_plan_type_code = #{salesPlanTypeCode}
+	</select>
 </mapper>

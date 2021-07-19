@@ -63,6 +63,16 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String contractNameKana;
 
   /**
+   * 販売プランコード
+   */
+  String salesPlanCode;
+
+  /**
+   * 販売プランタイプコード
+   */
+  String salesPlanTypeCode;
+
+  /**
    * 有効/無効フラグ
    */
   String activeInactive;

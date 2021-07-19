@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import jp.co.ichain.luigi2.vo.NotificationsVo;
+import jp.co.ichain.luigi2.vo.SalesProductsVo;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
 
@@ -53,9 +54,10 @@ public interface CommonMapper {
 
   // 決済方法取得
   String selectFactoringCompanyCode(@Param("contractNo") String contractNo);
-  
+
   // 営業日取得
-  Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date, @Param("count") Integer count);
+  Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date,
+      @Param("count") Integer count);
 
   /**
    * 通知登録
@@ -66,4 +68,15 @@ public interface CommonMapper {
    * @param dataMap
    */
   void insertNotification(NotificationsVo notification);
+
+  /**
+   * 販売プラン取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-19
+   * @updatedAt : 2021-07-19
+   * @param paramMap
+   * @return
+   */
+  SalesProductsVo selectSalesProducts(Map<String, Object> paramMap);
 }
