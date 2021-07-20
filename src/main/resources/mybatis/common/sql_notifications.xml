@@ -39,7 +39,7 @@
 				ELSE null END,</if>
 			IFNULL(#{errorFlag},0),
 			#{updatedBy}
-		FROM contracts co JOIN customers cu
+		FROM contracts co LEFT OUTER JOIN customers cu
 				ON co.contractor_customer_id = cu.customer_id
 			LEFT OUTER JOIN customers_indivisual cui
 				ON co.contractor_customer_id = cui.customer_id AND cu.customer_type=1

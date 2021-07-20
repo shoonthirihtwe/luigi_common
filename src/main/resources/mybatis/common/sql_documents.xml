@@ -9,7 +9,7 @@
 			id,
 			tenant_id,
 			${key},
-			<if test ="table == 'maintenance_documents'">sequence_no,</if>
+			sequence_no,
 			document_title,
 			document_url,
 			upload_date,
@@ -19,18 +19,17 @@
 			(SELECT IFNULL(max(id),0)+1 FROM ${table}),
 			#{tenantId},
 			#{ownerCode},
-			<if test ="table == 'maintenance_documents'">IFNULL(max(sequence_no),0)+1,</if>
+			IFNULL(max(sequence_no),0)+1,
 			#{documentTitle},
-			concat(#{document},(SELECT IFNULL(max(id),0)+1 FROM ${table}),'_', #{fileName}),
+			concat(#{document},(SELECT IFNULL(max(id),0)+1 FROM ${table}),'_', #{encodeFileName}),
 			now(),
 			#{updatedBy}
-		FROM ${table}
-		WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
+		FROM dual
 	</insert>
 	
 	<select id="selectDocuments"  resultType="DocumentsVo" parameterType="hashmap">
 		SELECT
-			<if test ="table == 'maintenance_documents'">sequence_no as sequenceNo,</if>
+			sequence_no as sequenceNo,
 			document_title as documentIitle,
 			document_url as documentUrl,
 			upload_date as uploadDate
