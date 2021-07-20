@@ -22,7 +22,7 @@
 			contract_no,
 			contract_branch_no,
 		  	sequence_no,
-		  	log_type,
+		  	<if test="logType != null">log_type,</if>
 		  	message_code,
 		  	<if test="messageGroup != null">message_group,</if>
 		  	reason_group_code,
@@ -38,7 +38,7 @@
 			#{contractNo},
 			#{contractBranchNo},
 			#{sequenceNo},
-			#{logType},
+			<if test="logType != null">#{logType},</if>
 			#{messageCode},
 			<if test="messageGroup != null">#{messageGroup},</if>
 			#{reasonGroupCode},
