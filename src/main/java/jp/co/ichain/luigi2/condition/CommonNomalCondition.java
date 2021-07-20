@@ -55,6 +55,20 @@ public class CommonNomalCondition {
   public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
     return ((long) data) <= new Date().getTime();
   }
+  
+  /**
+   * 日付が現時刻以下
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-19
+   * @updatedAt : 2021-07-19
+   * @param data
+   * @param max
+   * @return
+   */
+  public boolean underCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
+    return ((long) data) >= new Date().getTime();
+  }
 
   /**
    * キーに値するデータ存在チェック
@@ -71,5 +85,24 @@ public class CommonNomalCondition {
     Boolean result = mapper.selectIsExistKey(Luigi2TableInfo.getLockTable(TableInfo.valueOf(key)),
         tenantId, data);
     return result != null ? result : false;
+  }
+  
+  /**
+   * 郵便番号チェック
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-19
+   * @updatedAt : 2021-07-19
+   * @param data
+   * @return
+   */
+  public boolean checkZipcode(Object data, Integer tenantId, List<Object> paramList) {
+    String zipcode = (String) data;
+    String numberRex = "0-9";
+    if(zipcode.contains("-")){
+      zipcode = zipcode.replace("-", "");    
+    }
+    return zipcode.matches(numberRex) && zipcode.length() == 7;
+    
   }
 }

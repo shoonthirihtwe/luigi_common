@@ -144,6 +144,9 @@ public class Validity {
             if (data instanceof List) {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
+                if(map.get("tenantId") == null) {
+                  map.put("tenantId", tenantId);
+                }
                 validate(validityMap, objValidityMap, map, exList);
               }
             } else {
@@ -151,6 +154,9 @@ public class Validity {
             }
           } else {
             if (data instanceof Map) {
+              if(((Map)data).get("tenantId") == null) {
+                ((Map)data).put("tenantId", tenantId);
+              }
               validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
