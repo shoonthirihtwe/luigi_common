@@ -16,10 +16,11 @@
 			created_by
 			)
 		SELECT
-			(SELECT IFNULL(max(id),0)+1 FROM ${table}),
+			(SELECT IFNULL(max(id),0)+1 FROM ${table} ),
 			#{tenantId},
 			#{ownerCode},
-			IFNULL(max(sequence_no),0)+1,
+			(SELECT IFNULL(max(sequence_no),0)+1 FROM ${table}
+			WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}),
 			#{documentTitle},
 			concat(#{document},(SELECT IFNULL(max(id),0)+1 FROM ${table}),'_', #{encodeFileName}),
 			now(),
