@@ -108,12 +108,9 @@ public class Validity {
    */
   @SuppressWarnings("unchecked")
   public void validate(Map<String, ValidityVo> validityMap, Map<String, Object> serviceInstanceMap,
-      Map<String, Object> paramMap, List<WebException> exList)
+      Integer tenantId, Map<String, Object> paramMap, List<WebException> exList)
       throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-
-    // tenantId
-    val tenantId = (Integer) paramMap.get("tenantId");
 
     // validate
     for (val key : serviceInstanceMap.keySet()) {
@@ -144,20 +141,14 @@ public class Validity {
             if (data instanceof List) {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                if(map.get("tenantId") == null) {
-                  map.put("tenantId", tenantId);
-                }
-                validate(validityMap, objValidityMap, map, exList);
+                validate(validityMap, objValidityMap, tenantId, map, exList);
               }
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
           } else {
             if (data instanceof Map) {
-              if(((Map)data).get("tenantId") == null) {
-                ((Map)data).put("tenantId", tenantId);
-              }
-              validate(validityMap, objValidityMap, (Map<String, Object>) data, exList);
+              validate(validityMap, objValidityMap, tenantId, (Map<String, Object>) data, exList);
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }

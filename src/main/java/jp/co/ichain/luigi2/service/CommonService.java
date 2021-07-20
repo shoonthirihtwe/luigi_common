@@ -77,7 +77,7 @@ public class CommonService {
       validity.validateCondition(validityMap.get(serviceInstanceMap.get("param-key")), "this",
           paramMap, tenantId, exList);
     }
-    validity.validate(validityMap, serviceInstanceMap, paramMap, exList);
+    validity.validate(validityMap, serviceInstanceMap, tenantId, paramMap, exList);
 
     if (exList.size() > 0) {
       throw new WebParameterException(Luigi2ErrorCode.V0000, exList);
