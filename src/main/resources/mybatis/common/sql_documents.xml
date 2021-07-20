@@ -24,8 +24,7 @@
 			concat(#{document},(SELECT IFNULL(max(id),0)+1 FROM ${table}),'_', #{fileName}),
 			now(),
 			#{updatedBy}
-		FROM ${table}
-		WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
+		FROM dual
 	</insert>
 	
 	<select id="selectDocuments"  resultType="DocumentsVo" parameterType="hashmap">
