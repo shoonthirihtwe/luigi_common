@@ -253,17 +253,16 @@ public class AwsS3Service {
     String documentDir = serviceInstance.get(0).getInherentMap().get(documentsType.name).toString();
 
     List<String> fileTags = new ArrayList<String>();
-    val tagList = (List<String>) paramMap.get("fileTagList");
 
-    if(paramMap.get("fbClaims") != null) {
+    if (paramMap.get("fbClaims") != null) {
       fileTags.add(FreeDocumentsFileType.FB_CLAIMS.name);
     }
-    
-    if(paramMap.get("accountJournal") != null) {
+
+    if (paramMap.get("accountJournal") != null) {
       fileTags.add(FreeDocumentsFileType.ACCOUNT_JOURNAL.name);
     }
-    
-    if(paramMap.get("reservePayment") != null) {
+
+    if (paramMap.get("reservePayment") != null) {
       fileTags.add(FreeDocumentsFileType.RESERVE_PAYMENT.name);
     }
 
