@@ -34,7 +34,7 @@ public class NotificationService {
    * @createdAt : 2021-07-16
    * @updatedAt : 2021-07-16
    * @param param {tenantId, contractNo, notificationDate, updatedBy 必須)
-   *        coment : 通信欄コメント
+   *        comment : 通信欄コメント
    *        sendee : 通知対象者 「セットしない場合、契約者名が自動でセットされる」
    *        email : 通知対象者 「セットしない場合、契約者Emailが自動でセットされる」
    *        noitificationMethod : 通知方法「セットしない場合、00でセットされる」

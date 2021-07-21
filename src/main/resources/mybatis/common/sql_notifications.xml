@@ -9,9 +9,9 @@
 			notification_date,
 			contract_no,
 			contract_branch_no,
-			template_nunber,
+			template_number,
 		    notification_implementation,
-		    coment,
+		    comment,
 		    data,
 		    sendee,
 		    notification_method,
@@ -25,7 +25,7 @@
 			max(co.contract_branch_no),
 			#{templateNumber},
 			'0',
-			#{coment},
+			#{comment},
 			'${data}',
 			<if test ="sendee != null">#{sendee},</if>
 			<if test ="sendee == null">CASE 
