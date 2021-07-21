@@ -55,7 +55,7 @@ public class CommonNomalCondition {
   public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
     return ((long) data) <= new Date().getTime();
   }
-  
+
   /**
    * 日付が現時刻以下
    * 
@@ -86,7 +86,7 @@ public class CommonNomalCondition {
         tenantId, data);
     return result != null ? result : false;
   }
-  
+
   /**
    * 郵便番号チェック
    * 
@@ -99,10 +99,10 @@ public class CommonNomalCondition {
   public boolean checkZipcode(Object data, Integer tenantId, List<Object> paramList) {
     String zipcode = (String) data;
     String numberRex = "0-9";
-    if(zipcode.contains("-")){
-      zipcode = zipcode.replace("-", "");    
+    if (zipcode.contains("-")) {
+      zipcode = zipcode.replace("-", "");
     }
     return zipcode.matches(numberRex) && zipcode.length() == 7;
-    
+
   }
 }

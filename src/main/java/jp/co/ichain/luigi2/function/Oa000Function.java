@@ -48,6 +48,7 @@ public class Oa000Function {
     paramMap.put("tenantId", tenantId);
     paramMap.put("salesPlanCode", params[0]);
     paramMap.put("salesPlanTypeCode", params[1]);
+    paramMap.put("issueDate", params[4]);
 
     val dateCode = (String) params[2];
     val standardDateCal = Calendar.getInstance();
