@@ -65,10 +65,8 @@
 		FROM
 			tenants
 		WHERE
-			id IN 
-			<foreach item="tenantId" collection="tenantIds" separator="," open="(" close=")">
-		        #{tenantId}
-		    </foreach>
+			id IN (<foreach item="tenantId" collection="tenantIds" separator=",">#{tenantId}</foreach>)
+			AND date_format(batch_date, '%Y%m%d')<![CDATA[<=]]>date_format(now(), '%Y%m%d')
 	</select>
 	<select id="selectFactoringCompanyCode" resultType="string" parameterType="hashmap">
 		SELECT factoring_company_code
@@ -103,5 +101,7 @@
 			tenant_id = #{tenantId}
 			AND sales_plan_code = #{salesPlanCode}
 			AND sales_plan_type_code = #{salesPlanTypeCode}
+			AND <![CDATA[start_date<=#{issueDate} AND end_date>=#{issueDate}]]>
+		LIMIT 1
 	</select>
 </mapper>

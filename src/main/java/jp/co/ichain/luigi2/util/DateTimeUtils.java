@@ -133,4 +133,24 @@ public class DateTimeUtils {
   public static LocalDate convertDateToLocalDate(Date dateToConvert) {
     return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
   }
+
+  /**
+   * 時間を削除する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-20
+   * @updatedAt : 2021-07-20
+   * @param date
+   * @return
+   */
+  public static Date getDateRemoveTime(Date date) {
+    Calendar calCur = Calendar.getInstance();
+    calCur.setTime(date);
+    calCur.set(Calendar.HOUR_OF_DAY, 0);
+    calCur.set(Calendar.MINUTE, 0);
+    calCur.set(Calendar.SECOND, 0);
+    calCur.set(Calendar.MILLISECOND, 0);
+
+    return calCur.getTime();
+  }
 }
