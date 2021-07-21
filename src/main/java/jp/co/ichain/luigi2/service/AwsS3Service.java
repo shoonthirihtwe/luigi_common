@@ -255,26 +255,16 @@ public class AwsS3Service {
     List<String> fileTags = new ArrayList<String>();
     val tagList = (List<String>) paramMap.get("fileTagList");
 
-    for (int i = 0; i < tagList.size(); i++) {
-      switch (i) {
-        case FB_CLAIMS:
-          if (Integer.parseInt(tagList.get(i)) != 0) {
-            fileTags.add(FreeDocumentsFileType.FB_CLAIMS.name);
-          }
-          break;
-        case ACCOUNT_JOURNAL:
-          if (Integer.parseInt(tagList.get(i)) != 0) {
-            fileTags.add(FreeDocumentsFileType.ACCOUNT_JOURNAL.name);
-          }
-          break;
-        case RESERVE_PAYMENT:
-          if (Integer.parseInt(tagList.get(i)) != 0) {
-            fileTags.add(FreeDocumentsFileType.RESERVE_PAYMENT.name);
-          }
-          break;
-        default:
-          throw new WebDataException(Luigi2ErrorCode.D0001, "fileTagList");
-      }
+    if(paramMap.get("fbClaims") != null) {
+      fileTags.add(FreeDocumentsFileType.FB_CLAIMS.name);
+    }
+    
+    if(paramMap.get("accountJournal") != null) {
+      fileTags.add(FreeDocumentsFileType.ACCOUNT_JOURNAL.name);
+    }
+    
+    if(paramMap.get("reservePayment") != null) {
+      fileTags.add(FreeDocumentsFileType.RESERVE_PAYMENT.name);
     }
 
     return awsS3Dao.searchFile(paramMap, documentDir, fileTags);
