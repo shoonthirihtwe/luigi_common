@@ -73,6 +73,11 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String salesPlanTypeCode;
 
   /**
+   * 現契約日
+   */
+  Date issueDate;
+
+  /**
    * 有効/無効フラグ
    */
   String activeInactive;

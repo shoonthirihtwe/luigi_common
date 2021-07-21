@@ -103,5 +103,7 @@
 			tenant_id = #{tenantId}
 			AND sales_plan_code = #{salesPlanCode}
 			AND sales_plan_type_code = #{salesPlanTypeCode}
+			AND <![CDATA[start_date<=#{issueDate} AND end_date>=#{issueDate}]]>
+		LIMIT 1
 	</select>
 </mapper>
