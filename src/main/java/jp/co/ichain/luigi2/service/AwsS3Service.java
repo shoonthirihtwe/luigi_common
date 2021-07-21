@@ -245,12 +245,11 @@ public class AwsS3Service {
    * @throws SdkClientException
    * @throws AmazonServiceException
    */
-  @SuppressWarnings("unchecked")
   public List<DownloadFileVo> searchDownloadDocument(FreeDocumentsType documentsType,
       Map<String, Object> paramMap) throws JsonMappingException, JsonProcessingException,
       AmazonServiceException, SdkClientException, ParseException {
-    val serviceInstance = siResources.get((Integer) paramMap.get("tenantId"), FREE_DOCUMENTS);
-    String documentDir = serviceInstance.get(0).getInherentMap().get(documentsType.name).toString();
+    
+
 
     List<String> fileTags = new ArrayList<String>();
 
@@ -265,7 +264,10 @@ public class AwsS3Service {
     if (paramMap.get("reservePayment") != null) {
       fileTags.add(FreeDocumentsFileType.RESERVE_PAYMENT.name);
     }
-
+    
+    val serviceInstance = siResources.get((Integer) paramMap.get("tenantId"), FREE_DOCUMENTS);
+    String documentDir = serviceInstance.get(0).getInherentMap().get(documentsType.name).toString();
+    
     return awsS3Dao.searchFile(paramMap, documentDir, fileTags);
   }
 }
