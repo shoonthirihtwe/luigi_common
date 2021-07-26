@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.config.datasource;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
@@ -44,18 +47,26 @@ public class DataSourceConfig {
 
   @Autowired
   Environment env;
-  
+
+  @Autowired
+  ResourcePatternResolver resourcePatternResolver;
+
   @Bean("dataSourceInitializer")
   public DataSourceInitializer dataSourceInitializer(
-      @Qualifier("luigi2DataSource") DataSource datasource) {
+      @Qualifier("luigi2DataSource") DataSource datasource) throws IOException {
     ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
 
     if (env.acceptsProfiles(Profiles.of("test"))) {
-      
+
       resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
-      resourceDatabasePopulator.addScript(new ClassPathResource("test_sql/init_data.sql"));
+      resourceDatabasePopulator.setContinueOnError(true);
+      resourceDatabasePopulator.addScript(new ClassPathResource("test_sql/init_data_clear.sql"));
+      Resource[] resources = resourcePatternResolver.getResources("classpath:Seed/*.sql");
+      for (Resource resource : resources) {
+        resourceDatabasePopulator.addScript(resource);
+      }
+
       resourceDatabasePopulator.addScript(new ClassPathResource("Service_instance/values.sql"));
-      
     }
     DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
     dataSourceInitializer.setDataSource(datasource);
