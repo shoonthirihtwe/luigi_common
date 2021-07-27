@@ -33,8 +33,7 @@ public class DepositDetailVo {
   /**
    * 保険料収納処理実施日
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date dueDate;
+  String dueDate;
   /**
    * 未納保険料
    */
