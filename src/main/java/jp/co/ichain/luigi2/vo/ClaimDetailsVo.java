@@ -118,6 +118,11 @@ public class ClaimDetailsVo extends ObjectVo {
    * 請求内容
    */
   String claimDetailInfo;
+  
+  /**
+   * 請求対象回数
+   */
+  Integer treatmentTimes;
 
   /**
    * 請求日数
