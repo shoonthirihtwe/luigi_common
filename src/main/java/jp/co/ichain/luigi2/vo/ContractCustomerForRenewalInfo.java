@@ -139,6 +139,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String insEmail;
 
   /**
+   * 申込日
+   */
+  Date applicationDate;
+  
+  /**
    * 受付日
    */
   @JsonSerialize(using = JsonDateSerializer.class)

@@ -208,12 +208,12 @@ public class AwsS3Dao {
     Date fromDate = new Date();
     Date toDate = new Date();
     Calendar cal = Calendar.getInstance();
-    if (paramMap.get("from") instanceof String) {
+    if (paramMap.get("from") instanceof Long) {
       fromDate = new Date(Long.parseLong(paramMap.get("from").toString()));
       cal.setTime(fromDate);
     }
 
-    if (paramMap.get("to") instanceof String) {
+    if (paramMap.get("to") instanceof Long) {
       toDate = new Date(Long.parseLong(paramMap.get("to").toString()));
     }
 

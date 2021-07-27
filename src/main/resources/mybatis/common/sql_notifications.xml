@@ -3,15 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.ichain.luigi2.mapper.NotificationMapper">
-	<insert id="insertNotification" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertNotification" parameterType="hashmap">
 		INSERT INTO notifications (
 			tenant_id,
 			notification_date,
 			contract_no,
 			contract_branch_no,
-			template_nunber,
+			template_number,
 		    notification_implementation,
-		    coment,
+		    comment,
 		    data,
 		    sendee,
 		    notification_method,
@@ -25,7 +25,7 @@
 			max(co.contract_branch_no),
 			#{templateNumber},
 			'0',
-			#{coment},
+			#{comment},
 			'${data}',
 			<if test ="sendee != null">#{sendee},</if>
 			<if test ="sendee == null">CASE 
@@ -39,9 +39,9 @@
 				ELSE null END,</if>
 			IFNULL(#{errorFlag},0),
 			#{updatedBy}
-		FROM contracts co JOIN customers cu
+		FROM contracts co LEFT OUTER JOIN customers cu
 				ON co.contractor_customer_id = cu.customer_id
-			LEFT OUTER JOIN customers_indivisual cui
+			LEFT OUTER JOIN customers_individual cui
 				ON co.contractor_customer_id = cui.customer_id AND cu.customer_type=1
 			LEFT OUTER JOIN customers_corporate cuc
 				ON co.contractor_customer_id = cuc.customer_id AND cu.customer_type=2

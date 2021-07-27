@@ -28,29 +28,33 @@ public class SalesProductsVo extends ObjectVo {
   Integer tenantId;
 
   String salesPlanCode;
-  
+
   String salesPlanTypeCode;
-  
+
   Date startDate;
-  
+
   Date endDate;
-  
+
   String salesPlanName;
-  
+
   String salePlanNameDisplay;
-  
+
   Integer issueAgeUpper;
-  
+
   Integer issueAgeLower;
-  
+
   Integer premium;
-  
+
   String activeInactive;
-  
+
   String specialRequirement;
-  
+
+  String terminationDatePattern;
+
+  String terminationDateOrder;
+
   Integer sortNo;
-  
+
   Integer updateCount;
 
   @JsonIgnore

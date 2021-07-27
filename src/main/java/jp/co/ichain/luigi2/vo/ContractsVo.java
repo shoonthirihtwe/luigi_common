@@ -147,6 +147,28 @@ public class ContractsVo extends ObjectVo {
   Integer paymentDateOrder;
 
   Integer updateCount;
+  
+  /**
+   * 更新日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date renewalDate;
+  
+  /**
+   * 更新後満期日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date renewalExpirationDate;
+  
+  /**
+   * １回分保険料(更新後)
+   */
+  Integer renewalPremiumAmount;
+  
+  /**
+   * 更新後年齢
+   */
+  Integer renewalAge;
 
   @JsonIgnore
   Date createdAt;

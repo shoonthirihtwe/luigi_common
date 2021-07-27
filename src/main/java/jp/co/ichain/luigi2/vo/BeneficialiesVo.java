@@ -62,6 +62,12 @@ public class BeneficialiesVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
+  
+  @JsonIgnore
+  Date deletedAt;
+
+  @JsonIgnore
+  String deletedBy;
 
   /**
    * ロック用
@@ -94,4 +100,14 @@ public class BeneficialiesVo extends ObjectVo {
    * 氏名　名
    */
   String nameKanjiMei;
+  
+  /**
+   * ロール連番
+   */
+  Integer roleSequenceNo;
+  
+  /**
+   * ステータス
+   */
+  String status;
 }

@@ -63,6 +63,22 @@ public class MaintenanceRequestsVo extends ObjectVo {
   String contractNameKana;
 
   /**
+   * 販売プランコード
+   */
+  String salesPlanCode;
+
+  /**
+   * 販売プランタイプコード
+   */
+  String salesPlanTypeCode;
+
+  /**
+   * 現契約日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date issueDate;
+
+  /**
    * 有効/無効フラグ
    */
   String activeInactive;
@@ -93,6 +109,12 @@ public class MaintenanceRequestsVo extends ObjectVo {
    * 申込経路
    */
   String applicationMethod;
+
+  /**
+   * 消滅基準日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date terminationBaseDate;
 
   /**
    * 商品タイプ
