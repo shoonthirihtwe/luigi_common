@@ -25,7 +25,7 @@
 			max(co.contract_branch_no),
 			#{templateNumber},
 			'0',
-			#{coment},
+			#{comment},
 			'${data}',
 			<if test ="sendee != null">#{sendee},</if>
 			<if test ="sendee == null">CASE 

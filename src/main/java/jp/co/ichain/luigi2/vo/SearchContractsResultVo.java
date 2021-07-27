@@ -13,6 +13,7 @@ import lombok.Setter;
 
 /**
  * SearchContractsResultVo
+ * 画面ID: SB-001
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -39,6 +40,8 @@ public class SearchContractsResultVo extends ObjectVo {
   String applicantNameKnj;
   
   String applicantNameKana;
+  
+  String salesPlanCode;
   
   Integer updateCount;
 

@@ -33,7 +33,7 @@ public class NotificationsVo extends ObjectVo {
   /**
    * 通知予定日
    */
-  Date notificationDate;
+  Long notificationDate;
   /**
    * 証券番号
    */
@@ -57,7 +57,7 @@ public class NotificationsVo extends ObjectVo {
   /**
    * 通信欄コメント
    */
-  String coment;
+  String comment;
 
   /**
    * 通知対象者
