@@ -139,33 +139,33 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String insEmail;
 
   /**
-   * 契約者 生年月日
+   * 受付日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date receivedDate;
 
   /**
-   * 氏名漢字 姓
+   * 被保険者氏名漢字 姓
    */
   String insNameKnjSei;
 
   /**
-   * 氏名漢字 名
+   * 被保険者氏名漢字 名
    */
   String insNameKnjMei;
 
   /**
-   * 住所カナ 県
+   * 被保険者住所カナ 県
    */
   String insAddrKnjPref;
 
   /**
-   * 住所漢字 1
+   * 被保険者住所漢字 1
    */
   String insAddrKnj1;
 
   /**
-   * 住所漢字 2
+   * 被保険者住所漢字 2
    */
   String insAddrKnj2;
 
