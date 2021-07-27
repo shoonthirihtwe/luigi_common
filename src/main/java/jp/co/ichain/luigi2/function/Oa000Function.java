@@ -71,9 +71,13 @@ public class Oa000Function {
           default:
             throw new WebDataException(Luigi2ErrorCode.D0002, "terminationDatePattern");
         }
+        // 解除消滅日
+      case Luigi2DateCode.C00002:
+        return standardDateCal.getTime();
       default:
         throw new WebDataException(Luigi2ErrorCode.D0002, "dataCode");
     }
+
   }
 
   /**

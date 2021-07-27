@@ -75,6 +75,7 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 現契約日
    */
+  @JsonSerialize(using = JsonDateSerializer.class)
   Date issueDate;
 
   /**
@@ -108,6 +109,12 @@ public class MaintenanceRequestsVo extends ObjectVo {
    * 申込経路
    */
   String applicationMethod;
+
+  /**
+   * 消滅基準日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date terminationBaseDate;
 
   /**
    * 商品タイプ

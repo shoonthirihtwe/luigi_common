@@ -15,6 +15,11 @@ public class Luigi2DateCode {
   public static final String C00001 = "C00001";
 
   /**
+   * (保全)解除消滅日
+   */
+  public static final String C00002 = "C00002";
+
+  /**
    * (更新)更新案内通知日
    */
   public static final String F00001 = "F00001";

@@ -11,7 +11,7 @@
 			contract_branch_no,
 			template_number,
 		    notification_implementation,
-		    coment,
+		    comment,
 		    data,
 		    sendee,
 		    notification_method,
@@ -41,7 +41,7 @@
 			#{updatedBy}
 		FROM contracts co LEFT OUTER JOIN customers cu
 				ON co.contractor_customer_id = cu.customer_id
-			LEFT OUTER JOIN customers_indivisual cui
+			LEFT OUTER JOIN customers_individual cui
 				ON co.contractor_customer_id = cui.customer_id AND cu.customer_type=1
 			LEFT OUTER JOIN customers_corporate cuc
 				ON co.contractor_customer_id = cuc.customer_id AND cu.customer_type=2

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebDataException;
@@ -53,6 +54,7 @@ public class CommonService {
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
    */
+  @Transactional(transactionManager = "luigi2TransactionManager", readOnly = true)
   public void validate(Map<String, Object> paramMap, String endpoint)
       throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
