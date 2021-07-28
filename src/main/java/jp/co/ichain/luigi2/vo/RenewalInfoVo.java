@@ -130,7 +130,7 @@ public class RenewalInfoVo {
   /**
    * ロック用
    */
-  String updateCount;
+  Integer updateCount;
 
   @JsonIgnore
   Date createdAt;
