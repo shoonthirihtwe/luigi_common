@@ -2,6 +2,7 @@ package jp.co.ichain.luigi2.vo;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -90,7 +91,17 @@ public class ClaimHeadersVo extends ObjectVo {
   /**
    * 請求者区分
    */
-  String claimCategory;
+  String claimantCategory;
+  
+  /**
+   * 漢字氏名
+   */
+  String claimantKnj;
+  
+  /**
+   * カナ氏名
+   */
+  String claimantKana;
 
   /**
    * 請求者（被保険者） 姓
@@ -485,7 +496,7 @@ public class ClaimHeadersVo extends ObjectVo {
   /**
    * 保険金・給付金請求詳細
    */
-  ClaimDetailsVo claimDetails;
+  List<ClaimDetailsVo> claimDetails;
   
   /**
    * ロック用
@@ -496,6 +507,6 @@ public class ClaimHeadersVo extends ObjectVo {
   public ClaimHeadersVo() {
     beneficialies = new ArrayList<BeneficialiesVo>();
     claimDocuments = new ArrayList<ClaimDocumentsVo>();
-    claimDetails = new ClaimDetailsVo();
+    claimDetails = new ArrayList<ClaimDetailsVo>();
   }
 }

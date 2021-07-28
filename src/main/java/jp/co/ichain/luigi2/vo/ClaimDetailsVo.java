@@ -4,6 +4,8 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -108,6 +110,23 @@ public class ClaimDetailsVo extends ObjectVo {
    * 支払タイプ名称
    */
   String paymentText;
+  
+  /**
+   * 請求対象期間(from)
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date treatmentDateFrom;
+  
+  /**
+   * 請求対象期間(to)
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date treatmentDateTo;
+  
+  /**
+   * 都度支払限度額
+   */
+  Integer paygLimitAmount;
 
   /**
    * 給付日額
