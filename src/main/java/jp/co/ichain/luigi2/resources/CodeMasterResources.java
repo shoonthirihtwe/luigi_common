@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.resources;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class CodeMasterResources {
 
   private Map<Integer, Map<String, List<CodeMasterVo>>> map = null;
 
-  private Map<Integer, Integer> updateCountMap = null;
+  private Map<Integer, Date> updatedAtMap = null;
 
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
@@ -48,16 +49,23 @@ public class CodeMasterResources {
   @PostConstruct
   public void initialize() throws JsonMappingException, JsonProcessingException {
     this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
-    this.updateCountMap = new HashMap<Integer, Integer>();
+    this.updatedAtMap = new HashMap<Integer, Date>();
 
     ObjectMapper objMapper = new ObjectMapper();
     for (val tenantId : serviceInstancesResources.getTenantList()) {
+
       val codeList = serviceInstancesResources.get(tenantId, "code_master");
       Map<String, List<CodeMasterVo>> codeMap =
           objMapper.readValue(codeList.get(0).getInherentJson(),
               new TypeReference<Map<String, List<CodeMasterVo>>>() {});
       this.map.put(tenantId, codeMap);
-      this.updateCountMap.put(tenantId, codeList.get(0).getUpdateCount());
+
+      // 日付登録
+      var updatedAt = codeList.get(0).getUpdatedAt();
+      if (updatedAt == null) {
+        updatedAt = codeList.get(0).getCreatedAt();
+      }
+      updatedAtMap.put(tenantId, updatedAt);
     }
 
   }
@@ -113,18 +121,14 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public Map<String, List<CodeMasterVo>> get(Integer tenantId, Object updateCount)
+  public Map<String, List<CodeMasterVo>> get(Integer tenantId, Long updatedAt)
       throws JsonMappingException, JsonProcessingException {
     if (this.map == null) {
       this.initialize();
     }
 
-    if (updateCount != null
-        && this.updateCountMap.get(tenantId) <= Integer.parseInt(updateCount.toString())) {
-      return null;
-    }
-
-    return this.map.get(tenantId);
+    return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
+        : this.map.get(tenantId);
   }
 
   /**
@@ -143,25 +147,5 @@ public class CodeMasterResources {
     }
 
     return this.map.keySet();
-  }
-
-  /**
-   * UpdateCount情報取得
-   *
-   * @author : [AOT] g.kim
-   * @createdAt : 2021-07-19
-   * @updatedAt : 2021-07-19
-   * @param tenantId
-   * @return updateCount
-   * @throws JsonProcessingException
-   * @throws JsonMappingException
-   */
-  public Integer getUpdateCount(Integer tenantId)
-      throws JsonMappingException, JsonProcessingException {
-    if (this.updateCountMap == null) {
-      this.initialize();
-    }
-
-    return this.updateCountMap.get(tenantId);
   }
 }

@@ -102,7 +102,6 @@ public class ValidityResources {
 
     return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
         : this.map.get(tenantId);
-
   }
 
   /**
