@@ -150,7 +150,9 @@ public class ServiceInstancesResources {
       this.initialize();
     }
 
-    return this.map.get(tenantId).get(sourceKey).stream().findFirst();
+    val result = this.map.get(tenantId).get(sourceKey);
+
+    return result != null ? result.stream().findFirst() : null;
   }
 
   /**

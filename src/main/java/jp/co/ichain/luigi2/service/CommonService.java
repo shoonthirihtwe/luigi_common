@@ -65,7 +65,7 @@ public class CommonService {
         serviceInstancesResources.getFirst(tenantId, validity.getValiditySourceKey(endpoint));
 
     // sourceKeyが存在しない場合
-    if (optional.isEmpty()) {
+    if (optional == null || optional.isEmpty()) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "sourceKey",
           validity.getValiditySourceKey(endpoint));
     }
