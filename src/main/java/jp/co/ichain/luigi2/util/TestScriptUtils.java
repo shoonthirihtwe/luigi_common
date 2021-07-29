@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -23,6 +25,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.co.ichain.luigi2.mapper.CommonMapper;
+import lombok.val;
 
 /**
  * TestScriptUtils
@@ -37,6 +41,9 @@ public class TestScriptUtils {
   @Autowired
   @Qualifier("luigi2DataSource")
   private DataSource dataSource;
+
+  @Autowired
+  private CommonMapper commonMapper;
 
   /**
    * execute Sql
@@ -131,8 +138,34 @@ public class TestScriptUtils {
     ObjectMapper mapper = new ObjectMapper();
     ClassPathResource resource = new ClassPathResource(path);
     return mapper.writeValueAsString(
-        mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"),
-            HashMap.class));
+        mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"), HashMap.class));
+  }
+
+  /**
+   * バッチ日付更新
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @param "yyyy-MM-dd"
+   * @param tenantId
+   * @return
+   * @throws ParseException
+   * @throws SQLException
+   * @throws ScriptException
+   */
+  public void updateBatchDate(String date, Integer... tenantId)
+      throws JsonParseException, JsonMappingException, JsonProcessingException,
+      UnsupportedEncodingException, IOException, ParseException {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    val paramMap = new HashMap<String, Object>();
+    paramMap.put("batchDate", sdf.parse(date));
+    if (tenantId.length != 0) {
+      paramMap.put("tenantId", tenantId);
+    }
+    commonMapper.updateBatchDate(paramMap);
+
   }
 
 }

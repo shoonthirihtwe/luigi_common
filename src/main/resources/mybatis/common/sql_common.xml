@@ -104,4 +104,18 @@
 			AND <![CDATA[start_date<=#{issueDate} AND end_date>=#{issueDate}]]>
 		LIMIT 1
 	</select>
+	<update id="updateBatchDate" parameterType="hashmap">
+		update 
+			tenants
+		SET
+			batch_date=#{batchDate}
+		<where>
+			<if test="tenantId != null">
+				id IN
+				<foreach collection="tenantId" item="id" index="index" separator="," open="(" close=")">
+        		#{id}
+     			</foreach>
+			</if>
+     	</where>
+	</update>
 </mapper>

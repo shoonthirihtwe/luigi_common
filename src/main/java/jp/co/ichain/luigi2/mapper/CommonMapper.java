@@ -78,4 +78,15 @@ public interface CommonMapper {
    * @return
    */
   SalesProductsVo selectSalesProducts(Map<String, Object> paramMap);
+
+  /**
+   * バッチ日付更新
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @param paramMap
+   * @return
+   */
+  int updateBatchDate(Map<String, Object> paramMap);
 }
