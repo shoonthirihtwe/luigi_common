@@ -23,7 +23,7 @@ TRUNCATE TABLE luigi2_test.contract_no;
 TRUNCATE TABLE luigi2_test.contracts;
 TRUNCATE TABLE luigi2_test.customers;
 TRUNCATE TABLE luigi2_test.customers_corporate;
-TRUNCATE TABLE luigi2_test.customers_indivisual;
+TRUNCATE TABLE luigi2_test.customers_individual;
 TRUNCATE TABLE luigi2_test.deposit_details;
 TRUNCATE TABLE luigi2_test.deposit_headers;
 TRUNCATE TABLE luigi2_test.error_message;
