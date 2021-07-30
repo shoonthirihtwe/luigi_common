@@ -1,12 +1,17 @@
 package jp.co.ichain.luigi2.config.security;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.service.AuthService;
 import jp.co.ichain.luigi2.vo.UsersVo;
+import lombok.val;
 
 /**
  * ユーザー情報サービス
@@ -21,6 +26,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
   @Autowired
   private AuthService authService;
 
+  @SuppressWarnings("unused")
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     if (username == null || username.isEmpty()) {
@@ -30,20 +36,20 @@ public class SecurityUserDetailsService implements UserDetailsService {
     String[] tmp = username.split("::");
     userVo.setTenantId(Integer.parseInt(tmp[0]));
     userVo.setId(Integer.parseInt(tmp[1]));
-    // TODO g.kim ログイン情報取得
-    // userVo.setKind(tmp[2]);
-    try {
-      // TODO g.kim ログイン情報取得
-      // userVo = authDao.getUser(userVo);
-      userVo = authService.getCurrentUser();
-    } catch (Exception e) {
-      throw new UsernameNotFoundException(username + "is not found");
-    }
+    
     if (userVo != null) {
-      // TODO g.kim ログイン情報取得
-      // userVo.setAccessId(tmp[3]);
       SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
-      userDetails.setUser(userVo);
+      val authorities = authService.loginUser(userVo);
+      if (authorities != null) {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        for (val authority : authorities) {
+          grantedAuthorities.add(new SimpleGrantedAuthority(authority.getFunctionId()));
+        }
+        userDetails.setUser(userVo);
+      } else {
+        throw new UsernameNotFoundException(username + "is not found");
+      }
+
       return (UserDetails) userDetails;
     }
     throw new UsernameNotFoundException(username + "is not found");

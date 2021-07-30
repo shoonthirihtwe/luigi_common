@@ -1,9 +1,7 @@
 package jp.co.ichain.luigi2.config.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import jp.co.ichain.luigi2.vo.UsersVo;
 
@@ -26,9 +24,6 @@ public class SecurityUserDetailsImpl implements UserDetails, SecurityUserDetails
   @Override
   public void setUser(UsersVo userVo) {
     this.userVo = userVo;
-    this.authorities = new ArrayList<GrantedAuthority>();
-    // TODO g.kim 権限設定
-    this.authorities.add(new SimpleGrantedAuthority("TODO権限"));
   }
 
   @Override
@@ -43,9 +38,7 @@ public class SecurityUserDetailsImpl implements UserDetails, SecurityUserDetails
 
   @Override
   public String getPassword() {
-    // TODO g.kim ログイン情報
-    // return "{noop}" + this.userVo.getAccessId();
-    return "{noop}";
+    return "{noop}" + this.userVo.getSub();
   }
 
   @Override

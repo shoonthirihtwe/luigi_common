@@ -13,15 +13,15 @@ import jp.co.ichain.luigi2.resources.TenantResources;
  * @updatedAt : 2021-07-02
  */
 @Component
-@ConfigurationProperties(prefix = "com.kb.jwt.aws")
+@ConfigurationProperties(prefix = "jwt.aws")
 public class JwtConfiguration {
 
   @Autowired
   TenantResources tenantResources;
 
-  private String identityPoolId;
   private String jwkUrl;
   private String region = "ap-northeast-1";
+  private String userPoolId;
   private String userNameField = "sub";
   private int connectionTimeout = 2000;
   private int readTimeout = 2000;
@@ -30,30 +30,22 @@ public class JwtConfiguration {
 
   public JwtConfiguration() {}
 
-  public String getJwkUrl(Integer tenantId)
+  public String getJwkUrl()
       throws InstantiationException, IllegalAccessException, SecurityException {
     return this.jwkUrl != null && !this.jwkUrl.isEmpty() ? this.jwkUrl
         : String.format("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json",
-            this.region, tenantResources.get(tenantId).getUserPoolId());
+            this.region, this.userPoolId);
   }
 
   public String getCognitoIdentityPoolUrl(Integer tenantId)
       throws InstantiationException, IllegalAccessException, SecurityException {
     return String.format("https://cognito-idp.%s.amazonaws.com/%s", this.region,
-        tenantResources.get(tenantId).getUserPoolId());
+        this.userPoolId);
   }
 
-  public String getUserPoolId(Integer tenantId)
+  public String getUserPoolId()
       throws InstantiationException, IllegalAccessException, SecurityException {
-    return tenantResources.get(tenantId).getUserPoolId();
-  }
-
-  public String getIdentityPoolId() {
-    return identityPoolId;
-  }
-
-  public void setIdentityPoolId(String identityPoolId) {
-    this.identityPoolId = identityPoolId;
+    return this.userPoolId;
   }
 
   public void setJwkUrl(String jwkUrl) {
