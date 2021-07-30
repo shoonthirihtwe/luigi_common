@@ -111,14 +111,13 @@ public class TestScriptUtils {
    * @throws SQLException
    * @throws ScriptException
    */
-  @SuppressWarnings("unchecked")
-  public HashMap<String, String> loadJsonToHashMap(String path)
+  public Object loadJsonToObject(String path)
       throws JsonParseException, JsonMappingException, UnsupportedEncodingException, IOException {
 
     ObjectMapper mapper = new ObjectMapper();
     ClassPathResource resource = new ClassPathResource(path);
     return mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"),
-        HashMap.class);
+        Object.class);
 
   }
 
