@@ -109,4 +109,22 @@
     "type": "java.lang.String",
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"
   }
+  ,
+  {
+    "name": "jwt.aws.region",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  }
+  ,
+  {
+    "name": "jwt.aws.user.pool.id",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  }
+  ,
+  {
+    "name": "env.test.mode",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  }
 ]}

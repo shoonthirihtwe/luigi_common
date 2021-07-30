@@ -89,4 +89,14 @@ public interface CommonMapper {
    * @return
    */
   int updateBatchDate(Map<String, Object> paramMap);
+  /**
+   * 権限関数名取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @param paramMap
+   * @return
+   */
+  List<String> selectFunctionId();
 }

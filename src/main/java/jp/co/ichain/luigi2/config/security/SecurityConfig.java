@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import jp.co.ichain.luigi2.config.security.cognito.AwsCognitoIdTokenProcessor;
 import jp.co.ichain.luigi2.config.security.cognito.AwsCognitoJwtAuthFilter;
+import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
@@ -43,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   AwsCognitoIdTokenProcessor awsCognitoIdTokenProcessor;
   @Autowired
   TenantResources tenantResources;
+  @Autowired
+  CommonMapper commonMapper;
 
   @Override
   public void configure(WebSecurity web) throws Exception {
@@ -62,8 +65,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .cors();
     http.authorizeRequests().antMatchers("/login", "/logout", "/err/**", "/p/**", "/actuator/**")
         .permitAll();
-    http.authorizeRequests().antMatchers("/u/**").permitAll();
-    http.authorizeRequests().antMatchers("/api/**").permitAll();
+    http.authorizeRequests().antMatchers("/u/**").authenticated();
+
+    for (val functionId : commonMapper.selectFunctionId()) {
+      http.authorizeRequests().antMatchers("/" + functionId).hasAnyAuthority(functionId);
+    }
 
     http.authorizeRequests().anyRequest().denyAll();
   }

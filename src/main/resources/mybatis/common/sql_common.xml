@@ -104,6 +104,15 @@
 			AND <![CDATA[start_date<=#{issueDate} AND end_date>=#{issueDate}]]>
 		LIMIT 1
 	</select>
+	<select id="selectFunctionId" resultType="java.lang.String">
+		SELECT DISTINCT 
+			function_id 
+		FROM 
+			authorities
+		WHERE 
+			allow_deny=1
+			AND api_yn=1
+	</select>
 	<update id="updateBatchDate" parameterType="hashmap">
 		update 
 			tenants
