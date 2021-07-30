@@ -28,7 +28,7 @@ public class AuthService {
 
   @Value("${env.test.mode}")
   Boolean isTestMode;
-  
+
   /**
    * ログイン中の会員取得
    * 
@@ -38,8 +38,8 @@ public class AuthService {
    * @return
    */
   public UsersVo getCurrentUser() {
-    //TODO: テストのため、後で削除予定
-    if(isTestMode) {
+    // TODO: テストのため、後で削除予定
+    if (isTestMode) {
       val result = new UsersVo();
       result.setTenantId(1);
       result.setId(1);
@@ -47,7 +47,7 @@ public class AuthService {
       result.setSub("a1234");
       return result;
     }
-    
+
     try {
       SecurityUserDetails userDetails =
           (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -75,7 +75,7 @@ public class AuthService {
 
     return authorities;
   }
-  
+
   /**
    * Admin権限取得
    * 
