@@ -47,6 +47,10 @@ public class JwtConfiguration {
       throws InstantiationException, IllegalAccessException, SecurityException {
     return this.userPoolId;
   }
+  
+  public void setUserPoolId(String userPoolId) {
+    this.userPoolId = userPoolId;
+  }
 
   public void setJwkUrl(String jwkUrl) {
     this.jwkUrl = jwkUrl;
