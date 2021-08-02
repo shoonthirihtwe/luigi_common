@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.ichain.luigi2.dto.ResultWebDto;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
@@ -115,6 +116,7 @@ public class ControllerUtils {
    * @return
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   public ControllerFunction<HttpServletRequest, String, MultipartRequest, ThrowingSupplierInParameterMap<ResultWebDto>, ? extends ResultWebDto> makeFileControllerHandler()
       throws Exception {
     return (request, endpoint, mulr, supplier) -> {
@@ -136,6 +138,14 @@ public class ControllerUtils {
 
       // Data
       for (String key : CollectionUtils.safe(requestMap.keySet())) {
+        if ("json".equals(key)) {
+          val json = requestMap.get(key);
+          if (json != null && json.length > 0) {
+            ObjectMapper mapper = new ObjectMapper();
+            paramMap.putAll(mapper.readValue(json[0], Map.class));
+          }
+          continue;
+        }
         val list = requestMap.get(key);
         if (key.contains("List")) {
           paramMap.put(key, Arrays.asList(list));
