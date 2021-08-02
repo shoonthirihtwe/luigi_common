@@ -72,4 +72,12 @@ public class Luigi2ErrorCode {
    * 他で更新ずみ
    */
   public static final String D0005 = "D0005";
+  /**
+   * 認証中エラー
+   */
+  public static final String A0001 = "A0001";
+  /**
+   * 認証キー期限エラー
+   */
+  public static final String A0002 = "A0002";
 }

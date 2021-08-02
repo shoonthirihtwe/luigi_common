@@ -32,10 +32,8 @@ public class UsersVo extends ObjectVo {
   String name;
 
   String email;
-
-  String password;
-
-  String rememberToken;
+  
+  String sub;
 
   @JsonSerialize(using = JsonDateSerializer.class)
   Date lastLoginAt;

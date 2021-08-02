@@ -7,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.nimbusds.jwt.proc.BadJWTException;
@@ -43,17 +41,14 @@ public class AwsCognitoJwtAuthFilter extends GenericFilter {
         SecurityContextHolder.clearContext();
       }
     } catch (BadJWTException e) {
-      ((HttpServletResponse) response).sendError(HttpStatus.SC_UNAUTHORIZED);
-      // TODO エラーコード生成
-      response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.S0000 + "\"}");
+      response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.A0002 + "\"}");
       response.setContentType("application/json");
       SecurityContextHolder.clearContext();
       e.printStackTrace();
       return;
+
     } catch (Exception e) {
-      ((HttpServletResponse) response).sendError(HttpStatus.SC_UNAUTHORIZED);
-      // TODO エラーコード生成
-      response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.S0000 + "\"}");
+      response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.A0001 + "\"}");
       response.setContentType("application/json");
       SecurityContextHolder.clearContext();
       e.printStackTrace();

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.UserMapper">
+	<select id="getLoginUserAuth" parameterType="UsersVo"  resultType="AuthoritiesVo">
+		SELECT 
+			a.function_id as functionId
+		FROM 
+			authorities a JOIN role_users r
+			ON a.tenant_id=r.tenant_id AND a.role_id=r.role_id
+		WHERE 
+			r.user_id=#{id}
+			AND a.allow_deny=1
+			AND r.avaliable_date &lt; now()
+			AND r.unavaliable_date > now()
+			AND a.api_yn=1
+	</select>
+	<select id="getAdminAuth" parameterType="UsersVo"  resultType="AuthoritiesVo">
+		SELECT 
+			a.function_id as functionId
+		FROM 
+			authorities a
+		WHERE 
+			a.tenant_id=#{tenantId}
+			AND a.allow_deny=1
+			AND a.api_yn=1
+	</select>
+
+	<update id="updateLoginUser" parameterType="UsersVo">
+		UPDATE 
+			users u
+		SET 
+			u.update_count=u.update_count + 1,
+			u.last_login_at=now() 
+		WHERE 
+			tenant_id=#{tenantId}
+			AND sub=#{sub}
+		<selectKey keyProperty="id" resultType="UsersVo" order="AFTER">
+			SELECT 
+				id
+			FROM 
+				users
+			WHERE 
+				tenant_id=#{tenantId}
+				AND sub=#{sub}
+		</selectKey>
+	</update>
+	
+</mapper>

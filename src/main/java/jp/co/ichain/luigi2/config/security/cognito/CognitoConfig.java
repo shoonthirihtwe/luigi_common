@@ -38,7 +38,7 @@ public class CognitoConfig {
       SecurityException {
     ResourceRetriever resourceRetriever = new DefaultResourceRetriever(
         jwtConfiguration.getConnectionTimeout(), jwtConfiguration.getReadTimeout());
-    URL jwkSetUrl = new URL(jwtConfiguration.getJwkUrl(tenantId));
+    URL jwkSetUrl = new URL(jwtConfiguration.getJwkUrl());
     JWKSource keySource = new RemoteJWKSet(jwkSetUrl, resourceRetriever);
     ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
     JWSKeySelector keySelector = new JWSVerificationKeySelector(RS256, keySource);

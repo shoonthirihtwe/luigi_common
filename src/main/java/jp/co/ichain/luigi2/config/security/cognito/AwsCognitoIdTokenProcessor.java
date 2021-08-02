@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,9 @@ import jp.co.ichain.luigi2.config.security.SecurityUserDetails;
 import jp.co.ichain.luigi2.config.security.SecurityUserDetailsImpl;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
+import jp.co.ichain.luigi2.vo.AuthoritiesVo;
 import jp.co.ichain.luigi2.vo.UsersVo;
+import lombok.val;
 
 /**
  * AwsCognitoIdTokenProcessor
@@ -44,7 +47,20 @@ public class AwsCognitoIdTokenProcessor {
   @Autowired
   TenantResources tenantResources;
 
+  @Value("${env.test.mode}")
+  Boolean isTestMode;
+
   public Authentication authenticate(HttpServletRequest request) throws Exception {
+
+    List<AuthoritiesVo> authorities = null;
+    UsersVo userVo = null;
+
+    // テストのためのログイン認証
+    // idTokenがあればその認証情報に上書きされる
+    if (isTestMode) {
+      userVo = authService.getCurrentUser();
+      authorities = authService.getAdminAuth(userVo);
+    }
 
     String idToken = request.getHeader(this.jwtConfiguration.getHttpHeader());
     if (idToken != null) {
@@ -68,24 +84,29 @@ public class AwsCognitoIdTokenProcessor {
       JWTClaimsSet claims = this.configurableJwtProcessor.process(bearerToken, null);
       validateIssuer(claims, tenantId);
       verifyIfIdToken(claims, tenantId);
-      String username = getUserNameFrom(claims);
+      val username = getUserNameFrom(claims);
       if (username != null) {
-        UsersVo userVo = new UsersVo();
-        userVo.setEmail(username);
+        userVo = new UsersVo();
+        userVo.setSub(username);
         userVo.setTenantId(tenantId);
 
-        // TODO login UserInfo
-        userVo = authService.getCurrentUser();
-        // userVo.setSub(username);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("TODO権限"));
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-            "TODOUserName", "TODOPassword", grantedAuthorities);
-        SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
-        userDetails.setUser(userVo);
-        token.setDetails(userDetails);
-        return token;
+        authorities = authService.loginUser(userVo);
       }
+    }
+
+    if (authorities != null) {
+      List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+      for (val authority : authorities) {
+        grantedAuthorities.add(new SimpleGrantedAuthority(authority.getFunctionId()));
+      }
+
+      UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+          String.valueOf(userVo.getTenantId() + "::" + userVo.getId()), userVo.getSub(),
+          grantedAuthorities);
+      SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
+      userDetails.setUser(userVo);
+      token.setDetails(userDetails);
+      return token;
     }
     return null;
   }
