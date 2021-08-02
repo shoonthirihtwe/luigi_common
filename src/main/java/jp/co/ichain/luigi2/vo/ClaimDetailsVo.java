@@ -50,6 +50,11 @@ public class ClaimDetailsVo extends ObjectVo {
    * 証券番号枝番
    */
   String contractBranchNo;
+  
+  /**
+   * 保障連番
+   */
+  Integer riskSequenceNo;
 
   /**
    * 連番
