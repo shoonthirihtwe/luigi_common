@@ -69,7 +69,7 @@ public class Validity {
     formatRegexMap.put("ZENNUM", "０-９");
     formatRegexMap.put("KANA", "\\u30a0-\\u30ff");
     formatRegexMap.put("HANKANA", "\\uFF65-\\uFF9F");
-    formatRegexMap.put("KANJI", "\\u4E00-\\u9FFF");
+    formatRegexMap.put("KANJI", "\\u4E00-\\u9FFF々");
     formatRegexMap.put("ALPHA", "a-zA-Z");
   }
 

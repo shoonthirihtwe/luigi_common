@@ -31,7 +31,7 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
   String customerId;
 
   /**
-   * 個人法人区分
+   * 契約者個人法人区分
    */
   Boolean corporateIndividualFlag;
 

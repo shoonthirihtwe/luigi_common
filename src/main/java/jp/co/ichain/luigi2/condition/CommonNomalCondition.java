@@ -29,20 +29,6 @@ public class CommonNomalCondition {
   AuthService authService;
 
   /**
-   * テスト用
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-06-10
-   * @updatedAt : 2021-06-10
-   * @param data
-   * @param max
-   * @return
-   */
-  public boolean overMax(Object data, Integer tenantId, List<Object> max) {
-    return ((Integer) data) <= ((Double) max.get(0)).intValue();
-  }
-
-  /**
    * 日付が現時刻以上
    * 
    * @author : [AOT] s.paku
