@@ -25,7 +25,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
+import jp.co.ichain.luigi2.mapper.DocumentsMapper;
 import lombok.val;
 
 /**
@@ -44,6 +46,12 @@ public class TestScriptUtils {
 
   @Autowired
   private CommonMapper commonMapper;
+
+  @Autowired
+  private DocumentsMapper documentsMapper;
+
+  @Autowired
+  private AwsS3Dao awsS3Dao;
 
   /**
    * execute Sql
@@ -167,4 +175,21 @@ public class TestScriptUtils {
 
   }
 
+  /**
+   * delete s3file
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @return
+   */
+  public void deleteUploadFiles() {
+    val urlList = documentsMapper.selectAllDocumentsUrl("new_business_documents");
+    urlList.addAll(documentsMapper.selectAllDocumentsUrl("maintenance_documents"));
+    urlList.addAll(documentsMapper.selectAllDocumentsUrl("claim_documents"));
+
+    for (val url : urlList) {
+      awsS3Dao.delete(url);
+    }
+  }
 }

@@ -37,4 +37,10 @@
 		FROM ${table} WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}
 		ORDER BY <if test ="table == 'maintenance_documents'">sequenceNo,</if>created_at
 	</select>
+	
+	<select id="selectAllDocumentsUrl"  resultType="string" parameterType="hashmap">
+		SELECT
+			document_url as documentUrl
+		FROM ${table} 
+	</select>
 </mapper>
