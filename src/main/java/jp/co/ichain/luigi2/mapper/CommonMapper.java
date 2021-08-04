@@ -89,6 +89,7 @@ public interface CommonMapper {
    * @return
    */
   int updateBatchDate(Map<String, Object> paramMap);
+
   /**
    * 権限関数名取得
    * 

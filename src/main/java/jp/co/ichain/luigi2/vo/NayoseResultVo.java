@@ -36,7 +36,7 @@ public class NayoseResultVo extends ObjectVo {
    * 部分一致(顧客ID)
    */
   List<String> partialMatchedList;
-  
+
   @JsonIgnore
-  String CustomerId;
+  String customerId;
 }
