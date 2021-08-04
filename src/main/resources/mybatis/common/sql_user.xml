@@ -46,5 +46,40 @@
 				AND sub=#{sub}
 		</selectKey>
 	</update>
-	
+	<select id="selectNayoseCustomerMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
+		SELECT
+			tenant_id as tenantId,
+			customer_id as customerId
+		FROM
+			<choose>
+				<when test="sex==3">
+					customers_corporate
+					WHERE 
+					corp_name_kana=#{nameKanaSei}
+					AND corp_addr_zip_code=#{postalCode}
+				</when>
+				<otherwise>
+					customers_individual
+					WHERE 
+					name_kana_sei = #{nameKanaSei}
+					AND name_kana_mei = #{nameKanaMei}
+					AND date_of_birth=DATE_FORMAT(#{dateOfBirth}, '%Y-%m-%d')
+					AND sex=#{sex}
+					AND addr_zip_code=#{postalCode}
+				</otherwise>
+			</choose>
+	</select>
+	<select id="selectNayoseCustomerIndividualPartialMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
+		SELECT
+			tenant_id as tenantId,
+			customer_id as customerId
+		FROM
+			customers_individual
+		WHERE 
+			(name_kana_sei LIKE CONCAT('%',#{nameKanaSei},'%')
+			OR name_kana_mei LIKE CONCAT('%',#{nameKanaMei},'%'))
+			AND date_of_birth=DATE_FORMAT(#{dateOfBirth}, '%Y-%m-%d')
+			AND sex=#{sex}
+			AND addr_zip_code=#{postalCode}
+	</select>
 </mapper>
