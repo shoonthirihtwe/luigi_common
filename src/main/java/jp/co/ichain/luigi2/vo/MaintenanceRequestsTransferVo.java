@@ -22,6 +22,22 @@ import lombok.Setter;
 public class MaintenanceRequestsTransferVo extends ObjectVo {
 
   /**
+   * 契約者変更区分
+   */
+  Boolean contractorCustomerChangeFg = false;
+  /**
+   * 契約者後見人変更区分
+   */
+  Boolean contractorGuardianCustomerChangeFg = false;
+  /**
+   * 被保険者変更区分
+   */
+  Boolean insuredCustomerChangeFg = false;
+  /**
+   * 被保険者後見人変更区分
+   */
+  Boolean insuredGuardianCustomerChangeFg = false;
+  /**
    * 契約者顧客情報
    */
   MaintenanceRequestsCustomersVo contractorCustomer;

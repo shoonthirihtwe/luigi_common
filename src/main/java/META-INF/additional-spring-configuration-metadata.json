@@ -117,7 +117,7 @@
   }
   ,
   {
-    "name": "jwt.aws.user.pool.id",
+    "name": "jwt.aws.user_pool_id",
     "type": "java.lang.String",
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"
   }

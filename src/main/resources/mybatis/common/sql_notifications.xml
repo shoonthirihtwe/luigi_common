@@ -22,29 +22,34 @@
 			#{tenantId},
 			#{notificationDate},
 			#{contractNo},
-			max(co.contract_branch_no),
+			co.contract_branch_no,
 			#{templateNumber},
 			'0',
 			#{comment},
 			'${data}',
 			<if test ="sendee != null">#{sendee},</if>
-			<if test ="sendee == null">CASE 
-				when cui.id is not null then concat(cui.name_knj_sei,' ',cui.name_knj_mei)
-				when cuc.id is not null then cuc.corp_name_official
+			<if test ="sendee == null">CASE cu.corporate_individual_flag
+				when '1' then concat(cui.name_knj_sei,' ',cui.name_knj_mei)
+				when '2' then cuc.corp_name_official
 				ELSE null END,</if>
 			#{notificationMethod},
 			<if test ="email != null">#{email},</if>
-			<if test ="email == null">CASE when cui.id is not null then cui.email
-				when cuc.id is not null then cuc.contact_email
+			<if test ="email == null">CASE cu.corporate_individual_flag 
+				when '1' then cui.email
+				when '2' then cuc.contact_email
 				ELSE null END,</if>
 			IFNULL(#{errorFlag},0),
 			#{updatedBy}
-		FROM contracts co LEFT OUTER JOIN customers cu
-				ON co.contractor_customer_id = cu.customer_id
+		FROM (SELECT contractor_customer_id
+			,max(contract_branch_no) as contract_branch_no
+			FROM contracts
+			WHERE tenant_id=#{tenantId} AND contract_no='${contractNo}'
+			GROUP BY tenant_id, contract_no, contractor_customer_id) co LEFT OUTER JOIN customers cu
+			ON co.contractor_customer_id = cu.customer_id
 			LEFT OUTER JOIN customers_individual cui
-				ON co.contractor_customer_id = cui.customer_id AND cui.id is not null
+				ON co.contractor_customer_id = cui.customer_id AND cu.corporate_individual_flag='1'
 			LEFT OUTER JOIN customers_corporate cuc
-				ON co.contractor_customer_id = cuc.customer_id AND cuc.id is not null
-		WHERE co.contract_no='${contractNo}' ORDER BY co.contract_branch_no AND (cui.id is not null OR cuc.id is not null) DESC LIMIT 1
+				ON co.contractor_customer_id = cuc.customer_id AND cu.corporate_individual_flag='2'
+		ORDER BY co.contract_branch_no DESC
 	</insert>
 </mapper>
