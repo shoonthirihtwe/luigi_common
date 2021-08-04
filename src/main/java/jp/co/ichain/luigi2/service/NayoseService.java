@@ -36,7 +36,7 @@ public class NayoseService {
   public NayoseResultVo nayose(NayoseRequestVo param) {
 
     var resultList = userMapper.selectNayoseCustomerMatch(param);
-    if (resultList != null) {
+    if (resultList != null && resultList.size() != 0) {
       List<String> idList = new ArrayList<String>();
       for (val result : resultList) {
         idList.add(result.getCustomerId());
@@ -45,11 +45,11 @@ public class NayoseService {
       return resultList.get(0);
     }
 
-    if (resultList == null && !param.getSex().equals("3")) {
+    if (resultList.size() == 0 && !param.getSex().equals("3")) {
       resultList = userMapper.selectNayoseCustomerIndividualPartialMatch(param);
     }
 
-    if (resultList != null) {
+    if (resultList != null && resultList.size() != 0) {
       List<String> idList = new ArrayList<String>();
       for (val result : resultList) {
         idList.add(result.getCustomerId());
