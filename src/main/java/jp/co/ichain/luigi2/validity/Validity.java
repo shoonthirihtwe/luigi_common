@@ -206,10 +206,14 @@ public class Validity {
    * @throws UnsupportedEncodingException
    * @throws JsonProcessingException
    * @throws JsonMappingException
+   * @throws InvocationTargetException
+   * @throws IllegalArgumentException
+   * @throws IllegalAccessException
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       List<WebException> exList, String key, Object data, Integer tenantId)
-      throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
+      throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
     // Required
     if (validityVo.getRequired() && data == null) {
@@ -217,6 +221,8 @@ public class Validity {
     }
 
     if (data != null) {
+      // Condition
+      validateCondition(validityVo, key, data, tenantId, exList);
       // type is string
       if (Vtype.STRING.toString().equals(validityVo.getType())) {
         String strData = (String) data;
