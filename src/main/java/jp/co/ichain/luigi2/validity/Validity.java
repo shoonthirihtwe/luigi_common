@@ -161,17 +161,21 @@ public class Validity {
 
         if (validityVo.getArray()) {
           // Condition
-          validateCondition(validityVo, key, data, tenantId, exList);
+          if (validityVo.getIsChildrenCondition() == false) {
+            validateCondition(validityVo, key, data, tenantId, exList);
+          }
           if (data instanceof List) {
             if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
               List<String> list = (List<String>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId);
+                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId,
+                    validityVo.getIsChildrenCondition());
               }
             } else {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId);
+                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId,
+                    validityVo.getIsChildrenCondition());
               }
             }
 
@@ -184,7 +188,7 @@ public class Validity {
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId);
+          validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId, true);
         }
       }
     }
@@ -211,7 +215,8 @@ public class Validity {
    * @throws IllegalAccessException
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
-      List<WebException> exList, String key, Object data, Integer tenantId)
+      List<WebException> exList, String key, Object data, Integer tenantId,
+      boolean isChildrenCondition)
       throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
@@ -222,7 +227,9 @@ public class Validity {
 
     if (data != null) {
       // Condition
-      validateCondition(validityVo, key, data, tenantId, exList);
+      if (isChildrenCondition) {
+        validateCondition(validityVo, key, data, tenantId, exList);
+      }
       // type is string
       if (Vtype.STRING.toString().equals(validityVo.getType())) {
         String strData = (String) data;
