@@ -86,11 +86,10 @@ public class CommonNomalCondition {
    */
   public boolean checkZipcode(Object data, Integer tenantId, List<Object> paramList) {
     String zipcode = (String) data;
-
     if (zipcode.contains("-")) {
       zipcode = zipcode.replace("-", "");
     }
-    return zipcode.matches(ZIP_REX) && zipcode.length() == 7;
+    return zipcode.matches(ZIP_REX);
 
   }
 }
