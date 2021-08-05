@@ -1,130 +1,134 @@
-{"properties": [
-  {
-    "name": "spring.luigi2.datasource.master.jdbc-url",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.master.jdbc-url'"
-  },
-  {
-    "name": "spring.luigi2.datasource.master.driver-class-name",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.master.driver-class-name'"
-  },
-  {
-    "name": "spring.luigi2.datasource.master.password",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.master.password'"
-  },
-  {
-    "name": "spring.luigi2.datasource.master.username",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.master.username'"
-  },
-  {
-    "name": "spring.luigi2.datasource.slave.jdbc-url",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.jdbc-url'"
-  },
-  {
-    "name": "spring.luigi2.datasource.slave.driver-class-name",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.driver-class-name'"
-  },
-  {
-    "name": "spring.luigi2.datasource.slave.password",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.password'"
-  },
-  {
-    "name": "spring.luigi2.datasource.slave.username",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.username'"
-  },
-  {
-    "name": "config.time-zone",
-    "type": "java.lang.String",
-    "description": "A description for 'config.time-zone'"
-  },
-  {
-    "name": "spring.luigi2.datasource.master.platform",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.master.platform'"
-  },
-  {
-    "name": "spring.luigi2.datasource.slave.platform",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "gmo.site-id",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "gmo.site-pass",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "gmo.shop-id",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "gmo.shop-pass",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.credential.access.key",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.credential.secret.key",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.s3.region",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.s3.bucket",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.s3.salt",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "aws.ses.region",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  },
-  {
-    "name": "mail.date.format",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  }
-  ,
-  {
-    "name": "jwt.aws.region",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  }
-  ,
-  {
-    "name": "jwt.aws.user_pool_id",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  }
-  ,
-  {
-    "name": "env.test.mode",
-    "type": "java.lang.String",
-    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
-  }
-]}
+{
+	"properties": [
+		{
+			"name": "spring.luigi2.datasource.master.jdbc-url",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.master.jdbc-url'"
+		},
+		{
+			"name": "spring.luigi2.datasource.master.driver-class-name",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.master.driver-class-name'"
+		},
+		{
+			"name": "spring.luigi2.datasource.master.password",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.master.password'"
+		},
+		{
+			"name": "spring.luigi2.datasource.master.username",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.master.username'"
+		},
+		{
+			"name": "spring.luigi2.datasource.slave.jdbc-url",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.jdbc-url'"
+		},
+		{
+			"name": "spring.luigi2.datasource.slave.driver-class-name",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.driver-class-name'"
+		},
+		{
+			"name": "spring.luigi2.datasource.slave.password",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.password'"
+		},
+		{
+			"name": "spring.luigi2.datasource.slave.username",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.username'"
+		},
+		{
+			"name": "config.time-zone",
+			"type": "java.lang.String",
+			"description": "A description for 'config.time-zone'"
+		},
+		{
+			"name": "spring.luigi2.datasource.master.platform",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.master.platform'"
+		},
+		{
+			"name": "spring.luigi2.datasource.slave.platform",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.site-id",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.site-pass",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.shop-id",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.shop-pass",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.credential.access.key",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.credential.secret.key",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.s3.region",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.s3.bucket",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.s3.salt",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "aws.ses.region",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "mail.date.format",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "jwt.aws.region",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "jwt.aws.user_pool_id",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "env.test.mode",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "antisocial.url",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		}
+	]
+}

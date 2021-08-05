@@ -46,7 +46,7 @@ public class Luigi2ErrorCode {
    * 日付が現時刻以上
    */
   public static final String V0007 = "V0007";
-  
+
   /**
    * 項目のみで不正
    */
@@ -80,4 +80,8 @@ public class Luigi2ErrorCode {
    * 認証キー期限エラー
    */
   public static final String A0002 = "A0002";
+  /**
+   * 反社会性力エラー
+   */
+  public static final String E0001 = "E0001";
 }

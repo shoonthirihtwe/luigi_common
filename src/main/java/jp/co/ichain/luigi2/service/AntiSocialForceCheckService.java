@@ -15,6 +15,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
@@ -29,6 +30,10 @@ import jp.co.ichain.luigi2.vo.AntiSocialForceCheckVo;
  */
 @Service
 public class AntiSocialForceCheckService {
+
+  @Value("${antisocial.url}")
+  String antisocialUrl;
+
   private static String ANTISOCIAL_DATE = "2019-11-03";
 
   /**
@@ -42,17 +47,17 @@ public class AntiSocialForceCheckService {
    * @throws IOException
    * @throws UnsupportedOperationException
    */
-  public static AntiSocialForceCheckVo antisocialCheck(String tenantsId, String name, Date birtday,
-      String address, String antisocialUrl) throws ClientProtocolException, IOException {
+  public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
+      String address) throws ClientProtocolException, IOException {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
     String dateOfbirthday = dateOfBirth.format(formatter);
 
     Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
-    inputMap.put("InsurerCodeSeq", tenantsId);
+    inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
-    inputMap.put("RetrievalMethod", "1");
+    inputMap.put("RetrievalMethod", "0");
     inputMap.put("NameKanji", name);
     inputMap.put("DOB", dateOfbirthday);
     inputMap.put("Address", address);
