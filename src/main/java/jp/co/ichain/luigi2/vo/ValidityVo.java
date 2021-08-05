@@ -31,7 +31,7 @@ public class ValidityVo extends ObjectVo {
 
   Boolean isBinaryLength = true;
 
-  Boolean isChildrenCondition = false;
+  Boolean isChildrenCondition = true;
 
   String objectType;
 
