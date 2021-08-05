@@ -84,7 +84,7 @@ public class CommonNomalCondition {
    */
   public boolean checkZipcode(Object data, Integer tenantId, List<Object> paramList) {
     String zipcode = (String) data;
-    String numberRex = "0-9";
+    String numberRex = "[0-9]+";
     if (zipcode.contains("-")) {
       zipcode = zipcode.replace("-", "");
     }
