@@ -45,6 +45,11 @@ public class NayoseRequestVo extends ObjectVo {
    * 性別
    */
   String sex;
+  
+  /**
+   * 法人/個人区分
+   */
+  String corporateIndividualFlag;
 
   /**
    * 住所(郵便番号)

@@ -52,7 +52,7 @@
 			customer_id as customerId
 		FROM
 			<choose>
-				<when test="sex==3">
+				<when test="corporateIndividualFlag == 2">
 					customers_corporate
 					WHERE 
 					corp_name_kana=#{nameKanaSei}
@@ -68,6 +68,7 @@
 					AND addr_zip_code=#{postalCode}
 				</otherwise>
 			</choose>
+		ORDER BY updated_at DESC
 	</select>
 	<select id="selectNayoseCustomerIndividualPartialMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
 		SELECT
@@ -81,5 +82,6 @@
 			AND date_of_birth=DATE_FORMAT(#{dateOfBirth}, '%Y-%m-%d')
 			AND sex=#{sex}
 			AND addr_zip_code=#{postalCode}
+		ORDER BY updated_at DESC
 	</select>
 </mapper>

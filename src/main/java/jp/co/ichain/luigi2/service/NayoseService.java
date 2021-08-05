@@ -29,8 +29,13 @@ public class NayoseService {
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-04
    * @updatedAt : 2021-08-04
-   * @param paramMap
-   * @param endpoint
+   * @param tenantId
+   * @param nameKanaSei
+   * @param nameKanaMei
+   * @param dateOfBirth
+   * @param sex
+   * @param corporateIndividualFlag
+   * @param postalCode
    */
   @Transactional(transactionManager = "luigi2TransactionManager", readOnly = true)
   public NayoseResultVo nayose(NayoseRequestVo param) {
@@ -45,7 +50,7 @@ public class NayoseService {
       return resultList.get(0);
     }
 
-    if (resultList.size() == 0 && !param.getSex().equals("3")) {
+    if (resultList != null && resultList.size() == 0 && !param.getSex().equals("3")) {
       resultList = userMapper.selectNayoseCustomerIndividualPartialMatch(param);
     }
 
