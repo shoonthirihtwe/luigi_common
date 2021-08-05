@@ -40,7 +40,7 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 保全申請番号
    */
-  Integer requestNo;
+  String requestNo;
 
   /**
    * 証券番号
@@ -217,17 +217,22 @@ public class MaintenanceRequestsVo extends ObjectVo {
   /**
    * 保険料返金額
    */
-  Integer refundAmount;
+  Long refundAmount;
 
   /**
    * 保険料総返金額
    */
-  Integer totalRefundAmount;
+  Long totalRefundAmount;
 
   /**
    * 解約払戻金額
    */
   Integer cashValue;
+
+  /**
+   * 住所変更顧客情報
+   */
+  MaintenanceRequestsTransferVo transfer;
 
   /**
    * ロック用

@@ -58,18 +58,22 @@ public class Oa000Function {
       // 解約消滅日
       case Luigi2DateCode.C00001:
         val salesPlanVo = mapper.selectSalesProducts(paramMap);
-        switch (salesPlanVo.getTerminationDatePattern()) {
-          case "MB":
-            standardDateCal.set(Calendar.DAY_OF_MONTH, 1);
-            return standardDateCal.getTime();
-          case "ME":
-            standardDateCal.set(Calendar.DAY_OF_MONTH,
-                standardDateCal.getActualMaximum(Calendar.DAY_OF_MONTH));
-            return standardDateCal.getTime();
-          case "MO":
-            return standardDateCal.getTime();
-          default:
-            throw new WebDataException(Luigi2ErrorCode.D0002, "terminationDatePattern");
+        if (salesPlanVo != null) {
+          switch (salesPlanVo.getTerminationDatePattern()) {
+            case "MB":
+              standardDateCal.set(Calendar.DAY_OF_MONTH, 1);
+              return standardDateCal.getTime();
+            case "ME":
+              standardDateCal.set(Calendar.DAY_OF_MONTH,
+                  standardDateCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+              return standardDateCal.getTime();
+            case "MO":
+              return standardDateCal.getTime();
+            default:
+              throw new WebDataException(Luigi2ErrorCode.D0002, "terminationDatePattern");
+          }
+        } else {
+          throw new WebDataException(Luigi2ErrorCode.D0002, "sales_plan_code");
         }
         // 解除消滅日
       case Luigi2DateCode.C00002:

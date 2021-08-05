@@ -28,6 +28,8 @@ public class CommonNomalCondition {
   @Autowired
   AuthService authService;
 
+  static final String ZIP_REX = "^[0-9]{7}$";
+
   /**
    * 日付が現時刻以上
    * 
@@ -84,11 +86,11 @@ public class CommonNomalCondition {
    */
   public boolean checkZipcode(Object data, Integer tenantId, List<Object> paramList) {
     String zipcode = (String) data;
-    String numberRex = "0-9";
+
     if (zipcode.contains("-")) {
       zipcode = zipcode.replace("-", "");
     }
-    return zipcode.matches(numberRex) && zipcode.length() == 7;
+    return zipcode.matches(ZIP_REX) && zipcode.length() == 7;
 
   }
 }
