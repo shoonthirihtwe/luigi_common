@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.nimbusds.jwt.proc.BadJWTException;
@@ -43,6 +44,7 @@ public class AwsCognitoJwtAuthFilter extends GenericFilter {
     } catch (BadJWTException e) {
       response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.A0002 + "\"}");
       response.setContentType("application/json");
+      ((HttpServletResponse) response).setStatus(401);
       SecurityContextHolder.clearContext();
       e.printStackTrace();
       return;
@@ -51,6 +53,7 @@ public class AwsCognitoJwtAuthFilter extends GenericFilter {
       response.getWriter().print("{\"code\":\"" + Luigi2ErrorCode.A0001 + "\"}");
       response.setContentType("application/json");
       SecurityContextHolder.clearContext();
+      ((HttpServletResponse) response).setStatus(401);
       e.printStackTrace();
       return;
     }

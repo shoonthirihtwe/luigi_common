@@ -38,7 +38,7 @@ public class AuthService {
    * @return
    */
   public UsersVo getCurrentUser() {
-    // TODO: テストのため、後で削除予定
+    // TODO: g.kim テストのため、後で削除予定 
     if (isTestMode) {
       val result = new UsersVo();
       result.setTenantId(1);
