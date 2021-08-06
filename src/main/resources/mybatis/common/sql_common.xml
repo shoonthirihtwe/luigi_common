@@ -66,7 +66,6 @@
 			tenants
 		WHERE
 			id IN (<foreach item="tenantId" collection="tenantIds" separator=",">#{tenantId}</foreach>)
-			AND date_format(batch_date, '%Y%m%d')<![CDATA[<=]]>date_format(now(), '%Y%m%d')
 	</select>
 	<select id="selectFactoringCompanyCode" resultType="string" parameterType="hashmap">
 		SELECT factoring_company_code
