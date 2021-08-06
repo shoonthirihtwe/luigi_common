@@ -235,6 +235,11 @@ public class MaintenanceRequestsVo extends ObjectVo {
   MaintenanceRequestsTransferVo transfer;
 
   /**
+   * 受取人
+   */
+  List<BeneficialiesVo> beneficiariesList;
+
+  /**
    * ロック用
    */
   Integer updateCount;

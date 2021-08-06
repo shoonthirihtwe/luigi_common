@@ -20,7 +20,7 @@
 	
 	<select id="selectIsExistKey" parameterType="map" resultType="boolean">
 		SELECT 1 FROM ${tableInfo.table} WHERE
-		tenant_id=#{tenantId} AND ${tableInfo.key}=#{data}
+		tenant_id=#{tenantId} AND ${tableInfo.key}=#{data} LIMIT 1
 	</select>
 
 	<select id="selectServiceInstances" parameterType="map"
