@@ -108,14 +108,14 @@ public class TestScriptUtils {
             new TypeReference<Map<String, Object>>() {});
 
     for (String key : map.keySet()) {
-      if(key.contains("List")) {
-        List<String> list = (List<String>)map.get(key);
-        
-        for(String str: list) {
+      if (key.contains("List")) {
+        List<String> list = (List<String>) map.get(key);
+
+        for (String str : list) {
           params.add(key, str);
         }
-      }else {
-        params.add(key, (String)map.get(key));
+      } else {
+        params.add(key, (String) map.get(key));
       }
     }
 
