@@ -47,8 +47,8 @@ public class AwsCognitoIdTokenProcessor {
   @Autowired
   TenantResources tenantResources;
 
-  @Value("${env.test.mode}")
-  Boolean isTestMode;
+  @Value("${env.debug.mode}")
+  Boolean isDebugMode;
 
   public Authentication authenticate(HttpServletRequest request) throws Exception {
 
@@ -57,7 +57,7 @@ public class AwsCognitoIdTokenProcessor {
 
     // テストのためのログイン認証
     // idTokenがあればその認証情報に上書きされる
-    if (isTestMode) {
+    if (isDebugMode) {
       userVo = authService.getCurrentUser();
       authorities = authService.getAdminAuth(userVo);
     }

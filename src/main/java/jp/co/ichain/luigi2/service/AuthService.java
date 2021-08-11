@@ -26,8 +26,8 @@ public class AuthService {
   @Autowired
   UserMapper userMapper;
 
-  @Value("${env.test.mode}")
-  Boolean isTestMode;
+  @Value("${env.debug.mode}")
+  Boolean isDebugMode;
 
   /**
    * ログイン中の会員取得
@@ -39,7 +39,7 @@ public class AuthService {
    */
   public UsersVo getCurrentUser() {
     // TODO: g.kim テストのため、後で削除予定 
-    if (isTestMode) {
+    if (isDebugMode) {
       val result = new UsersVo();
       result.setTenantId(1);
       result.setId(1);

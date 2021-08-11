@@ -84,4 +84,12 @@ public class Luigi2ErrorCode {
    * 反社会性力エラー
    */
   public static final String E0001 = "E0001";
+  /**
+   * ファイル認証中エラー
+   */
+  public static final String F0001 = "F0001";
+  /**
+   * 不正なファイル検出エラー
+   */
+  public static final String F0002 = "F0002";
 }
