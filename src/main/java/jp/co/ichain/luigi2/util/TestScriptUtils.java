@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,15 +97,28 @@ public class TestScriptUtils {
    * @throws SQLException
    * @throws ScriptException
    */
+  @SuppressWarnings("unchecked")
   public MultiValueMap<String, String> loadJsonToMultiValueMap(String path)
       throws JsonParseException, JsonMappingException, UnsupportedEncodingException, IOException {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     ObjectMapper mapper = new ObjectMapper();
     ClassPathResource resource = new ClassPathResource(path);
-    Map<String, String> map =
+    Map<String, Object> map =
         mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"),
-            new TypeReference<Map<String, String>>() {});
-    params.setAll(map);
+            new TypeReference<Map<String, Object>>() {});
+
+    for (String key : map.keySet()) {
+      if(key.contains("List")) {
+        List<String> list = (List<String>)map.get(key);
+        
+        for(String str: list) {
+          params.add(key, str);
+        }
+      }else {
+        params.add(key, (String)map.get(key));
+      }
+    }
+
     return params;
   }
 
