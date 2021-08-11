@@ -27,6 +27,8 @@ public class BeneficialiesVo extends ObjectVo {
 
   Integer id;
 
+  Integer socialSeq;
+
   Integer tenantId;
 
   String beneficiaryCode;
@@ -62,7 +64,7 @@ public class BeneficialiesVo extends ObjectVo {
 
   @JsonIgnore
   String updatedBy;
-  
+
   @JsonIgnore
   Date deletedAt;
 
@@ -90,22 +92,22 @@ public class BeneficialiesVo extends ObjectVo {
    * 契約者との続柄
    */
   String relationship;
-  
+
   /**
-   * 氏名　姓（会社名）
+   * 氏名 姓（会社名）
    */
   String nameKanjiSei;
 
   /**
-   * 氏名　名
+   * 氏名 名
    */
   String nameKanjiMei;
-  
+
   /**
    * ロール連番
    */
   Integer roleSequenceNo;
-  
+
   /**
    * ステータス
    */

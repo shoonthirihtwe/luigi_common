@@ -39,6 +39,25 @@ public class AntiSocialForceCheckService {
   /**
    * 反社会的勢力チェック
    * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-11
+   * @updatedAt : 2021-08-11
+   * @param tenantsId
+   * @param name
+   * @param birtday
+   * @param address
+   * @return
+   * @throws IOException
+   * @throws ClientProtocolException
+   */
+  public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
+      String address) throws ClientProtocolException, IOException {
+    return this.antisocialCheck(tenantsId, name, birtday, address, "0");
+  }
+
+  /**
+   * 反社会的勢力チェック
+   * 
    * @param $name
    * @param $birthday
    * @param $address
@@ -48,7 +67,7 @@ public class AntiSocialForceCheckService {
    * @throws UnsupportedOperationException
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
-      String address) throws ClientProtocolException, IOException {
+      String address, String RetrievalMethod) throws ClientProtocolException, IOException {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
     String dateOfbirthday = dateOfBirth.format(formatter);
@@ -57,7 +76,7 @@ public class AntiSocialForceCheckService {
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
-    inputMap.put("RetrievalMethod", "0");
+    inputMap.put("RetrievalMethod", RetrievalMethod);
     inputMap.put("NameKanji", name);
     inputMap.put("DOB", dateOfbirthday);
     inputMap.put("Address", address);
