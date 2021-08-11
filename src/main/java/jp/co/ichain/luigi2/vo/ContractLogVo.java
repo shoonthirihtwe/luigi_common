@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * ContractLogVo 
+ * ContractLogVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-05-31
@@ -24,32 +24,34 @@ import lombok.Setter;
 public class ContractLogVo extends ObjectVo {
 
   Integer id;
-  
+
   Integer tenantId;
-  
+
   String contractNo;
-  
+
   /**
    * 証券番号枝番
    */
   String contractBranchNo;
-  
+
+  String requestNo;
+
   Integer sequenceNo;
-  
+
   String logType;
-  
+
   String messageCode;
-  
+
   String messageGroup;
-  
+
   String reasonGroupCode;
-  
+
   String reasonCode;
-  
+
   String contactTransactionCode;
-  
+
   String description;
-  
+
   String programName;
 
   Integer updateCount;
@@ -58,7 +60,7 @@ public class ContractLogVo extends ObjectVo {
   Date createdAt;
 
   @JsonIgnore
-  String createdBy;
+  Object createdBy;
 
   @JsonIgnore
   Date updatedAt;

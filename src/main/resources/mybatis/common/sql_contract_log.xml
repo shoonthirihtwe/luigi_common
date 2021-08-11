@@ -3,18 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.ichain.luigi2.mapper.ContractLogMapper">
-		<select id="selectSequenceNo" resultType="Integer" parameterType="hashmap">
-		SELECT
-			CASE WHEN max(sequence_no) is null THEN 1
-	    	ELSE max(sequence_no) + 1
-	    	END as sequence_no
-		FROM
-			contract_log
-		WHERE
-			tenant_id = #{tenantId}
-		    AND contract_no = #{contractNo}
-		    AND contract_branch_no = #{contractBranchNo}
-	</select>
 	<insert id="insertContractLog" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO contract_log
 		(
@@ -22,9 +10,9 @@
 			contract_no,
 			contract_branch_no,
 		  	sequence_no,
-		  	<if test="logType != null">log_type,</if>
+		  	log_type,
 		  	message_code,
-		  	<if test="messageGroup != null">message_group,</if>
+		  	message_group,
 		  	reason_group_code,
 		  	reason_code,
 		  	contact_transaction_code,
@@ -32,21 +20,39 @@
 		  	program_name,
 		  	created_by
 		)
-		VALUES
-		(
-			#{tenantId},
-			#{contractNo},
-			#{contractBranchNo},
-			#{sequenceNo},
+		SELECT
+			c.tenant_id,
+			c.contract_no,
+			c.contract_branch_no,
+			IFNULL(max(l.sequence_no),0)+1,
 			<if test="logType != null">#{logType},</if>
-			#{messageCode},
-			<if test="messageGroup != null">#{messageGroup},</if>
+			<if test="logType == null">0,</if>
+			<if test="messageCode != null">#{messageCode},</if>
+			<if test="messageCode == null">0,</if>
+			#{messageGroup},
 			#{reasonGroupCode},
 			#{reasonCode},
 			#{contactTransactionCode},
 			#{description},
 			#{programName},
-			#{createdBy}
-		)
+			<if test="updatedBy != null">#{updatedBy}</if>
+			<if test="updatedBy == null">#{createdBy}</if>
+		<if test="contractNo == null">
+			FROM (SELECT ct.* FROM contracts ct JOIN maintenance_requests mr 
+			ON ct.tenant_id=mr.tenant_id AND ct.contract_no=mr.contract_no AND ct.contract_branch_no=mr.contract_branch_no
+			WHERE mr.tenant_id=#{tenantId} AND mr.request_no=#{requestNo}) 
+				c LEFT JOIN contract_log l
+			ON c.tenant_id=l.tenant_id AND c.contract_no=l.contract_no AND c.contract_branch_no=l.contract_branch_no
+			GROUP BY c.tenant_id, c.contract_no, c.contract_branch_no
+		</if>
+		<if test="contractNo != null">
+			FROM (SELECT tenant_id, contract_no, 
+				<if test="contractBranchNo != null">contract_branch_no</if>
+				<if test="contractBranchNo == null">max(contract_branch_no) as contract_branch_no</if>
+				FROM contracts WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo}
+				<if test="contractBranchNo != null">AND contract_branch_no=#{contractBranchNo}</if>) c LEFT JOIN contract_log l
+			ON c.tenant_id=l.tenant_id AND c.contract_no=l.contract_no AND c.contract_branch_no=l.contract_branch_no
+			GROUP BY c.tenant_id, c.contract_no , c.contract_branch_no
+		</if>
 	</insert>
 </mapper>

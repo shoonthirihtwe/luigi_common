@@ -14,9 +14,13 @@ import jp.co.ichain.luigi2.vo.ContractLogVo;
 @Repository
 @Luigi2Mapper
 public interface ContractLogMapper {
-  // 契約ログの連番取得
-  int selectSequenceNo(ContractLogVo contractLogVo);
-
-  // 契約ログを作成
+  /**
+   * 証券ログ挿入
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-11
+   * @updatedAt : 2021-08-11
+   * @param contractLogVo
+   */
   void insertContractLog(ContractLogVo contractLogVo);
 }
