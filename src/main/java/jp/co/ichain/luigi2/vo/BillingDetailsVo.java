@@ -48,6 +48,7 @@ public class BillingDetailsVo extends ObjectVo {
   /**
    * 充当月
    */
+
   String dueDate;
 
   /**
