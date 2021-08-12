@@ -1,33 +1,30 @@
 package jp.co.ichain.luigi2.resources.code;
 
 /**
- * 証券マスタコード
+ * 顧客マスタコード
  * 
  * @author : [AOT] s.paku
  * @createdAt : 2021-08-12
  * @updatedAt : 2021-08-12
  */
-public class Luigi2CodeContracts {
+public class Luigi2CodeCustomers {
 
   /**
-   * 払込経路
+   * 顧客の区分を管理する
    * 
-   * 1:現金 ､ 郵振
-   * 2:団体
-   * 3:クレジットカード
-   * 4:口座振替
-   * 5:キャリア
+   * 1:個人
+   * 2:法人
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    */
-  public enum PaymentMethod {
-    CASH("1"), GROUP("2"), CREDIT("3"), TRANSFER("4"), CARRIER("5");
+  public enum CorporateIndividualFlag {
+    INDIVIDUAL("1"), CORPORATION("2");
 
     String val;
 
-    PaymentMethod(String val) {
+    CorporateIndividualFlag(String val) {
       this.val = val;
     }
 
