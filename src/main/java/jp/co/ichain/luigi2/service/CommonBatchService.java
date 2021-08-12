@@ -53,7 +53,7 @@ public class CommonBatchService {
    * @throws ParseException
    */
   public void payAndCreateDepositData(List<BillingDetailsVo> billingDetails, int tenantId,
-      Date batchDate) throws ParseException {
+      Date batchDate, String createdBy) throws ParseException {
 
     // バッチナンバー
     int batchNo = mapper.selectBatchNo(batchDate);
@@ -168,7 +168,7 @@ public class CommonBatchService {
         depositDetailsVo.setPremiumDueDate(batchDate); // 保険料充当日 ＝ バッチ日付を設定
         // 保険料 連番 ＝ 請求詳細の保険料 連番
         depositDetailsVo.setPremiumSequenceNo(billingDetail.getPremiumSequenceNo());
-        depositDetailsVo.setCreatedBy(Luigi2Endpoint.BD002); // 作成者 ＝ この処理の機能IDを設定
+        depositDetailsVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
         // 保険料入金詳細データを作成する
         mapper.insertDepositDetails(depositDetailsVo);
 
@@ -193,10 +193,10 @@ public class CommonBatchService {
       depositHeadersVo.setBatchTotalAmount(String.valueOf(batchTotalAmount));
       depositHeadersVo.setBatchStatus("A"); // ステータス ＝ A（入力完了：マッチング待ち）を設定
       depositHeadersVo.setComment(null); // 備考 ＝ 属性初期値
-      depositHeadersVo.setUsereId(Luigi2Endpoint.BD002); // 処理ユーザーID ＝ この処理の機能IDを設定
+      depositHeadersVo.setUsereId(createdBy); // 処理ユーザーID ＝ この処理の機能IDを設定
       depositHeadersVo.setCollectionRoute("R"); // 収集ルート ＝ R（レギュラー）を設定
       depositHeadersVo.setGroupCode(null); // 団体コード ＝ 属性初期値
-      depositHeadersVo.setCreatedBy(Luigi2Endpoint.BD002); // 作成者 ＝ この処理の機能IDを設定
+      depositHeadersVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
 
       // 保険料入金ヘッダの作成を実施
       mapper.insertDepositHeaders(depositHeadersVo);
