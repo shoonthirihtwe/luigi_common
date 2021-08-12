@@ -72,7 +72,7 @@ public class CommonBatchService {
       String contractNo = billingDetail.getContractNo(); // 証券番号
       String contractBranchNo = billingDetail.getContractBranchNo(); // 証券番号枝番
       String cardCustNumber = billingDetail.getCardCustNumber(); // カード登録顧客番号 ※証券番号または親証券番号
-      Date dueDate = billingDetail.getDueDate(); // 請求詳細の充当月
+      String dueDate = billingDetail.getDueDate(); // 請求詳細の充当月
       Integer premiumDueAmount = billingDetail.getTotalGrossPremium(); // 合計保険料金額
 
       // GMO決済サービス
