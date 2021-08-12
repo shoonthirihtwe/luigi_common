@@ -67,7 +67,8 @@ public class DepositDetailsVo extends ObjectVo {
   /**
    * 充当月
    */
-  String dueDate;
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date dueDate;
   
   /**
    * 合計保険料金額
