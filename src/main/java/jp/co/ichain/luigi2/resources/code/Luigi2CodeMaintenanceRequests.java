@@ -56,12 +56,63 @@ public class Luigi2CodeMaintenanceRequests {
    * @updatedAt : 2021-08-12
    */
   public enum TransactionCode {
-    TRANSFER("11"), RECIPIENT("14"), paymentmethod("31"), CANCEL("41"), DELETE("42"), RETRACTION(
+    TRANSFER("11"), RECIPIENT("14"), PAYMENTMETHOD("31"), CANCEL("41"), DELETE("42"), RETRACTION(
         "44");
 
     String val;
 
     TransactionCode(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
+
+  /**
+   * 一次査定結果
+   * 
+   * 00:通常引受
+   * 01:取下
+   * 02:不備
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum FirstAssessmentResults {
+    COMPLATE("00"), CANCEL("01"), INADEQUACY("02");
+
+    String val;
+
+    FirstAssessmentResults(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
+
+  /**
+   * 二次査定結果
+   * 
+   * 00:承認
+   * 01:差戻
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum SecondAssessmentResults {
+    COMPLATE("00"), REJECT("01");
+
+    String val;
+
+    SecondAssessmentResults(String val) {
       this.val = val;
     }
 

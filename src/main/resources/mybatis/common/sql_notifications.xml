@@ -32,7 +32,8 @@
 				when '1' then concat(cui.name_knj_sei,' ',cui.name_knj_mei)
 				when '2' then cuc.corp_name_official
 				ELSE null END,</if>
-			#{notificationMethod},
+			<if test ="notificationMethod != null">#{notificationMethod},</if>
+			<if test ="notificationMethod == null">'00',</if>
 			<if test ="email != null">#{email},</if>
 			<if test ="email == null">CASE cu.corporate_individual_flag 
 				when '1' then cui.email

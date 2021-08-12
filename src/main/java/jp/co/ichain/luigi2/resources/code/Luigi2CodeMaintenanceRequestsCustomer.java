@@ -11,6 +11,7 @@ public class Luigi2CodeMaintenanceRequestsCustomer {
 
   /**
    * ロール
+   * 
    * PH:契約者
    * IN:被保険者
    * BE:保険金受取人(給付タイプ）
@@ -25,5 +26,19 @@ public class Luigi2CodeMaintenanceRequestsCustomer {
    */
   public enum Role {
     PH, IN, BE, BD, BM, PG, IG
+  }
+
+  /**
+   * 更新前後
+   * 
+   * A:After
+   * B:Before
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum BeforeAfter {
+    A, B
   }
 }
