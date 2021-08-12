@@ -45,6 +45,7 @@ public class Luigi2CodeContracts {
       return this.val;
     }
   }
+
   /**
    * 払込経路
    * 
