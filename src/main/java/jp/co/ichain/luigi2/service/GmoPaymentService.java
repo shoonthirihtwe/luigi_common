@@ -44,7 +44,6 @@ class GmoPaymentService {
   private String shopPass;
 
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyyyMMddHHmm");
-  private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
 
   @SuppressWarnings("serial")
   private static Map<String, String> API_URL_MAP = new HashMap<String, String>() {

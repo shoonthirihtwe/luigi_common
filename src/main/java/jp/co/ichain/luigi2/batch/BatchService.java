@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.batch;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -10,5 +11,5 @@ public interface BatchService {
 
   public void run(List<TenantsVo> tenantList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-      JsonMappingException, JsonProcessingException;
+      JsonMappingException, JsonProcessingException, ParseException;
 }

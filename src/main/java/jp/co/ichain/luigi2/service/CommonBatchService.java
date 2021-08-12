@@ -41,6 +41,8 @@ public class CommonBatchService {
   @Autowired
   PaymentService paymentService;
 
+  private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
+
   /**
    * 請求決済処理を実施し入金データを作成
    * 
@@ -48,9 +50,10 @@ public class CommonBatchService {
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    * @return
+   * @throws ParseException
    */
   public void payAndCreateDepositData(List<BillingDetailsVo> billingDetails, int tenantId,
-      Date batchDate) {
+      Date batchDate) throws ParseException {
 
     // バッチナンバー
     int batchNo = mapper.selectBatchNo(batchDate);
@@ -105,7 +108,9 @@ public class CommonBatchService {
         depositDetailsVo.setContractNo(contractNo); // 契約番号 ＝ 請求詳細の証券番号
         depositDetailsVo.setContractBranchNo(contractBranchNo); // 証券番号枝番
         depositDetailsVo.setApplicationNo(null); // 申込番号 ＝ 属性初期値
-        depositDetailsVo.setDueDate(billingDetail.getDueDate()); // 充当月 ＝ 請求詳細の充当月
+
+        // 充当月 ＝ 請求詳細の充当月
+        depositDetailsVo.setDueDate(dueDateForamt.parse(billingDetail.getDueDate()));
         // 合計保険料金額 ＝ 請求詳細の請求額
         depositDetailsVo.setTotalPremiumAmount(billingDetail.getTotalGrossPremium());
         // 入金金額
