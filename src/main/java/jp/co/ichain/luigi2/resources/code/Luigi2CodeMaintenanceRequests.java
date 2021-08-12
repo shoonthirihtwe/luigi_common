@@ -11,6 +11,7 @@ public class Luigi2CodeMaintenanceRequests {
 
   /**
    * 保全申請ステータス
+   * 
    * 0: 受付済
    * 1: 一次査定済
    * 2: 二次査定済
