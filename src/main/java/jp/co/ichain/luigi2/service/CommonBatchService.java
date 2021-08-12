@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
-import jp.co.ichain.luigi2.resources.Luigi2BatchCode;
-import jp.co.ichain.luigi2.resources.Luigi2Endpoint;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
 import jp.co.ichain.luigi2.vo.BillingDetailsVo;
@@ -276,7 +275,8 @@ public class CommonBatchService {
     // 連番
     billingHeaderVo.setPaymentMethodCode(billingHeaderNo);
     // 請求ヘッダー状態コード = B(Billed)を設定
-    billingHeaderVo.setBillingHeaderStatus(Luigi2BatchCode.BILLED_STATUS);
+    billingHeaderVo
+        .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.BILLED.toString());
     // 団体コード = 属性初期値
     billingHeaderVo.setGroupCode(null);
     // 収納代行会社コード = 収納代行会社コード
@@ -400,7 +400,7 @@ public class CommonBatchService {
     // 取消日（canceled_date）＝ 属性初期値
 
     // 作成者 ＝ この処理の機能IDを設定
-    premiumHeader.setCreatedBy(Luigi2Endpoint.BD008);
+    premiumHeader.setCreatedBy(createdBy);
     return premiumHeader;
   }
 }
