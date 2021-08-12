@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebConditionException;
+import jp.co.ichain.luigi2.exception.WebConversionException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.CodeMasterResources;
@@ -31,6 +32,9 @@ public class Validity {
 
   @Autowired
   ConditionUtils commonCondition;
+
+  @Autowired
+  ConversionUtils conversionUtils;
 
   @Autowired
   CodeMasterResources codeMasterResources;
@@ -54,7 +58,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum FormatType {
-    EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA
+    EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA, ZIPCODE
   }
 
   private final Map<String, String> formatRegexMap;
@@ -64,6 +68,7 @@ public class Validity {
     formatRegexMap.put("EMAIL",
         "^[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*@[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+(\\.[\\w!#%&'/=~`\\*\\+\\?\\{\\}\\^$\\-\\|]+)*$");
     formatRegexMap.put("TEL", "^\\d{3,4}-?\\d{3,4}-?\\d{4}$");
+    formatRegexMap.put("ZIPCODE", "^\\d{3}-?\\d{4}$");
     formatRegexMap.put("HIRA", "\\u3040-\\u309F");
     formatRegexMap.put("NUM", "0-9");
     formatRegexMap.put("ZENNUM", "０-９");
@@ -166,9 +171,9 @@ public class Validity {
           }
           if (data instanceof List) {
             if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
-              List<String> list = (List<String>) data;
-              for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId,
+              List<Object> list = (List<Object>) data;
+              for (val item : list) {
+                validate(validityVo, serviceInstanceMap, exList, key, item, tenantId,
                     validityVo.getIsChildrenCondition());
               }
             } else {
@@ -183,11 +188,13 @@ public class Validity {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
         } else {
-          val vdata = validateType(type, data);
-          paramMap.put(key, vdata);
+          var vdata = validateType(type, data, exList);
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
+          vdata = convert(validityVo, key, data, tenantId, exList);
+
+          paramMap.put(key, vdata);
           validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId, true);
         }
       }
@@ -271,6 +278,40 @@ public class Validity {
         exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
     }
+  }
+
+  /**
+   * 自動変換する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   * @param validityVo
+   * @param key
+   * @param data
+   * @param tenantId
+   * @param exList
+   * @return
+   * @throws IllegalAccessException
+   * @throws IllegalArgumentException
+   * @throws InvocationTargetException
+   */
+  public Object convert(ValidityVo validityVo, String key, Object data, Integer tenantId,
+      List<WebException> exList)
+      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    if (validityVo.getConversion() != null && data != null) {
+      val conditionMethod = validityVo.getConversion();
+      try {
+        data = conversionUtils.convert(conditionMethod, tenantId, data);
+      } catch (InvocationTargetException e) {
+        if (e.getCause() instanceof WebException) {
+          exList.add((WebException) e.getCause());
+        } else {
+          exList.add(new WebConversionException(Luigi2ErrorCode.V0006, key));
+        }
+      }
+    }
+    return data;
   }
 
   /**
@@ -361,7 +402,7 @@ public class Validity {
    * @param data
    * @return
    */
-  private Object validateType(Vtype type, Object data) {
+  private Object validateType(Vtype type, Object data, List<WebException> exList) {
     switch (type) {
       case STRING:
         if (data instanceof String) {

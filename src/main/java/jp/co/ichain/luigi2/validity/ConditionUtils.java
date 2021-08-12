@@ -27,7 +27,6 @@ import lombok.val;
 @Component
 public class ConditionUtils {
 
-
   Map<String, Object> methodConditionMap;
   Map<String, Method> methodMap;
 

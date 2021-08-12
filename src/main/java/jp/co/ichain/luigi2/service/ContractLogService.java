@@ -72,9 +72,11 @@ public class ContractLogService {
    * @param contractLogVo
    */
   public void registerContractLog(ContractLogVo contractLogVo) {
-    contractLogVo
-        .setDescription(DESCRIPTION_MAP
-            .get(contractLogVo.getReasonCode() + contractLogVo.getContactTransactionCode()));
+    if (contractLogVo.getDescription() == null) {
+      contractLogVo
+          .setDescription(DESCRIPTION_MAP
+              .get(contractLogVo.getReasonCode() + contractLogVo.getContactTransactionCode()));
+    }
     contractLogMapper.insertContractLog(contractLogVo);
   }
 
