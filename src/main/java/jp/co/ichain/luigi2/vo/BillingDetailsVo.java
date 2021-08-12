@@ -51,7 +51,8 @@ public class BillingDetailsVo extends ObjectVo {
   /**
    * 充当月
    */
-  String dueDate;
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date dueDate;
   
   /**
    * 払込方法コード
