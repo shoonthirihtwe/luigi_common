@@ -31,7 +31,9 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.util.IOUtils;
+import fi.solita.clamav.ClamAVClient;
 import jp.co.ichain.luigi2.exception.WebAwsException;
+import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.DownloadFileVo;
 import lombok.val;
@@ -49,6 +51,11 @@ public class AwsS3Dao {
   private final AmazonS3 s3Client;
   private final String bucketName;
 
+  private final ClamAVClient clamAvClient;
+
+  @Value("${env.debug.mode}")
+  Boolean isDebugMode;
+
   /**
    * ファイルをS3にアップロード
    * 
@@ -60,12 +67,18 @@ public class AwsS3Dao {
    * @return
    * @throws IOException
    */
-  public PutObjectResult upload(String url, InputStream inputStream) throws IOException {
+  public PutObjectResult upload(String url, InputStream inputStream)
+      throws IOException, WebException {
     ObjectMetadata meta = new ObjectMetadata();
     // size
     byte[] f = IOUtils.toByteArray(inputStream);
     meta.setContentLength(f.length);
     meta.setContentType(new Tika().detect(inputStream));
+
+    // clamAV
+    if (isDebugMode) {
+      scanFile(f);
+    }
 
     return s3Client.putObject(bucketName, url, new ByteArrayInputStream(f), meta);
   }
@@ -109,11 +122,12 @@ public class AwsS3Dao {
   }
 
   AwsS3Dao(@Value("${aws.s3.region}") String region, @Value("${aws.s3.bucket}") String bucket,
-      AWSCredentialsProvider credentialsProvider) {
+      AWSCredentialsProvider credentialsProvider, ClamAVClient clamAvClient) {
 
     this.s3Client = AmazonS3ClientBuilder.standard().withRegion(region)
         .withCredentials(credentialsProvider).build();
     this.bucketName = bucket;
+    this.clamAvClient = clamAvClient;
   }
 
   /**
@@ -228,4 +242,24 @@ public class AwsS3Dao {
 
     return summaryList;
   }
+
+  /**
+   * clamAvファイル検証
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-11
+   * @updatedAt : 2021-08-11
+   * @param byteArray
+   */
+  private void scanFile(byte[] data) {
+    try {
+      val reply = this.clamAvClient.scan(data);
+      if (!ClamAVClient.isCleanReply(reply)) {
+        throw new WebException(Luigi2ErrorCode.F0002);
+      }
+    } catch (IOException e) {
+      throw new WebException(Luigi2ErrorCode.F0001);
+    }
+  }
+
 }

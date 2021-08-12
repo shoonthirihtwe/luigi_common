@@ -23,6 +23,7 @@ public class ContractLogService {
   ContractLogMapper contractLogMapper;
 
   private static final Map<String, String> DESCRIPTION_MAP;
+
   static {
     DESCRIPTION_MAP = new HashMap<String, String>();
 

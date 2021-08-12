@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.CommonBatchMapper">
+	<select id="getMaxBillingHeaderNo"  resultType="hashmap" parameterType="hashmap">
+		SELECT 
+		    case 
+				when count(*) = 0 then 1
+		        else max(billng_header_no) + 1
+			end as billingHeaderNo
+		FROM luigi2_test.billing_headers 
+		WHERE 
+			payment_method_code = #{paymentMethodCode} 
+			and billing_period = #{billingPeriod}
+	</select>
+	<insert id="insertBillingHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO billing_headers
+			(
+			tenant_id,
+			billing_period,
+			billng_header_no,
+			group_code,
+			billing_header_status,
+			factoring_company_code,
+			create_date,
+			totall_billerd_amount,
+			total_received_amount,
+			created_by
+			)
+		VALUES
+			(
+			#{tenantId},
+			#{billingPeriod},
+			#{billngHeaderNo},
+			#{groupCode},
+			#{billingHeaderStatus},
+			#{factoringCompanyCode},
+			#{createDate},
+			#{totallBillerdAmount},
+			#{totalReceivedAmount},
+			#{createdBy}
+			)
+	</insert>
+	<insert id="insertBillingDetails" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO billing_details
+			(
+			tenant_id,
+			billing_period,
+			payment_method_code,
+			billng_header_no,
+			contract_no,
+			contract_branch_no,
+			premium_due_date,
+			premium_sequence_no,
+			due_date,
+			<!-- premium_due_amount, -->
+			bank_code,
+			bank_branch_code,
+			bank_account_type,
+			bank_account_no,
+			token_no,
+			bank_result_code,
+			card_result_code,
+			other_result_code,
+			name_knj_sei,
+			name_knj_mei,
+			name_kana_sei,
+			name_kana_mei,
+			created_by
+			)
+		VALUES
+			(
+			#{tenantId},
+			#{billingPeriod},
+			#{paymentMethodCode},
+			#{billngHeaderNo},
+			#{contractNo},
+			#{contractBranchNo},
+			#{premiumDueDate},
+			#{premiumSequenceNo},
+			#{dueDate},
+			<!-- #{premiumDueAmount}, -->
+			#{bankCode},
+			#{bankBranchCode},
+			#{bankAccountType},
+			#{bankAccountNo},
+			#{tokenNo},
+			#{bankResultCode},
+			#{cardResultCode},
+			#{otherResultCode},
+			#{nameKnjSei},
+			#{nameKnjMei},
+			#{nameKanaSei},
+			#{nameKanaMei},
+			#{createdBy}
+			)
+	</insert>
+	<select id="selectBatchNo" resultType="Integer" parameterType="hashmap">
+		SELECT
+			CASE WHEN max(batch_no) is null THEN 1
+			ELSE max(batch_no) + 1
+			END as batch_no
+		FROM
+			deposit_headers
+		WHERE
+			entry_date = #{batchDate}
+	</select>
+	<insert id="insertDepositDetails" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO deposit_details
+		(
+			tenant_id,
+		  	entry_date,
+		  	batch_no,
+		  	cash_detail_no,
+		  	contract_no,
+		  	contract_branch_no,
+		  	application_no,
+		  	due_date,
+		  	total_premium_amount,
+		  	deposit_amount,
+		  	commission_withheld,
+		  	compensation_tax,
+		  	clearing_date,
+		  	suspence_date,
+		  	delete_date,
+		  	cash_matching_date,
+		  	cash_detail_status,
+		  	payment_result_code,
+		  	access_id,
+		  	access_pass,
+		  	comment,
+		  	premium_due_date,
+		  	premium_sequence_no,
+		  	created_by
+		)
+		VALUES
+		(
+			#{tenantId},
+			#{entryDate},
+			#{batchNo},
+			#{cashDetailNo},
+			#{contractNo},
+			#{contractBranchNo},
+			#{applicationNo},
+			#{dueDate},
+			#{totalPremiumAmount},
+			#{depositAmount},
+			#{commissionWithheld},
+			#{compensationTax},
+			#{clearingDate},
+			#{suspenceDate},
+			#{deleteDate},
+			#{cashMatchingDate},
+			#{cashDetailStatus},
+			#{paymentResultCode},
+			#{accessId},
+			#{accessPass},
+			#{comment},
+			#{premiumDueDate},
+			#{premiumSequenceNo},
+			#{createdBy}
+		)
+	</insert>
+	<insert id="insertDepositHeaders" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO deposit_headers
+		(
+			tenant_id,
+		  	entry_date,
+		  	batch_no,
+		  	payment_method_code,
+		  	deposit_date,
+		  	received_amount,
+		  	batch_total_amount,
+		  	batch_status,
+		  	comment,
+		  	usere_id,
+		  	collection_route,
+		  	group_code,
+		  	created_by
+		)
+		VALUES
+		(
+			#{tenantId},
+			#{entryDate},
+			#{batchNo},
+			#{paymentMethodCode},
+			#{depositDate},
+			#{receivedAmount},
+			#{batchTotalAmount},
+			#{batchStatus},
+			#{comment},
+			#{usereId},
+			#{collectionRoute},
+			#{groupCode},
+			#{createdBy}
+		)
+	</insert>
+	<select id="getMaxPremiumSequenceNo"  resultType="PremiumHeadersVo" parameterType="hashmap">
+    	SELECT
+			case 
+				when MAX(premium_sequence_no)  is not null then MAX(premium_sequence_no) + 1
+				ELSE 1
+            END as premium_sequence_no,
+			premium_billing_period
+		FROM luigi2_test.premium_headers
+		WHERE contract_no = #{contractNo}
+    </select>
+    <insert id="insertPremiumHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO premium_headers
+			(
+			tenant_id,
+			contract_no,
+			contract_branch_no,
+			premium_due_date,
+			first_premium,
+			premium_sequence_no,
+			premium_billing_period,
+			effective_date,
+			total_gross_premium,
+			frequency,
+			premium_status,
+			refunded_date,
+			canceled_date,
+		  	created_by
+			)
+		VALUES
+			(
+			#{premiumHeader.tenantId},
+			#{premiumHeader.contractNo},
+			#{premiumHeader.contractBranchNo},
+			<if test="premiumHeader.premiumDueDate != null">#{premiumHeader.premiumDueDate},</if>
+			<if test="premiumHeader.premiumDueDate == null">'',</if>
+			#{premiumHeader.firstPremium},
+			#{premiumHeader.premiumSequenceNo},
+			#{premiumHeader.premiumBillingPeriod},
+			null,
+			
+			<if test="premiumHeader.totalGrossPremium != null">#{premiumHeader.totalGrossPremium},</if>
+			<if test="premiumHeader.totalGrossPremium == null">'',</if>
+			
+			#{premiumHeader.frequency},
+			#{premiumHeader.premiumStatus},
+			null,
+			null,
+			#{premiumHeader.createdBy}
+			)
+	</insert>
+</mapper>

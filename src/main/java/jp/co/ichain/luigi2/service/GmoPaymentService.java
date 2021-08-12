@@ -44,7 +44,6 @@ class GmoPaymentService {
   private String shopPass;
 
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyyyMMddHHmm");
-  private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
 
   @SuppressWarnings("serial")
   private static Map<String, String> API_URL_MAP = new HashMap<String, String>() {
@@ -101,7 +100,7 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo pay(String contractNo, String cardCustNumber, Date dueDate, Integer premiumDueAmount)
+  PaymentVo pay(String contractNo, String cardCustNumber, String dueDate, Integer premiumDueAmount)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
@@ -114,7 +113,7 @@ class GmoPaymentService {
      * 充当月billing_details.due_date(yyyymm) を設定
      */
     gmoPaymentVo
-        .setOrderID(contractNo + systemDateForamt.format(now) + dueDateForamt.format(dueDate));
+        .setOrderID(contractNo + systemDateForamt.format(now) + dueDate);
 
     // 保険料請求額billing_details.premium_due_amountを設定する
     gmoPaymentVo.setAmount((long) premiumDueAmount);

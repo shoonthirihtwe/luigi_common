@@ -85,4 +85,7 @@ dependencies {
     
     // file
     implementation group: 'org.apache.tika', name: 'tika-parsers', version: '1.26'
+    
+    // clamav
+    implementation group: 'fi.solita.clamav', name: 'clamav-client', version: '1.0.1'
 }

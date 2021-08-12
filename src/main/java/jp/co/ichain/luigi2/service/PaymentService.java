@@ -44,7 +44,7 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo pay(String contractNo, String cardCustNumber, Date dueDate,
+  public PaymentVo pay(String contractNo, String cardCustNumber, String dueDate,
       Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
       GmoPaymentException, IOException, ParseException {
 

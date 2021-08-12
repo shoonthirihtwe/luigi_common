@@ -67,7 +67,7 @@ public class AntiSocialForceCheckService {
    * @throws UnsupportedOperationException
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
-      String address, String RetrievalMethod) throws ClientProtocolException, IOException {
+      String address, String retrievalMethod) throws ClientProtocolException, IOException {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
     String dateOfbirthday = dateOfBirth.format(formatter);
@@ -76,7 +76,7 @@ public class AntiSocialForceCheckService {
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
-    inputMap.put("RetrievalMethod", RetrievalMethod);
+    inputMap.put("RetrievalMethod", retrievalMethod);
     inputMap.put("NameKanji", name);
     inputMap.put("DOB", dateOfbirthday);
     inputMap.put("Address", address);
