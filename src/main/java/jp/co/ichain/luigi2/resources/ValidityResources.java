@@ -38,7 +38,7 @@ public class ValidityResources {
   ServiceInstancesResources serviceInstancesResources;
 
   /**
-   * メッセージリソースを初期化する
+   * 検証を初期化する
    *
    * @author : [AOT] s.paku
    * @throws JsonProcessingException
@@ -55,31 +55,45 @@ public class ValidityResources {
     val tenantIdList = serviceInstancesResources.getTenantList();
 
     for (val tenantId : tenantIdList) {
-      var mapByTenant = serviceInstancesResources.get(tenantId);
-      var list = mapByTenant.get("validity");
-
-      // last updatedAt
-      Date maxValue =
-          list.stream().map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
-              .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
-              .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
-      updatedAtMap.put(tenantId, maxValue);
-
-      Gson gson = new Gson();
-      val validityMap = new HashMap<String, ValidityVo>();
-      for (val vo : list) {
-        JSONObject jsonObject = new JSONObject(vo.getInherentJson());
-
-        for (val key : jsonObject.keySet()) {
-          val tableJsonObject = jsonObject.getJSONObject(key);
-          if (tableJsonObject != null) {
-            validityMap.put(key, gson.fromJson(tableJsonObject.toString(), ValidityVo.class));
-          }
-        }
-      }
-      map.put(tenantId, validityMap);
+      this.initialize(tenantId);
     }
 
+  }
+
+  /**
+   * 検証を初期化する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
+    var mapByTenant = serviceInstancesResources.get(tenantId);
+    var list = mapByTenant.get("validity");
+
+    // last updatedAt
+    Date maxValue =
+        list.stream().map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
+            .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
+            .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
+    updatedAtMap.put(tenantId, maxValue);
+
+    Gson gson = new Gson();
+    val validityMap = new HashMap<String, ValidityVo>();
+    for (val vo : list) {
+      JSONObject jsonObject = new JSONObject(vo.getInherentJson());
+
+      for (val key : jsonObject.keySet()) {
+        val tableJsonObject = jsonObject.getJSONObject(key);
+        if (tableJsonObject != null) {
+          validityMap.put(key, gson.fromJson(tableJsonObject.toString(), ValidityVo.class));
+        }
+      }
+    }
+    map.put(tenantId, validityMap);
   }
 
   /**

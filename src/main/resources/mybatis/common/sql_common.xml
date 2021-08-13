@@ -26,7 +26,7 @@
 	<select id="selectServiceInstances" parameterType="map"
 		resultType="ServiceInstancesVo">
 		SELECT * from service_instances WHERE status='1'
-		<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
+		<if test="tenantId != null">AND tenant_id=#{tenantId}</if>
 		ORDER BY updated_at DESC
 	</select>
 	
@@ -126,4 +126,14 @@
 			</if>
      	</where>
 	</update>
+	<select id="selectResourcesLastUpdatedAt" resultType="VoHashMap">
+		SELECT -1 as tenant_id, UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
+		FROM tenants
+		UNION ALL
+		SELECT
+			tenant_id
+		    ,UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
+		FROM service_instances
+		GROUP BY tenant_id
+	</select>
 </mapper>
