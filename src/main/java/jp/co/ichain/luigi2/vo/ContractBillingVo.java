@@ -35,7 +35,6 @@ public class ContractBillingVo extends ObjectVo {
    * 決済日序数
    */
   String paymentDateOrder;
-  // TODO
   /**
    * 請求月
    */
