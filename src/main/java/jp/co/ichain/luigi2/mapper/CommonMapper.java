@@ -52,7 +52,9 @@ public interface CommonMapper {
 
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
-  List<ServiceInstancesVo> selectServiceInstances(@Param("updatedAt") Date updatedAt);
+  List<ServiceInstancesVo> selectServiceInstances();
+
+  List<ServiceInstancesVo> selectServiceInstances(@Param("tenantId") Integer tenantId);
 
   List<CodeMasterVo> selectCodeMaster(@Param("updatedAt") Date updatedAt);
 
@@ -100,4 +102,14 @@ public interface CommonMapper {
    * @return
    */
   List<String> selectFunctionId();
+
+  /**
+   * リソース更新用の更新日取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @return
+   */
+  List<Map<String, Object>> selectResourcesLastUpdatedAt();
 }

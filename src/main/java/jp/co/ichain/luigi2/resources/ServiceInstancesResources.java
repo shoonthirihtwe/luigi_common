@@ -38,7 +38,7 @@ import lombok.val;
 public class ServiceInstancesResources {
 
   private Map<Integer, Map<String, List<ServiceInstancesVo>>> map = null;
-  private Map<Integer, Date> updatedAtMap = null;
+  Map<Integer, Date> updatedAtMap = null;
 
   @Autowired
   CommonMapper commonMapper;
@@ -52,43 +52,75 @@ public class ServiceInstancesResources {
    * @createdAt : 2021-05-07
    * @updatedAt : 2021-05-07
    */
-  @SuppressWarnings("unchecked")
   @Lock(LockType.WRITE)
   @PostConstruct
   public void initialize() throws JsonMappingException, JsonProcessingException {
     this.map = new HashMap<Integer, Map<String, List<ServiceInstancesVo>>>();
     this.updatedAtMap = new HashMap<Integer, Date>();
 
-    val list = commonMapper.selectServiceInstances(null);
+    val list = commonMapper.selectServiceInstances();
     Map<Integer, List<ServiceInstancesVo>> tenantGroupMap =
         list.stream().collect(Collectors.groupingBy(vo -> vo.getTenantId()));
 
     for (val tenantId : tenantGroupMap.keySet()) {
-      val listByTenant = tenantGroupMap.get(tenantId);
+      this.initialize(tenantId, tenantGroupMap.get(tenantId));
+    }
+  }
 
-      // json map setting
-      for (val vo : listByTenant) {
-        if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
-          ObjectMapper mapper = new ObjectMapper();
-          if (vo.getInherentJson().charAt(0) == '[') {
-            vo.setInherentList(mapper.readValue(vo.getInherentJson(), List.class));
-          } else {
-            vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
-          }
+  /**
+   * テナントの初期化
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
+    this.map = new HashMap<Integer, Map<String, List<ServiceInstancesVo>>>();
+    this.updatedAtMap = new HashMap<Integer, Date>();
+
+    val list = commonMapper.selectServiceInstances(tenantId);
+    this.initialize(tenantId, list);
+  }
+
+  /**
+   * テナントの初期化
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @param tenantId
+   * @param listByTenant
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  @SuppressWarnings("unchecked")
+  private void initialize(Integer tenantId, List<ServiceInstancesVo> listByTenant)
+      throws JsonMappingException, JsonProcessingException {
+    // json map setting
+    for (val vo : listByTenant) {
+      if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
+        ObjectMapper mapper = new ObjectMapper();
+        if (vo.getInherentJson().charAt(0) == '[') {
+          vo.setInherentList(mapper.readValue(vo.getInherentJson(), List.class));
+        } else {
+          vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
         }
       }
-
-      // last updatedAt
-      Date maxValue = listByTenant.stream()
-          .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
-          .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
-          .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
-      updatedAtMap.put(tenantId, maxValue);
-
-      // sourceKey Group
-      this.map.put(tenantId,
-          listByTenant.stream().collect(Collectors.groupingBy(vo -> vo.getSourceKey())));;
     }
+
+    // last updatedAt
+    Date maxValue = listByTenant.stream()
+        .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
+        .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
+        .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
+    updatedAtMap.put(tenantId, maxValue);
+
+    // sourceKey Group
+    this.map.put(tenantId,
+        listByTenant.stream().collect(Collectors.groupingBy(vo -> vo.getSourceKey())));;
   }
 
   /**

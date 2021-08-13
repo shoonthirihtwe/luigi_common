@@ -34,7 +34,7 @@ public class TenantResources {
 
   private ConcurrentHashMap<Integer, TenantsVo> tenantMap = null;
   private ConcurrentHashMap<String, TenantsVo> tenantToDomainMap = null;
-  private Date updatedAt = null;
+  Date updatedAt = null;
 
   @Autowired
   CommonMapper mapper;

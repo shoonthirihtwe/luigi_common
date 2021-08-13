@@ -51,23 +51,35 @@ public class CodeMasterResources {
     this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
     this.updatedAtMap = new HashMap<Integer, Date>();
 
-    ObjectMapper objMapper = new ObjectMapper();
     for (val tenantId : serviceInstancesResources.getTenantList()) {
-
-      val codeList = serviceInstancesResources.get(tenantId, "code_master");
-      Map<String, List<CodeMasterVo>> codeMap =
-          objMapper.readValue(codeList.get(0).getInherentJson(),
-              new TypeReference<Map<String, List<CodeMasterVo>>>() {});
-      this.map.put(tenantId, codeMap);
-
-      // 日付登録
-      var updatedAt = codeList.get(0).getUpdatedAt();
-      if (updatedAt == null) {
-        updatedAt = codeList.get(0).getCreatedAt();
-      }
-      updatedAtMap.put(tenantId, updatedAt);
+      this.initialize(tenantId);
     }
+  }
 
+  /**
+   * 初期化する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
+    ObjectMapper objMapper = new ObjectMapper();
+    val codeList = serviceInstancesResources.get(tenantId, "code_master");
+    Map<String, List<CodeMasterVo>> codeMap =
+        objMapper.readValue(codeList.get(0).getInherentJson(),
+            new TypeReference<Map<String, List<CodeMasterVo>>>() {});
+    this.map.put(tenantId, codeMap);
+
+    // 日付登録
+    var updatedAt = codeList.get(0).getUpdatedAt();
+    if (updatedAt == null) {
+      updatedAt = codeList.get(0).getCreatedAt();
+    }
+    updatedAtMap.put(tenantId, updatedAt);
   }
 
   /**
