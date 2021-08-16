@@ -123,7 +123,7 @@ public class ContractReferenceVo extends ObjectVo {
   /**
    * 支払方法
    */
-  String paymentMethodCode;
+  String paymentMethod;
 
   /**
    * 保険料払込回数
