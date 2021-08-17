@@ -76,7 +76,7 @@ public class AwsS3Dao {
     meta.setContentType(new Tika().detect(inputStream));
 
     // clamAV
-    if (isDebugMode) {
+    if (isDebugMode == false) {
       scanFile(f);
     }
 
