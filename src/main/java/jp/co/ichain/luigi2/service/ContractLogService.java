@@ -29,9 +29,9 @@ public class ContractLogService {
 
     // 保全 020
     DESCRIPTION_MAP.put("02001", "保全（保全）請求　受付完了");
-    DESCRIPTION_MAP.put("02002", "保全（保全）請求　1次査定完了");
-    DESCRIPTION_MAP.put("02003", "保全（保全）請求　2次査定完了");
-    DESCRIPTION_MAP.put("02004", "保全（保全）請求　1次査定者へ差戻し");
+    DESCRIPTION_MAP.put("02002", "保全（保全）請求　１次査定完了");
+    DESCRIPTION_MAP.put("02003", "保全（保全）請求　２次査定完了");
+    DESCRIPTION_MAP.put("02004", "保全（保全）請求　１次査定者へ差戻し");
     DESCRIPTION_MAP.put("02005", "保全（保全）請求　不備");
 
     // 請収 030
