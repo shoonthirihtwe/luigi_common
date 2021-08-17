@@ -60,6 +60,7 @@ public class DataSourceConfig {
 
       resourceDatabasePopulator.setSqlScriptEncoding("UTF-8");
       resourceDatabasePopulator.setContinueOnError(true);
+      resourceDatabasePopulator.addScript(new ClassPathResource("DDL/current_DDL_LG2.sql"));
       resourceDatabasePopulator.addScript(new ClassPathResource("test_sql/init_data_clear.sql"));
       Resource[] resources = resourcePatternResolver.getResources("classpath:Seed/*.sql");
       for (Resource resource : resources) {
