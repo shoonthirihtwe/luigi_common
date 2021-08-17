@@ -41,16 +41,14 @@
 				ELSE null END,</if>
 			IFNULL(#{errorFlag},0),
 			#{updatedBy}
-		FROM (SELECT contractor_customer_id
-			,max(contract_branch_no) as contract_branch_no
-			FROM contracts
-			WHERE tenant_id=#{tenantId} AND contract_no='${contractNo}'
-			GROUP BY tenant_id, contract_no, contractor_customer_id) co LEFT OUTER JOIN customers cu
-			ON co.contractor_customer_id = cu.customer_id
-			LEFT OUTER JOIN customers_individual cui
-				ON co.contractor_customer_id = cui.customer_id AND cu.corporate_individual_flag='1'
-			LEFT OUTER JOIN customers_corporate cuc
-				ON co.contractor_customer_id = cuc.customer_id AND cu.corporate_individual_flag='2'
-		ORDER BY co.contract_branch_no DESC
+		FROM contracts co LEFT OUTER JOIN customers cu
+		ON co.contractor_customer_id = cu.customer_id
+		LEFT OUTER JOIN customers_individual cui
+			ON co.contractor_customer_id = cui.customer_id AND cu.corporate_individual_flag='1'
+		LEFT OUTER JOIN customers_corporate cuc
+			ON co.contractor_customer_id = cuc.customer_id AND cu.corporate_individual_flag='2'
+		WHERE co.tenant_id=#{tenantId} AND co.contract_no='${contractNo}' 
+		<if test ="contractBranchNo != null">AND co.contract_branch_no=#{contractBranchNo}</if>
+		<if test ="contractBranchNo == null">AND co.contract_branch_no=(SELECT max(contract_branch_no) FROM contracts WHERE tenant_id=#{tenantId} AND contract_no='${contractNo}' GROUP BY tenant_id, contract_no)</if>
 	</insert>
 </mapper>
