@@ -33,6 +33,8 @@ public class TenantsVo extends ObjectVo {
 
   Date batchDate;
 
+  Date onlineDate;
+
   String compensationGroupCode;
 
   String userPoolId;

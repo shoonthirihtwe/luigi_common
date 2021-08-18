@@ -212,12 +212,14 @@ public class ControllerUtils {
       Map<String, Object> paramMap) throws Exception {
 
     val curUser = authService.getCurrentUser();
+    TenantsVo tenantVo = null;
     if (curUser != null) {
-      paramMap.put("tenantId", curUser.getTenantId());
+      tenantVo = tenantResources.get(curUser.getTenantId());
+      paramMap.put("tenantId", tenantVo.getId());
       paramMap.put("updatedBy", curUser.getId());
+      paramMap.put("onlineDate", tenantVo.getOnlineDate());
     } else {
       String domain = request.getHeader("x-frontend-domain");
-      TenantsVo tenantVo = null;
       if (domain.indexOf(":") == -1) {
         tenantVo = tenantResources.get(domain);
       } else {
@@ -226,6 +228,7 @@ public class ControllerUtils {
 
       if (tenantVo != null) {
         paramMap.put("tenantId", tenantVo.getId());
+        paramMap.put("onlineDate", tenantVo.getOnlineDate());
       }
     }
 

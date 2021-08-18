@@ -88,13 +88,28 @@ public interface CommonMapper {
    */
   Date selectLastUpdatedAt(@Param("table") String table);
 
-  // バッチ日付を取得
-  List<TenantsVo> getBatchDate(@Param("tenantIds") List<Integer> tenantIds);
-
-  // 決済方法取得
+  /**
+   * 決済方法取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param contractNo
+   * @return
+   */
   String selectFactoringCompanyCode(@Param("contractNo") String contractNo);
 
-  // 営業日取得
+  /**
+   * 営業日取得
+   * 
+   * @author : [VJP] タン
+   * @createdAt : 2021-07-01
+   * @updatedAt : 2021-07-01
+   * @param tenantId
+   * @param date
+   * @param count
+   * @return
+   */
   Date selectOpenDate(@Param("tenantId") Integer tenantId, @Param("date") Date date,
       @Param("count") Integer count);
 
