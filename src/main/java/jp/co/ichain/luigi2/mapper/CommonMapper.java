@@ -21,22 +21,6 @@ import jp.co.ichain.luigi2.vo.TenantsVo;
 @Repository
 @Luigi2Mapper
 public interface CommonMapper {
-
-  /**
-   * Lockをかける
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-07-19
-   * @updatedAt : 2021-07-19
-   * @param map
-   * @param tenantId
-   */
-  void pessimisticLockKey(@Param("tableInfo") Map<String, Object> map,
-      @Param("tenantId") Integer tenantId);
-
-  String selectIncrementNumber(@Param("tableInfo") Map<String, Object> map,
-      @Param("tenantId") Integer tenantId);
-
   /**
    * キーに値するデータが存在するかチェック
    * 
@@ -50,14 +34,58 @@ public interface CommonMapper {
   Boolean selectIsExistKey(@Param("tableInfo") Map<String, Object> map,
       @Param("tenantId") Integer tenantId, @Param("data") Object data);
 
+  /**
+   * テナント取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param updatedAt
+   * @return
+   */
   List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
 
+  /**
+   * ServiceInstances取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @return
+   */
   List<ServiceInstancesVo> selectServiceInstances();
 
+  /**
+   * ServiceInstances取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param tenantId
+   * @return
+   */
   List<ServiceInstancesVo> selectServiceInstances(@Param("tenantId") Integer tenantId);
 
+  /**
+   * コードマスター取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param updatedAt
+   * @return
+   */
   List<CodeMasterVo> selectCodeMaster(@Param("updatedAt") Date updatedAt);
 
+  /**
+   * 最終更新日取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param table
+   * @return
+   */
   Date selectLastUpdatedAt(@Param("table") String table);
 
   // バッチ日付を取得

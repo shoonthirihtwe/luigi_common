@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
+import jp.co.ichain.luigi2.service.NumberingService;
 import lombok.val;
 
 /**
@@ -39,6 +40,9 @@ public class ResourcesRefreshScheduler {
   @Autowired
   FrontDesignResources frontDesignResources;
 
+  @Autowired
+  NumberingService numberingService;
+
   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
   /**
@@ -58,6 +62,7 @@ public class ResourcesRefreshScheduler {
         try {
           if (tenantResources.updatedAt.getTime() < (long) item.get("updatedAt")) {
             tenantResources.initialize();
+            numberingService.initialize();
             System.out.println("[Resources Refresh] tenantResources Refresh : " + tenantId + " "
                 + sdf.format(new Date()));
           }

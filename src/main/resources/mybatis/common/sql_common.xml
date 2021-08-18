@@ -2,22 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="jp.co.ichain.luigi2.mapper.CommonMapper">
-	<select id="pessimisticLockKey" parameterType="map"  resultType="int">
-		SELECT ${tableInfo.key} FROM ${tableInfo.table} WHERE
-		tenant_id=#{tenantId} AND ${tableInfo.key} <![CDATA[ > ]]>
-		(SELECT ${tableInfo.key} FROM ${tableInfo.table} WHERE
-		tenant_id=#{tenantId} ORDER BY ${tableInfo.key} DESC LIMIT 1)
-		FOR UPDATE
-	</select>
-
-	<select id="selectIncrementNumber" parameterType="map"
-		resultType="string">
-		SELECT
-		LPAD(IFNULL(max(${tableInfo.key}),0)+1,#{tableInfo.size},'0')
-		FROM ${tableInfo.table} WHERE tenant_id=#{tenantId}
-	</select>
-	
+<mapper namespace="jp.co.ichain.luigi2.mapper.CommonMapper">	
 	<select id="selectIsExistKey" parameterType="map" resultType="boolean">
 		SELECT 1 FROM ${tableInfo.table} WHERE
 		tenant_id=#{tenantId} AND ${tableInfo.key}=#{data} LIMIT 1

@@ -59,6 +59,8 @@ public class TenantResources {
     this.tenantToDomainMap = new ConcurrentHashMap<String, TenantsVo>();
 
     this.initializeTenants(mapper.selectTenants(null));
+
+    // maintenance_requests_no, contract_no
   }
 
   /**
