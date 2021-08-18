@@ -1,18 +1,25 @@
 package jp.co.ichain.luigi2.service;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jp.co.ichain.luigi2.batch.BatchService;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
+import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
 import jp.co.ichain.luigi2.vo.BillingDetailsVo;
@@ -23,6 +30,9 @@ import jp.co.ichain.luigi2.vo.DepositDetailsVo;
 import jp.co.ichain.luigi2.vo.DepositHeadersVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
+import jp.co.ichain.luigi2.vo.TenantsVo;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Batchサービス
@@ -31,6 +41,7 @@ import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
  * @createdAt : 2021-08-12
  * @updatedAt : 2021-08-12
  */
+@Slf4j
 @Service
 public class CommonBatchService {
 
@@ -41,6 +52,49 @@ public class CommonBatchService {
   PaymentService paymentService;
 
   private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
+  private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMDD");
+
+  /**
+   * バッチを実行する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-18
+   * @updatedAt : 2021-08-18
+   * @param batchMap
+   * @param args
+   * @throws ParseException
+   */
+  public void runBatch(Map<String, BatchService> batchMap, String... args) throws ParseException {
+    // テナントID & バッチ日付を取得
+    List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
+    for (val tmp : CollectionUtils.safe(args[0].split(","))) {
+      val tenant = new TenantsVo();
+      val tmp2 = tmp.split(":");
+      tenant.setId(Integer.valueOf(tmp2[0]));
+      tenant.setBatchDate(batchForamt.parse(tmp2[1]));
+      tenantList.add(tenant);
+    }
+
+    Set<String> keys = null;
+    if (args.length > 1) {
+      keys = new HashSet<String>();
+      keys.add(args[1]);
+    } else {
+      keys = batchMap.keySet();
+    }
+
+    keys.forEach(key -> {
+      log.info(key + "開始");
+      try {
+        batchMap.get(key).run(tenantList);
+      } catch (Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        log.error(sw.toString());
+      }
+      log.info(key + "完了");
+    });
+  }
 
   /**
    * 請求決済処理を実施し入金データを作成
@@ -247,7 +301,8 @@ public class CommonBatchService {
         createBillingHeader(contractBillingVo, billHeaderNo, createdBy);
     // 請求（billing_headers）に追加する
     mapper.insertBillingHeader(billingHeaderVo);
-    BillingDetailVo billingDetailVo = createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
+    BillingDetailVo billingDetailVo =
+        createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
     mapper.insertBillingDetails(billingDetailVo);
   }
 
@@ -294,7 +349,8 @@ public class CommonBatchService {
     return billingHeaderVo;
   }
 
-  private BillingDetailVo createBillingDetail(ContractBillingVo contractBilling, Integer billingHeadNo, String createdBy) {
+  private BillingDetailVo createBillingDetail(ContractBillingVo contractBilling,
+      Integer billingHeadNo, String createdBy) {
     BillingDetailVo billingDetailVo = new BillingDetailVo();
     billingDetailVo.setTenantId(contractBilling.getTenantId());
 
@@ -382,7 +438,7 @@ public class CommonBatchService {
     Integer frequency = Integer.parseInt(contractPremiumHeader.getFrequency());
     if (maxPremiumSequenNo.getPremiumSequenceNo() > 1 && frequency != 0) {
       String premiumBillingPeriod = DateTimeUtils.addMonthToYearMonth(
-          maxPremiumSequenNo.getPremiumBillingPeriod(), (Integer) 12 / frequency);
+          maxPremiumSequenNo.getPremiumBillingPeriod(), 12 / frequency);
       premiumHeader.setPremiumBillingPeriod(premiumBillingPeriod);
 
       // 保険料充当日:下で決定した保険料収納月premium_billing_period: 契約日contracts.issue_dateの日(dd)
