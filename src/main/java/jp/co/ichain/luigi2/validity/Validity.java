@@ -192,7 +192,7 @@ public class Validity {
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          vdata = convert(validityVo, key, data, tenantId, exList);
+          vdata = convert(validityVo, key, vdata, tenantId, exList);
 
           paramMap.put(key, vdata);
           validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId, true);

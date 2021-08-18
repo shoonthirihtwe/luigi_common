@@ -36,6 +36,9 @@ public class ResourcesRefreshScheduler {
   @Autowired
   ValidityResources validityResources;
 
+  @Autowired
+  FrontDesignResources frontDesignResources;
+
   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
   /**
@@ -70,6 +73,7 @@ public class ResourcesRefreshScheduler {
             serviceInstancesResources.initialize(tenantId);
             codeMasterResources.initialize(tenantId);
             validityResources.initialize(tenantId);
+            frontDesignResources.initialize(tenantId);
             System.out.println("[Resources Refresh] serviceInstancesResources Refresh : " + tenantId
                 + " " + sdf.format(new Date()));
           }

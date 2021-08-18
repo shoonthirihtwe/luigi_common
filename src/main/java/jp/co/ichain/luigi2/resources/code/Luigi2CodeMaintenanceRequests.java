@@ -70,6 +70,15 @@ public class Luigi2CodeMaintenanceRequests {
     public String toString() {
       return this.val;
     }
+
+    public static TransactionCode get(String key) {
+      for (TransactionCode v : values()) {
+        if (v.toString().equals(key)) {
+          return v;
+        }
+      }
+      return null;
+    }
   }
 
   /**
