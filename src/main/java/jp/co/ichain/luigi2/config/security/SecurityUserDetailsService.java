@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.config.security;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +37,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     String[] tmp = username.split("::");
     userVo.setTenantId(Integer.parseInt(tmp[0]));
     userVo.setId(Integer.parseInt(tmp[1]));
-    
+    userVo.setLastLoginAt(new Date(Long.parseLong(tmp[2])));
     if (userVo != null) {
       SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
       val authorities = authService.loginUser(userVo);

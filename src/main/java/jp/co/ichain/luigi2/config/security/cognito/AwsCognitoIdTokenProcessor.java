@@ -19,6 +19,7 @@ import jp.co.ichain.luigi2.config.security.SecurityUserDetailsImpl;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
 import jp.co.ichain.luigi2.vo.AuthoritiesVo;
+import jp.co.ichain.luigi2.vo.TenantsVo;
 import jp.co.ichain.luigi2.vo.UsersVo;
 import lombok.val;
 
@@ -70,26 +71,26 @@ public class AwsCognitoIdTokenProcessor {
       }
 
       String domain = request.getHeader("x-frontend-domain");
-      Integer tenantId = null;
+
+      TenantsVo tenantsVo = null;
       if (domain.indexOf(":") == -1) {
-        tenantId = tenantResources.get(domain).getId();
+        tenantsVo = tenantResources.get(domain);
       } else {
-        tenantId =
-            tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]).getId();
+        tenantsVo = tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]);
       }
 
       configurableJwtProcessor =
-          beanFactory.getBean(CognitoConfig.class).configurableJwtProcessor(tenantId);
+          beanFactory.getBean(CognitoConfig.class).configurableJwtProcessor(tenantsVo.getId());
 
       JWTClaimsSet claims = this.configurableJwtProcessor.process(bearerToken, null);
-      validateIssuer(claims, tenantId);
-      verifyIfIdToken(claims, tenantId);
+      validateIssuer(claims, tenantsVo.getId());
+      verifyIfIdToken(claims, tenantsVo.getId());
       val username = getUserNameFrom(claims);
       if (username != null) {
         userVo = new UsersVo();
         userVo.setSub(username);
-        userVo.setTenantId(tenantId);
-
+        userVo.setTenantId(tenantsVo.getId());
+        userVo.setLastLoginAt(tenantsVo.getOnlineDate());
         authorities = authService.loginUser(userVo);
       }
     }
@@ -101,8 +102,9 @@ public class AwsCognitoIdTokenProcessor {
       }
 
       UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-          String.valueOf(userVo.getTenantId() + "::" + userVo.getId()), userVo.getSub(),
-          grantedAuthorities);
+          String.valueOf(userVo.getTenantId() + "::" + userVo.getId() + "::"
+              + userVo.getLastLoginAt().getTime()),
+          userVo.getSub(), grantedAuthorities);
       SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
       userDetails.setUser(userVo);
       token.setDetails(userDetails);

@@ -23,20 +23,37 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TenantsVo extends ObjectVo {
 
+  /**
+   * ID
+   */
   Integer id;
-
+  /**
+   * テナント名
+   */
   String tenantName;
-
+  /**
+   * サイトURL
+   */
   String siteUrl;
-
+  /**
+   * 申込時リダクレクトURL
+   */
   String entryRedirectUrl;
-
+  /**
+   * バッチ日付
+   */
   Date batchDate;
-
+  /**
+   * オンライン日付
+   */
   Date onlineDate;
-
+  /**
+   * 補償グループ種別
+   */
   String compensationGroupCode;
-
+  /**
+   * userPoolId
+   */
   String userPoolId;
 
   @JsonIgnore
