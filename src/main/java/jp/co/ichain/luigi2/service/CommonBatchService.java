@@ -228,7 +228,7 @@ public class CommonBatchService {
    * @return
    */
   public void createBillingData(ContractBillingVo contractBillingVo, String createdBy) {
-    String billHeaderNo = "1";
+    Integer billHeaderNo = 1;
     // 連番計算：請求テーブルの請求月、払込方法コード単位で1からの連番を設定
     if (contractBillingVo.getPaymentMethodCode() != null
         && contractBillingVo.getBatchDate() != null) {
@@ -239,20 +239,20 @@ public class CommonBatchService {
       String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
       paramBillingHeaded.put("billingPeriod", billingPeriod);
       // 請求テーブルの請求月
-      billHeaderNo = mapper.getMaxBillingHeaderNo(paramBillingHeaded).get("billngHeaderNo");
+      billHeaderNo =
+          Integer.parseInt(mapper.getMaxBillingHeaderNo(paramBillingHeaded).get("billngHeaderNo"));
     }
     // 請求（billing_headers）データを準備する
     BillingHeaderVo billingHeaderVo =
         createBillingHeader(contractBillingVo, billHeaderNo, createdBy);
     // 請求（billing_headers）に追加する
     mapper.insertBillingHeader(billingHeaderVo);
-    BillingDetailVo billingDetailVo =
-        createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
+    BillingDetailVo billingDetailVo = createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
     mapper.insertBillingDetails(billingDetailVo);
   }
 
   private BillingHeaderVo createBillingHeader(ContractBillingVo contractBilling,
-      String billingHeaderNo, String createdBy) {
+      Integer billingHeaderNo, String createdBy) {
     BillingHeaderVo billingHeaderVo = new BillingHeaderVo();
     billingHeaderVo.setTenantId(contractBilling.getTenantId());
 
@@ -273,7 +273,7 @@ public class CommonBatchService {
     // 払込方法コード
     billingHeaderVo.setPaymentMethodCode(contractBilling.getPaymentMethodCode());
     // 連番
-    billingHeaderVo.setPaymentMethodCode(billingHeaderNo);
+    billingHeaderVo.setBillngHeaderNo(billingHeaderNo);
     // 請求ヘッダー状態コード = B(Billed)を設定
     billingHeaderVo
         .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.BILLED.toString());
@@ -294,8 +294,7 @@ public class CommonBatchService {
     return billingHeaderVo;
   }
 
-  private BillingDetailVo createBillingDetail(ContractBillingVo contractBilling,
-      String billingHeaderNo, String createdBy) {
+  private BillingDetailVo createBillingDetail(ContractBillingVo contractBilling, Integer billingHeadNo, String createdBy) {
     BillingDetailVo billingDetailVo = new BillingDetailVo();
     billingDetailVo.setTenantId(contractBilling.getTenantId());
 
@@ -305,7 +304,7 @@ public class CommonBatchService {
     // 払込方法コード = 請求billing_headersの払込方法コードpayment_method_code
     billingDetailVo.setPaymentMethodCode(contractBilling.getPaymentMethodCode());
     // 連番 = 請求billing_headersの連番billng_header_no
-    billingDetailVo.setBillngHeaderNo(contractBilling.getBillngHeaderNo());
+    billingDetailVo.setBillngHeaderNo(billingHeadNo);
     // 証券番号 = 保険料（premium_headers）.証券番号
     billingDetailVo.setContractNo(contractBilling.getContractNo());
     // 証券番号枝番 = 保険料（premium_headers）.証券番号枝番
