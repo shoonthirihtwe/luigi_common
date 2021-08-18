@@ -39,7 +39,7 @@
 				when '1' then cui.email
 				when '2' then cuc.contact_email
 				ELSE null END,</if>
-			IFNULL(#{errorFlag},0),
+			#{errorFlag},
 			#{updatedBy}
 		FROM contracts co LEFT OUTER JOIN customers cu
 		ON co.contractor_customer_id = cu.customer_id

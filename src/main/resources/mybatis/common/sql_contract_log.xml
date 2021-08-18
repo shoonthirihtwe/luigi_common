@@ -27,8 +27,7 @@
 			IFNULL(max(l.sequence_no),0)+1,
 			<if test="logType != null">#{logType},</if>
 			<if test="logType == null">0,</if>
-			<if test="messageCode != null">#{messageCode},</if>
-			<if test="messageCode == null">0,</if>
+			#{messageCode},
 			#{messageGroup},
 			#{reasonGroupCode},
 			#{reasonCode},
