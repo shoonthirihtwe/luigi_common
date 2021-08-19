@@ -1,12 +1,12 @@
 package jp.co.ichain.luigi2.condition;
 
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
+import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
 import jp.co.ichain.luigi2.validity.Condition;
 import lombok.val;
@@ -28,6 +28,9 @@ public class CommonNomalCondition {
   @Autowired
   AuthService authService;
 
+  @Autowired
+  TenantResources tenantResources;
+
   static final String ZIP_REX = "^[0-9]{7}$";
 
   /**
@@ -39,9 +42,13 @@ public class CommonNomalCondition {
    * @param data
    * @param max
    * @return
+   * @throws SecurityException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
    */
-  public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
-    return ((long) data) <= new Date().getTime();
+  public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList)
+      throws InstantiationException, IllegalAccessException, SecurityException {
+    return ((long) data) <= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**
@@ -53,9 +60,13 @@ public class CommonNomalCondition {
    * @param data
    * @param max
    * @return
+   * @throws SecurityException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
    */
-  public boolean underCurrentDate(Object data, Integer tenantId, List<Object> paramList) {
-    return ((long) data) >= new Date().getTime();
+  public boolean underCurrentDate(Object data, Integer tenantId, List<Object> paramList)
+      throws InstantiationException, IllegalAccessException, SecurityException {
+    return ((long) data) >= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**
