@@ -52,7 +52,7 @@ public class CommonBatchService {
   PaymentService paymentService;
 
   private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
-  private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMDD");
+  private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMdd");
 
   /**
    * バッチを実行する
