@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +46,7 @@ public class AuthService {
       result.setId(1);
       result.setEmail("test@aot.co.jp");
       result.setSub("a1234");
+      result.setLastLoginAt(new Date());
       return result;
     }
 
