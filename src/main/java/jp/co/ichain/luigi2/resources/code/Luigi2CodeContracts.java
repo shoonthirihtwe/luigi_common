@@ -33,7 +33,7 @@ public class Luigi2CodeContracts {
    * @updatedAt : 2021-08-12
    */
   public enum ContractStatus {
-    CANCEL(60), DELETE(65);
+    ESTABLISHMENT(40), CANCEL(60), DELETE(65);
 
     int val;
 
