@@ -80,9 +80,24 @@ public class AwsS3Service {
 
   public static final int RESERVE_PAYMENT = 2;
 
+  /**
+   * 経理ダウンロードファイルEnumType
+   * 
+   * FB_claims:支払用FBデータ 
+   * account_journal:会計仕訳データ 
+   * reserve_payment:支払備金データ 
+   * commission_summary:代理店手数料集計
+   * commission_detail:代理店手数料明細
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-19
+   * @updatedAt : 2021-08-19
+   */
   public enum FreeDocumentsFileType {
 
-    FB_CLAIMS("FB_claims"), ACCOUNT_JOURNAL("account_journal"), RESERVE_PAYMENT("reserve_payment");
+    FB_CLAIMS("FB_claims"), ACCOUNT_JOURNAL("account_journal"), RESERVE_PAYMENT(
+        "reserve_payment"), COMMISSION_SUMMARY(
+            "commission_summary"), COMMISSION_DETAIL("commission_detail");
 
     String name;
 
@@ -248,7 +263,7 @@ public class AwsS3Service {
   public List<DownloadFileVo> searchDownloadDocument(FreeDocumentsType documentsType,
       Map<String, Object> paramMap) throws JsonMappingException, JsonProcessingException,
       AmazonServiceException, SdkClientException, ParseException {
-    
+
 
 
     List<String> fileTags = new ArrayList<String>();
@@ -264,10 +279,25 @@ public class AwsS3Service {
     if (paramMap.get("reservePayment") != null) {
       fileTags.add(FreeDocumentsFileType.RESERVE_PAYMENT.name);
     }
-    
+
+    if (paramMap.get("commissionSummary") != null) {
+      fileTags.add(FreeDocumentsFileType.COMMISSION_SUMMARY.name);
+    }
+
+    if (paramMap.get("commissionDetail") != null) {
+      fileTags.add(FreeDocumentsFileType.COMMISSION_DETAIL.name);
+    }
+
     val serviceInstance = siResources.get((Integer) paramMap.get("tenantId"), FREE_DOCUMENTS);
     String documentDir = serviceInstance.get(0).getInherentMap().get(documentsType.name).toString();
-    
+
+    if (fileTags.size() == 0) {
+      for (val fileType : FreeDocumentsFileType.values()) {
+        fileTags.add(fileType.name);
+      }
+
+    }
+
     return awsS3Dao.searchFile(paramMap, documentDir, fileTags);
   }
 }
