@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.UserMapper;
-import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.NayoseRequestVo;
 import jp.co.ichain.luigi2.vo.NayoseResultVo;
 import lombok.val;
@@ -64,6 +62,6 @@ public class NayoseService {
       resultList.get(0).setPartialMatchedList(idList);
       return resultList.get(0);
     }
-    throw new WebException(Luigi2ErrorCode.D0001);
+    return null;
   }
 }
