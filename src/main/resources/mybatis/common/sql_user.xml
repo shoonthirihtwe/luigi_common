@@ -68,6 +68,7 @@
 					AND addr_zip_code=#{postalCode}
 				</otherwise>
 			</choose>
+				AND tenant_id=#{tenantId}
 		ORDER BY updated_at DESC
 	</select>
 	<select id="selectNayoseCustomerIndividualPartialMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
@@ -79,9 +80,7 @@
 		WHERE 
 			(name_kana_sei LIKE CONCAT('%',#{nameKanaSei},'%')
 			OR name_kana_mei LIKE CONCAT('%',#{nameKanaMei},'%'))
-			AND date_of_birth=DATE_FORMAT(#{dateOfBirth}, '%Y-%m-%d')
-			AND sex=#{sex}
-			AND addr_zip_code=#{postalCode}
+			AND tenant_id=#{tenantId}
 		ORDER BY updated_at DESC
 	</select>
 </mapper>
