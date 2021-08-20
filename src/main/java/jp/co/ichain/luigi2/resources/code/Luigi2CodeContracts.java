@@ -73,4 +73,41 @@ public class Luigi2CodeContracts {
       return this.val;
     }
   }
+
+  /**
+   * 契約者からみた続柄
+   * 
+   * 01:本人 
+   * 02:配偶者 
+   * 03:父母 
+   * 04:子 
+   * 05:兄弟姉妹 
+   * 06:祖父母 
+   * 07:孫 
+   * 08:その他親族 
+   * 09:内縁 
+   * 10:法人 
+   * 11:個人事業主 
+   * 12:従業員 
+   * 90:法定相続人
+   * 99:その他続柄
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-20
+   * @updatedAt : 2021-08-20
+   */
+  public enum Relationship {
+    SELF("01");
+
+    String val;
+
+    Relationship(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }
