@@ -33,7 +33,7 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
   /**
    * 契約者個人法人区分
    */
-  Boolean corporateIndividualFlag;
+  String corporateIndividualFlag;
 
   /**
    * 「個人」氏名(漢字)
