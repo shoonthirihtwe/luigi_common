@@ -12,8 +12,8 @@
 		WHERE 
 			r.user_id=#{id}
 			AND a.allow_deny=1
-			AND r.avaliable_date &lt; now()
-			AND r.unavaliable_date > now()
+			AND r.avaliable_date &lt; #{lastLoginAt}
+			AND r.unavaliable_date > #{lastLoginAt}
 			AND a.api_yn=1
 	</select>
 	<select id="getAdminAuth" parameterType="UsersVo"  resultType="AuthoritiesVo">
@@ -32,7 +32,7 @@
 			users u
 		SET 
 			u.update_count=u.update_count + 1,
-			u.last_login_at=now() 
+			u.last_login_at=#{lastLoginAt}
 		WHERE 
 			tenant_id=#{tenantId}
 			AND sub=#{sub}
