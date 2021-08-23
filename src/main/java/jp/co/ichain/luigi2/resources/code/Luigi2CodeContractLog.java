@@ -72,12 +72,12 @@ public class Luigi2CodeContractLog {
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    */
-  public enum contactTransactionCode {
+  public enum ContactTransactionCode {
     CONTRACT_ESTABLISHMENT("06");
 
     String val;
 
-    contactTransactionCode(String val) {
+    ContactTransactionCode(String val) {
       this.val = val;
     }
 
