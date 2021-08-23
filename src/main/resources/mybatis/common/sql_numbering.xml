@@ -6,17 +6,20 @@
 	<select id="pessimisticLockKey" parameterType="map"  resultType="int">
 		SELECT ${tableInfo.key} FROM ${tableInfo.table} WHERE
 		tenant_id=#{tenantId} AND ${tableInfo.key} <![CDATA[ = ]]>
-		<if test='tableInfo.table != "customers"'>#{code}</if>
-		<if test='tableInfo.table == "customers"'>(SELECT LPAD(${tableInfo.key}+1,#{tableInfo.size},'0') FROM ${tableInfo.table} 
-		WHERE tenant_id=#{tenantId} ORDER BY ${tableInfo.key} DESC LIMIT 1)</if>
+		<choose>
+		<when test='tableInfo.table == "contracts"'>#{code}</when>
+		<when test='tableInfo.table == "maintenance_requests"'>#{code}</when>
+		<otherwise>(SELECT LPAD(${tableInfo.key}+1,#{tableInfo.size},'0') FROM ${tableInfo.table} 
+		WHERE tenant_id=#{tenantId} ORDER BY ${tableInfo.key} DESC LIMIT 1)</otherwise>
+		</choose>
 		FOR UPDATE
 	</select>
 
 	<select id="selectIncrementNumber" parameterType="map"
 		resultType="string">
 		SELECT
-			<if test='tableInfo.table == "customers"'>LPAD(</if>
-			max(${tableInfo.key})<if test='tableInfo.table == "customers"'>+1,#{tableInfo.size},'0')</if>
+			<if test='tableInfo.table != "contracts" AND tableInfo.table != "maintenance_requests"'>LPAD(</if>
+			max(${tableInfo.key})<if test='tableInfo.table != "contracts" AND tableInfo.table != "maintenance_requests"'>+1,#{tableInfo.size},'0')</if>
 		FROM 
 			<choose>
 			<when test='tableInfo.table == "contracts"'>contract_no</when>
