@@ -110,4 +110,30 @@ public class Luigi2CodeContracts {
       return this.val;
     }
   }
+  
+  /**
+   * 責任開始日設定タイプ
+   * 
+   * 01:バッチ日付の翌日を設定
+   * 02:翌月1日を設定
+   * 03:過去日のままとする
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum EffectiveDateType {
+    BATCH_DATE_NEXT_DAY("01"), FIRST_DAY_OF_MONTH("02"), PREVIOUS_DAYS("03");
+
+    String val;
+
+    EffectiveDateType(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }

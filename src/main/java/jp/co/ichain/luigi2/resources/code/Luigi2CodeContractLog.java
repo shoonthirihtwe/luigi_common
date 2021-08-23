@@ -62,4 +62,28 @@ public class Luigi2CodeContractLog {
       return this.val;
     }
   }
+  
+  /**
+   * 異動コード
+   * 
+   * 06:成立確定
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum contactTransactionCode {
+    CONTRACT_ESTABLISHMENT("06");
+
+    String val;
+
+    contactTransactionCode(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }
