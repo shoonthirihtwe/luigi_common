@@ -62,6 +62,9 @@ public class ContractLogService {
     DESCRIPTION_MAP.put("05025", "契約満了　保険料変更");
     DESCRIPTION_MAP.put("05028", "契約満了");
     DESCRIPTION_MAP.put("05029", "契約満了受付");
+
+    // 経理 120
+    DESCRIPTION_MAP.put("12001", "保険金（給付金）支払の振込用データ作成");
   }
 
   /**
