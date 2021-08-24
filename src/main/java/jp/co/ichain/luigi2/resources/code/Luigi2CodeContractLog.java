@@ -18,13 +18,14 @@ public class Luigi2CodeContractLog {
    * 14:契約成立
    * 20:解約
    * 31:払込経路変更
+   * 51:保険金等支払
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    */
   public enum ReasonGroupCode {
-    DELETE("01"), TRANSFER("02"), RECIPIENT("09"), CONTRACT_ESTABLISHMENT("14"), CANCEL("20"), PAYMENTMETHOD("31");
+    DELETE("01"), TRANSFER("02"), RECIPIENT("09"), CONTRACT_ESTABLISHMENT("14"), CANCEL("20"), PAYMENTMETHOD("31"), PAYMENT_OF_INSURANCE("51");
 
     String val;
 
@@ -43,13 +44,14 @@ public class Luigi2CodeContractLog {
    * 
    * 010:新契
    * 020:保全
+   * 120:経理
    * 
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    */
   public enum ReasonCode {
-    CONTRACT("010"), MAINTENANCE_REQUESTS("020");
+    CONTRACT("010"), MAINTENANCE_REQUESTS("020"), ACCOUNTING("120");
 
     String val;
 
@@ -66,6 +68,7 @@ public class Luigi2CodeContractLog {
   /**
    * 異動コード
    * 
+   * 01:経理:保険金（給付金）支払
    * 06:成立確定
    * 
    * @author : [AOT] g.kim
@@ -73,11 +76,36 @@ public class Luigi2CodeContractLog {
    * @updatedAt : 2021-08-12
    */
   public enum ContactTransactionCode {
-    CONTRACT_ESTABLISHMENT("06");
+    ACCOUNTING("01"), CONTRACT_ESTABLISHMENT("06");
 
     String val;
 
     ContactTransactionCode(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
+
+  /**
+   * ログタイプ
+   * 
+   * 0:正常
+   * 1:エラー
+   * 
+   * @author : [VJP] タン
+   * @createdAt : 2021-08-23
+   * @updatedAt : 2021-08-23
+   */
+  public enum LogType {
+    OK("0"), NG("1");
+
+    String val;
+
+    LogType(String val) {
       this.val = val;
     }
 
