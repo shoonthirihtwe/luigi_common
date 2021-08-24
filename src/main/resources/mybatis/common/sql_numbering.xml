@@ -18,8 +18,8 @@
 	<select id="selectIncrementNumber" parameterType="map"
 		resultType="string">
 		SELECT
-			<if test='tableInfo.table != "contracts" AND tableInfo.table != "maintenance_requests"'>LPAD(</if>
-			max(${tableInfo.key})<if test='tableInfo.table != "contracts" AND tableInfo.table != "maintenance_requests"'>+1,#{tableInfo.size},'0')</if>
+			<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests"'>LPAD(</if>
+			max(${tableInfo.key})<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests"'>+1,#{tableInfo.size},'0')</if>
 		FROM 
 			<choose>
 			<when test='tableInfo.table == "contracts"'>contract_no</when>
