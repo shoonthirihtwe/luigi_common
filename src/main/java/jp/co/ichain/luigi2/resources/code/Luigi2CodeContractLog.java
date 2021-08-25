@@ -25,7 +25,8 @@ public class Luigi2CodeContractLog {
    * @updatedAt : 2021-08-12
    */
   public enum ReasonGroupCode {
-    DELETE("01"), TRANSFER("02"), RECIPIENT("09"), CONTRACT_ESTABLISHMENT("14"), CANCEL("20"), PAYMENTMETHOD("31"), PAYMENT_OF_INSURANCE("51");
+    DELETE("01"), TRANSFER("02"), RECIPIENT("09"), CONTRACT_ESTABLISHMENT("14"), CANCEL(
+        "20"), PAYMENTMETHOD("31"), PAYMENT_OF_INSURANCE("51");
 
     String val;
 
@@ -64,7 +65,7 @@ public class Luigi2CodeContractLog {
       return this.val;
     }
   }
-  
+
   /**
    * 異動コード
    * 
@@ -76,7 +77,8 @@ public class Luigi2CodeContractLog {
    * @updatedAt : 2021-08-12
    */
   public enum ContactTransactionCode {
-    ACCOUNTING("01"), CONTRACT_ESTABLISHMENT("06");
+    ACCOUNTING("01"), CONTRACT_ESTABLISHMENT("06"), MAINTENANCE_REQUESTS("01"), MAINTENANCE_FIRST(
+        "02"), MAINTENANCE_SECOND("03"), MAINTENANCE_CANCEL("04"), MAINTENANCE_INADEQUACY("05");
 
     String val;
 
