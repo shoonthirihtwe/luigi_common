@@ -175,11 +175,6 @@ public class ClaimHeadersVo extends ObjectVo {
   String email;
 
   /**
-   * 請求事由
-   */
-  String typeOfAccident;
-
-  /**
    * 請求事由発生日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
