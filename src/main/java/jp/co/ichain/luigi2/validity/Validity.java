@@ -263,6 +263,11 @@ public class Validity {
         if (validityVo.getFormats() != null) {
           validateFormat(key, validityVo.getFormats(), strData, exList);
         }
+
+        // regex
+        if (validityVo.getRegex() != null) {
+          validateRegex(key, validityVo.getRegex(), strData, exList);
+        }
       }
 
       // codeMaster
@@ -389,6 +394,24 @@ public class Validity {
       if (strData.matches(sb.toString()) == false) {
         exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
       }
+    }
+  }
+
+  /**
+   * 正規規則検証を行う
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-25
+   * @updatedAt : 2021-08-25
+   * @param key
+   * @param regex
+   * @param strData
+   * @param exList
+   */
+  private void validateRegex(String key, String regex, String strData,
+      List<WebException> exList) {
+    if (strData.matches(regex) == false) {
+      exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
     }
   }
 

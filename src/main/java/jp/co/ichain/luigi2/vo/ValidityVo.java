@@ -47,6 +47,8 @@ public class ValidityVo extends ObjectVo {
 
   String conversion;
 
+  String regex;
+
   List<Integer> intFixedList;
 
   List<String> fixedList;
