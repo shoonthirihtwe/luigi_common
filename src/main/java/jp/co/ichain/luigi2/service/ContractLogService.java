@@ -59,7 +59,7 @@ public class ContractLogService {
     DESCRIPTION_MAP.put("05003", "満了処理済");
     DESCRIPTION_MAP.put("05004", "更新済");
     DESCRIPTION_MAP.put("05024", "契約満了");
-    DESCRIPTION_MAP.put("05025", "契約満了　保険料変更");
+    DESCRIPTION_MAP.put("05025", "契約更新");
     DESCRIPTION_MAP.put("05028", "契約満了");
     DESCRIPTION_MAP.put("05029", "契約満了受付");
 
