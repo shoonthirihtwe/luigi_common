@@ -233,4 +233,52 @@ public class Convert {
 
     return input.toString();
   }
+
+  /**
+   * 半角文字を全角に変更
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-26
+   * @updatedAt : 2021-08-26
+   * @param String
+   * @return
+   */
+  public static String toFullChar(String str) {
+    if (str == null)
+      return null;
+    StringBuffer strBuf = new StringBuffer();
+    char c = 0;
+    for (int i = 0; i < str.length(); i++) {
+      c = str.charAt(i);
+      if (c >= 0x21 && c <= 0x7e)
+        c += 0xfee0;
+      else if (c == 0x20)
+        c = 0x3000;
+      strBuf.append(c);
+    }
+    return strBuf.toString();
+  }
+
+  /**
+   * 全角文字を半角に変更
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-26
+   * @updatedAt : 2021-08-26
+   * @param String
+   * @return
+   */
+  public static String toHalfChar(String str) {
+    StringBuffer strBuf = new StringBuffer();
+    char c = 0;
+    for (int i = 0; i < str.length(); i++) {
+      c = str.charAt(i);
+      if (c >= '！' && c <= '～')
+        c -= 0xfee0;
+      else if (c == '　')
+        c = 0x20;
+      strBuf.append(c);
+    }
+    return strBuf.toString();
+  }
 }
