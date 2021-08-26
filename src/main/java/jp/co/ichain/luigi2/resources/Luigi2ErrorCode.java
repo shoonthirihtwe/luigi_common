@@ -51,6 +51,11 @@ public class Luigi2ErrorCode {
    * 項目のみで不正
    */
   public static final String V0008 = "V0008";
+  
+  /**
+   * キーパラメータ中腹
+   */
+  public static final String V0011 = "V0011";
 
   /**
    * 一致なし
@@ -92,4 +97,8 @@ public class Luigi2ErrorCode {
    * 不正なファイル検出エラー
    */
   public static final String F0002 = "F0002";
+  /**
+   * CSVファイルのデータ不備
+   */
+  public static final String F0003 = "F0003";
 }
