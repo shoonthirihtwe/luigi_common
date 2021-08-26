@@ -94,6 +94,8 @@ public class CommonBatchService {
       }
       log.info(key + "完了");
     });
+
+    System.exit(0);
   }
 
   /**
