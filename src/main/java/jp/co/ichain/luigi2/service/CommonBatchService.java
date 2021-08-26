@@ -45,6 +45,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CommonBatchService {
 
+  public static boolean TEST_FLAG = false;
+
   @Autowired
   CommonBatchMapper mapper;
 
@@ -95,7 +97,9 @@ public class CommonBatchService {
       log.info(key + "完了");
     });
 
-    System.exit(0);
+    if (TEST_FLAG == false) {
+      System.exit(0);
+    }
   }
 
   /**
