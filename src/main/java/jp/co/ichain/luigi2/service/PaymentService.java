@@ -44,11 +44,11 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo pay(String contractNo, String cardCustNumber, String dueDate,
+  public PaymentVo pay(Integer tenantId, String contractNo, String cardCustNumber, String dueDate,
       Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
       GmoPaymentException, IOException, ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(contractNo);
+    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
 
     if (factoringCompanyCode == null) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "contractNo");
@@ -83,11 +83,11 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo cancel(String contractNo, String accessId, String accessPassword, Date suspenceDate)
+  public PaymentVo cancel(Integer tenantId, String contractNo, String accessId, String accessPassword, Date suspenceDate)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(contractNo);
+    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
 
     if (factoringCompanyCode == null) {
       throw new WebDataException(Luigi2ErrorCode.D0001);

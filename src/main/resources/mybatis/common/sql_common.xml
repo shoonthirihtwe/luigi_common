@@ -56,7 +56,7 @@
 		SELECT factoring_company_code
 		FROM factoring_companies f JOIN tenants t
         ON f.tenant_id=t.id
-		WHERE f.deleted_at is null AND 
+		WHERE f.deleted_at is null AND tenant_id=#{tenantId} AND 
 			factoring_company_start_date <![CDATA[<= t.online_date AND t.online_date <=]]> factoring_company_end_date AND
 			factoring_company_code = (
 			SELECT 

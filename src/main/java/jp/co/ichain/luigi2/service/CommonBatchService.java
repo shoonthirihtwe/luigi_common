@@ -53,7 +53,6 @@ public class CommonBatchService {
   @Autowired
   PaymentService paymentService;
 
-  private SimpleDateFormat dueDateForamt = new SimpleDateFormat("yyyyMM");
   private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMdd");
 
   /**
@@ -135,7 +134,7 @@ public class CommonBatchService {
       String contractBranchNo = billingDetail.getContractBranchNo(); // 証券番号枝番
       String cardCustNumber = billingDetail.getCardCustNumber(); // カード登録顧客番号 ※証券番号または親証券番号
       String dueDate = billingDetail.getDueDate(); // 請求詳細の充当月
-      Integer premiumDueAmount = billingDetail.getTotalGrossPremium(); // 合計保険料金額
+      Integer premiumDueAmount = billingDetail.getPremiumDueAmount(); // 合計保険料金額
 
       // GMO決済サービス
       PaymentVo paymentVo = new PaymentVo();
@@ -143,7 +142,8 @@ public class CommonBatchService {
       String accessId = ""; // 取引ID
       String accessPass = ""; // 取引パスワード
       try {
-        paymentVo = paymentService.pay(contractNo, cardCustNumber, dueDate, premiumDueAmount);
+        paymentVo =
+            paymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount);
         if (paymentVo != null) {
           accessId = paymentVo.getAccessId();
           accessPass = paymentVo.getAccessPass();
@@ -156,9 +156,6 @@ public class CommonBatchService {
           | WebException e) {
         validGmo = false;
       } finally {
-        // 入金詳細保存フラグ
-        boolean billingDetailSaveFlag = true;
-
         DepositDetailsVo depositDetailsVo = new DepositDetailsVo();
         depositDetailsVo.setTenantId(tenantId); // テナントID
         depositDetailsVo.setEntryDate(batchDate); // 入力日 ＝ 入金の入金日
@@ -169,13 +166,13 @@ public class CommonBatchService {
         depositDetailsVo.setApplicationNo(null); // 申込番号 ＝ 属性初期値
 
         // 充当月 ＝ 請求詳細の充当月
-        depositDetailsVo.setDueDate(dueDateForamt.parse(billingDetail.getDueDate()));
+        depositDetailsVo.setDueDate(billingDetail.getDueDate());
         // 合計保険料金額 ＝ 請求詳細の請求額
-        depositDetailsVo.setTotalPremiumAmount(billingDetail.getTotalGrossPremium());
+        depositDetailsVo.setTotalPremiumAmount(premiumDueAmount);
         // 入金金額
         // 1. カード決済APIレスポンスのエラーなしの場合、「合計保険料金額」と同値を設定
         // 2. カード決済APIレスポンスのエラーありの場合、0を設定
-        depositDetailsVo.setDepositAmount(validGmo ? billingDetail.getTotalGrossPremium() : 0);
+        depositDetailsVo.setDepositAmount(validGmo ? premiumDueAmount : 0);
         depositDetailsVo.setCommissionWithheld(null); // 振込手数料 ＝ 属性初期値
         depositDetailsVo.setCompensationTax(null); // 振込手数料 消費税 ＝ 属性初期値
         depositDetailsVo.setClearingDate(null); // 消し込み日 ＝ 属性初期値
@@ -218,23 +215,22 @@ public class CommonBatchService {
               depositDetailsVo.setPaymentResultCode("4"); // カードの有効期限範囲外
               break;
             default:
-              billingDetailSaveFlag = false;
           }
         }
         depositDetailsVo.setAccessId(accessId); // 取引ID
         depositDetailsVo.setAccessPass(accessPass); // 取引パスワード
         depositDetailsVo.setComment(null); // 備考 ＝ 属性初期値
-        depositDetailsVo.setPremiumDueDate(batchDate); // 保険料充当日 ＝ バッチ日付を設定
+        depositDetailsVo.setPremiumDueDate(billingDetail.getPremiumDueDate()); // 保険料充当日 ＝ バッチ日付を設定
         // 保険料 連番 ＝ 請求詳細の保険料 連番
         depositDetailsVo.setPremiumSequenceNo(billingDetail.getPremiumSequenceNo());
         depositDetailsVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
         // 保険料入金詳細データを作成する
         mapper.insertDepositDetails(depositDetailsVo);
 
-        if (billingDetailSaveFlag) {
-          batchTotalAmount += billingDetail.getTotalGrossPremium();
-          receivedAmount += validGmo ? billingDetail.getTotalGrossPremium() : 0;
-        }
+        // 作成した入金詳細の「合計保険料金額」を合算して設定
+        receivedAmount += premiumDueAmount;
+        // 作成した入金詳細の「入金金額」を合算して設定
+        batchTotalAmount += validGmo ? premiumDueAmount : 0;
       }
     }
 
@@ -260,6 +256,7 @@ public class CommonBatchService {
       // 保険料入金ヘッダの作成を実施
       mapper.insertDepositHeaders(depositHeadersVo);
     }
+
   }
 
   /**
@@ -443,8 +440,8 @@ public class CommonBatchService {
     // 1件目は契約日と同じ。また払込回数=00はBD-008の対象外。
     Integer frequency = Integer.parseInt(contractPremiumHeader.getFrequency());
     if (maxPremiumSequenNo.getPremiumSequenceNo() > 1 && frequency != 0) {
-      String premiumBillingPeriod = DateTimeUtils.addMonthToYearMonth(
-          maxPremiumSequenNo.getPremiumBillingPeriod(), 12 / frequency);
+      String premiumBillingPeriod = DateTimeUtils
+          .addMonthToYearMonth(maxPremiumSequenNo.getPremiumBillingPeriod(), 12 / frequency);
       premiumHeader.setPremiumBillingPeriod(premiumBillingPeriod);
 
       // 保険料充当日:下で決定した保険料収納月premium_billing_period: 契約日contracts.issue_dateの日(dd)

@@ -1,7 +1,10 @@
 package jp.co.ichain.luigi2.vo;
 
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,7 +51,6 @@ public class BillingDetailsVo extends ObjectVo {
   /**
    * 充当月
    */
-
   String dueDate;
 
   /**
@@ -105,4 +107,15 @@ public class BillingDetailsVo extends ObjectVo {
    * カード登録顧客番号 ※証券番号または親証券番号
    */
   String cardCustNumber;
+
+  /**
+   * 保険料請求額
+   */
+  Integer premiumDueAmount;
+  
+  /**
+   * 保険料充当日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date premiumDueDate;
 }
