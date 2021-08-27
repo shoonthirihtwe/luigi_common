@@ -9,6 +9,7 @@
 		<choose>
 		<when test='tableInfo.table == "contracts"'>#{code}</when>
 		<when test='tableInfo.table == "maintenance_requests"'>#{code}</when>
+		<when test='tableInfo.table == "claim_trxs_id"'>#{code}</when>
 		<otherwise>(SELECT LPAD(${tableInfo.key}+1,#{tableInfo.size},'0') FROM ${tableInfo.table} 
 		WHERE tenant_id=#{tenantId} ORDER BY ${tableInfo.key} DESC LIMIT 1)</otherwise>
 		</choose>
@@ -18,8 +19,8 @@
 	<select id="selectIncrementNumber" parameterType="map"
 		resultType="string">
 		SELECT
-			<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests"'>LPAD(</if>
-			max(${tableInfo.key})<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests"'>+1,#{tableInfo.size},'0')</if>
+			<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests" and tableInfo.table != "claim_trxs_id"'>LPAD(</if>
+			max(${tableInfo.key})<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests" and tableInfo.table != "claim_trxs_id"'>+1,#{tableInfo.size},'0')</if>
 		FROM 
 			<choose>
 			<when test='tableInfo.table == "contracts"'>contract_no</when>
@@ -54,8 +55,16 @@
 		)
 		VALUES(
 			#{tenantId}
-		     <if test='code != null'>,LPAD(${code}+1,#{tableInfo.size},'0')</if>
-		    <if test='code == null'>,LPAD('1',#{tableInfo.size},'0')</if>
+			<choose>
+			<when test='tableInfo.table == "claim_trxs_id"'>
+				<if test='code != null'>,${code}+1</if>
+			    <if test='code == null'>,1</if>
+			</when>
+			<otherwise>
+			    <if test='code != null'>,LPAD(${code}+1,#{tableInfo.size},'0')</if>
+			    <if test='code == null'>,LPAD('1',#{tableInfo.size},'0')</if>
+		    </otherwise>
+		    </choose>
 		    ,#{updatedBy}
 		)
 	</insert>

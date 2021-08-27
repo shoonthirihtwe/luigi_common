@@ -44,15 +44,13 @@ public class NumberingService {
       throws InstantiationException, IllegalAccessException, SecurityException {
     for (val tenant : tenantResources.getAll()) {
       val tenantId = tenant.getId();
-      if (numberingMapper
-          .selectIncrementNumber(Luigi2TableInfo.getLockTable(TableInfo.Contracts),
-              tenantId) == null) {
+      if (numberingMapper.selectIncrementNumber(Luigi2TableInfo.getLockTable(TableInfo.Contracts),
+          tenantId) == null) {
         numberingMapper.insertNo(Luigi2TableInfo.getLockTable(TableInfo.Contracts), tenantId, null,
             "cachingAI");
       }
-      if (numberingMapper
-          .selectIncrementNumber(Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests),
-              tenantId) == null) {
+      if (numberingMapper.selectIncrementNumber(
+          Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests), tenantId) == null) {
         numberingMapper.insertNo(Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests),
             tenantId, null, "cachingAI");
       }
@@ -74,7 +72,8 @@ public class NumberingService {
     val map = Luigi2TableInfo.getLockTable(tableInfo);
     String code = numberingMapper.selectIncrementNumber(map, tenantId);
     numberingMapper.pessimisticLockKey(map, tenantId, code);
-    if (tableInfo == TableInfo.Contracts || tableInfo == TableInfo.MaintenanceDocuments) {
+    if (tableInfo == TableInfo.Contracts || tableInfo == TableInfo.MaintenanceDocuments
+        || tableInfo == TableInfo.ClaimTrxsId) {
       numberingMapper.updateNo(map, tenantId, code, updatedBy);
       numberingMapper.insertNo(map, tenantId, code, updatedBy);
     }

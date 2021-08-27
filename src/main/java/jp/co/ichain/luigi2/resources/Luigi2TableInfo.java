@@ -62,7 +62,6 @@ public class Luigi2TableInfo {
     map = new HashMap<String, Object>();
     map.put("table", "claim_trxs_id");
     map.put("key", "claim_trxs_id");
-    map.put("size", 9);
     TABLE_INFO_MAP.put(TableInfo.ClaimTrxsId, map);
 
     // claim_trxs_id
