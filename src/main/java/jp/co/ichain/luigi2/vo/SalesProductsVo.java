@@ -37,7 +37,7 @@ public class SalesProductsVo extends ObjectVo {
 
   String salesPlanName;
 
-  String salePlanNameDisplay;
+  String salesPlanNameDisplay;
 
   Integer issueAgeUpper;
 
