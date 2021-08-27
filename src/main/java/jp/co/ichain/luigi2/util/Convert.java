@@ -244,16 +244,18 @@ public class Convert {
    * @return
    */
   public static String toFullChar(String str) {
-    if (str == null)
+    if (str == null) {
       return null;
+    }
     StringBuffer strBuf = new StringBuffer();
     char c = 0;
     for (int i = 0; i < str.length(); i++) {
       c = str.charAt(i);
-      if (c >= 0x21 && c <= 0x7e)
+      if (c >= 0x21 && c <= 0x7e) {
         c += 0xfee0;
-      else if (c == 0x20)
+      } else if (c == 0x20) {
         c = 0x3000;
+      }
       strBuf.append(c);
     }
     return strBuf.toString();
@@ -273,10 +275,11 @@ public class Convert {
     char c = 0;
     for (int i = 0; i < str.length(); i++) {
       c = str.charAt(i);
-      if (c >= '！' && c <= '～')
+      if (c >= '！' && c <= '～') {
         c -= 0xfee0;
-      else if (c == '　')
+      } else if (c == '　') {
         c = 0x20;
+      }
       strBuf.append(c);
     }
     return strBuf.toString();
