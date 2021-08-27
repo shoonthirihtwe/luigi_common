@@ -33,5 +33,5 @@ public class SalesProductsListVo extends ObjectVo {
   /**
    * 画面表示名
    */
-  String salePlanNameDisplay;
+  String salesPlanNameDisplay;
 }
