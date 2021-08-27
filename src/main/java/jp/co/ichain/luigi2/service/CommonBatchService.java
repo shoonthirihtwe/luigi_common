@@ -19,6 +19,11 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.CashDetailStatus;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.PaymentResultCode;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.BatchStatus;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRoute;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.PaymentMethodCode;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
@@ -179,10 +184,11 @@ public class CommonBatchService {
         depositDetailsVo.setSuspenceDate(batchDate); // サスペンス日 ＝ バッチ日付を設定
         depositDetailsVo.setDeleteDate(null); // 削除日 ＝ 属性初期値
         depositDetailsVo.setCashMatchingDate(null); // マッチング日 ＝ 属性初期値
-        depositDetailsVo.setCashDetailStatus("S"); // 明細のステータス ＝ S（suspence）を設定
+        // 明細のステータス ＝ S（suspence）を設定
+        depositDetailsVo.setCashDetailStatus(CashDetailStatus.SUSPENCE.toString());
         // 引き去り結果コード カード
         if (validGmo) {
-          depositDetailsVo.setPaymentResultCode("0"); // 決済OK（エラーなし）
+          depositDetailsVo.setPaymentResultCode(PaymentResultCode.SUCCESS.toString()); // 決済OK（エラーなし）
         } else {
           // GMOエラー詳細コードチェック
           switch (errMessage) {
@@ -199,20 +205,20 @@ public class CommonBatchService {
             case "42G970000":
             case "42G980000":
             case "42G990000":
-              depositDetailsVo.setPaymentResultCode("1"); // カード無効
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.INVALID.toString()); // カード無効
               break;
             case "42G030000":
             case "42G050000":
             case "42G070000":
             case "42G550000":
-              depositDetailsVo.setPaymentResultCode("2"); // カード限度額オーバー
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.OVER.toString()); // カード限度額オーバー
               break;
             case "42G020000":
             case "42G040000":
-              depositDetailsVo.setPaymentResultCode("3"); // カード残高不足
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.INSUFFICIENT.toString()); // カード残高不足
               break;
             case "42G830000":
-              depositDetailsVo.setPaymentResultCode("4"); // カードの有効期限範囲外
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.OUT_OF_RANGE.toString()); // カードの有効期限範囲外
               break;
             default:
           }
@@ -240,16 +246,18 @@ public class CommonBatchService {
       depositHeadersVo.setTenantId(tenantId); // テナントID
       depositHeadersVo.setEntryDate(batchDate); // 入力日 ＝ バッチ日付を設定
       depositHeadersVo.setBatchNo(batchNo); // バッチナンバー ＝ 入金テーブルの入力日単位で1からの連番を設定
-      depositHeadersVo.setPaymentMethodCode("3"); // 払込方法コード ＝ 3（カード）を設定
+      // 払込方法コード ＝ 3（カード）を設定
+      depositHeadersVo.setPaymentMethodCode(PaymentMethodCode.CARD.toString());
       depositHeadersVo.setDepositDate(batchDate); // 入金日 ＝ バッチ日付を設定
       // 入金金額 ＝ 作成した入金詳細の「合計保険料金額」を合算して設定
       depositHeadersVo.setReceivedAmount(String.valueOf(receivedAmount));
       // バッチ合計金額 ＝ 作成した入金詳細の「入金金額」を合算して設定
       depositHeadersVo.setBatchTotalAmount(String.valueOf(batchTotalAmount));
-      depositHeadersVo.setBatchStatus("A"); // ステータス ＝ A（入力完了：マッチング待ち）を設定
+      depositHeadersVo.setBatchStatus(BatchStatus.WAITING.toString()); // ステータス ＝ A（入力完了：マッチング待ち）を設定
       depositHeadersVo.setComment(null); // 備考 ＝ 属性初期値
       depositHeadersVo.setUsereId(createdBy); // 処理ユーザーID ＝ この処理の機能IDを設定
-      depositHeadersVo.setCollectionRoute("R"); // 収集ルート ＝ R（レギュラー）を設定
+      // 収集ルート ＝ R（レギュラー）を設定
+      depositHeadersVo.setCollectionRoute(CollectionRoute.REGULAR.toString());
       depositHeadersVo.setGroupCode(null); // 団体コード ＝ 属性初期値
       depositHeadersVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
 
