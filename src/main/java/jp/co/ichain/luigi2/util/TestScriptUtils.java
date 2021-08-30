@@ -198,12 +198,12 @@ public class TestScriptUtils {
    * @return
    */
   public void deleteUploadFiles() {
-    val urlList = documentsMapper.selectAllDocumentsUrl("new_business_documents");
-    urlList.addAll(documentsMapper.selectAllDocumentsUrl("maintenance_documents"));
-    urlList.addAll(documentsMapper.selectAllDocumentsUrl("claim_documents"));
+    val documentList = documentsMapper.selectAllDocumentsUrl("new_business_documents");
+    documentList.addAll(documentsMapper.selectAllDocumentsUrl("maintenance_documents"));
+    documentList.addAll(documentsMapper.selectAllDocumentsUrl("claim_documents"));
 
-    for (val url : urlList) {
-      awsS3Dao.delete(url);
+    for (val document : documentList) {
+      awsS3Dao.delete(document.getTenantId(), document.getDocumentUrl());
     }
   }
 }

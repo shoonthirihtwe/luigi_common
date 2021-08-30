@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.batch;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
@@ -11,5 +13,6 @@ public interface BatchService {
 
   public void run(List<TenantsVo> tenantList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-      JsonMappingException, JsonProcessingException, ParseException;
+      JsonMappingException, JsonProcessingException, ParseException,
+      UnsupportedEncodingException, IOException;
 }

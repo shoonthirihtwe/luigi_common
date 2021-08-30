@@ -1,13 +1,16 @@
 package jp.co.ichain.luigi2.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
@@ -32,8 +35,8 @@ public class CsvUtils {
    * @param MultipartFile csvFile
    * @param Map<title, mapping> matchingData
    * @return
-   * @throws IOException 
-   * @throws CsvException 
+   * @throws IOException
+   * @throws CsvException
    */
   public static List<Map<String, Object>> get(MultipartFile csvFile,
       Map<String, String> matchingData) throws IOException, CsvException {
@@ -69,5 +72,39 @@ public class CsvUtils {
     reader.close();
 
     return csvMapList;
+  }
+
+  /**
+   * Csvを作成する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-30
+   * @updatedAt : 2021-08-30
+   * @param titleMap
+   * @param dataList
+   * @return
+   * @throws IOException
+   */
+  public static ByteArrayOutputStream write(Map<String, String> titleMap,
+      List<Map<String, Object>> dataList) throws IOException {
+    val result = new ByteArrayOutputStream();
+    val keys = titleMap.keySet();
+    val convert = new Convert();
+    try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(result))) {
+      // title writer
+      csvWriter.writeNext(titleMap.values().toArray(String[]::new));
+
+      for (val dataMap : CollectionUtils.safe(dataList)) {
+        int idx = 0;
+        val lines = new String[keys.size()];
+
+        for (val key : CollectionUtils.safe(keys)) {
+          lines[idx] = convert.toString(dataMap.get(key));
+          idx++;
+        }
+        csvWriter.writeNext(lines);
+      }
+    }
+    return result;
   }
 }
