@@ -21,25 +21,92 @@ import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
 @Luigi2Mapper
 public interface CommonBatchMapper {
 
-  Map<String, String> getMaxBillingHeaderNo(Map<String, Object> param);
+  /**
+   * 請求billing_headerのBillingHeaderNoの最大値取得
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
+  int selectMaxBillingHeaderNo(Map<String, Object> param);
 
+  /**
+   * 請求billing_headerを作成
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   int insertBillingHeader(BillingHeaderVo billingHeaderVo);
 
+  /**
+   * 請求詳細billing_header_detailを作成
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   int insertBillingDetails(BillingDetailVo billingDetailVo);
 
-  // 保険料premium_headersを作成
+  /**
+   * 保険料premium_headersを作成
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   void insertPremiumHeader(Map<String, Object> param);
 
-  // max(保険料.保険料連番)
+  /**
+   * max(保険料.保険料連番)
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   PremiumHeadersVo getMaxPremiumSequenceNo(Map<String, Object> param);
 
-  // 保険料入金詳細データを作成する。
+  /**
+   * 保険料入金詳細データを作成する。
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   int insertDepositDetails(DepositDetailsVo depositDetailsVo);
 
-  // 保険料入金ヘッダを作成する。
+  /**
+   * 保険料入金ヘッダを作成する。
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   int insertDepositHeaders(DepositHeadersVo depositHeadersVo);
 
-  // 入金ヘッダの入力日単位で1からの連番
+  /**
+   * 入金ヘッダの入力日単位で1からの連番
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-06-18
+   * @updatedAt : 2021-06-18
+   * @param param
+   * @return
+   */
   int selectBatchNo(Date batchDate);
 
 }
