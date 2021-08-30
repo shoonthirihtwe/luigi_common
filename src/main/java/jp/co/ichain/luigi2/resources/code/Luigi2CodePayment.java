@@ -40,7 +40,14 @@ public class Luigi2CodePayment {
    * 
    * 戻り値
    *
-   * 0（引落し成功） 1（残高不足） 2（預金取引なし（口座解約済等）） 3（預金者都合による振替停止） 4（振替依頼書不備） 8（委託者都合による停止） 9（その他） E（その他）
+   * 0（引落し成功）
+   * 1（残高不足）
+   * 2（預金取引なし（口座解約済等））
+   * 3（預金者都合による振替停止）
+   * 4（振替依頼書不備）
+   * 8（委託者都合による停止）
+   * 9（その他）
+   * E（その他）
    * N（振替結果不明）
    * 
    * @author : [VJP] HOANGNH
@@ -79,7 +86,11 @@ public class Luigi2CodePayment {
    * 
    * 戻り値
    *
-   * 0（決済成功） 1（カード無効） 2（限度額オーバー） 3（カード残高不足） 4（カード有効期限範囲外）
+   * 0（決済成功）
+   * 1（カード無効）
+   * 2（限度額オーバー） 
+   * 3（カード残高不足）
+   * 4（カード有効期限範囲外）
    * 
    * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-26
@@ -111,7 +122,10 @@ public class Luigi2CodePayment {
   }
 
   /**
-   * 戻り値 M: Matched U: Unmatched
+   * 戻り値 
+   * 
+   * M: Matched
+   * U: Unmatched
    * 
    * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-26

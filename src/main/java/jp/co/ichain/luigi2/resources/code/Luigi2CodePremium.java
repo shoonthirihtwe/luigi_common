@@ -10,13 +10,13 @@ package jp.co.ichain.luigi2.resources.code;
 public class Luigi2CodePremium {
 
   /**
-   * 契約査定免除
+   * PremiumStatus
    * 
-   * 0:非該当 1:該当
+   * M:マッチ
    * 
-   * @author : [AOT] g.kim
-   * @createdAt : 2021-08-12
-   * @updatedAt : 2021-08-12
+   * @author : [VJP] HoangNH
+   * @createdAt : 2021-08-30
+   * @updatedAt : 2021-08-30
    */
   public enum PremiumStatus {
     MATCHED("M");

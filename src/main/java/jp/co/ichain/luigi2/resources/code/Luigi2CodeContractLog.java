@@ -112,7 +112,7 @@ public class Luigi2CodeContractLog {
   /**
    * ログタイプ
    * 
-   * 0:正常 
+   * 0:正常
    * 1:エラー
    * 
    * @author : [VJP] タン
