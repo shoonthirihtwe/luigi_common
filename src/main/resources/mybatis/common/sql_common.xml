@@ -44,14 +44,6 @@
 		</where>
 		ORDER BY updated_at DESC
 	</select>
-	<select id="getBatchDate" resultType="TenantsVo" parameterType="hashmap">
-		SELECT 
-			id, batch_date
-		FROM
-			tenants
-		WHERE
-			id IN (<foreach item="tenantId" collection="tenantIds" separator=",">#{tenantId}</foreach>)
-	</select>
 	<select id="selectFactoringCompanyCode" resultType="string" parameterType="hashmap">
 		SELECT factoring_company_code
 		FROM factoring_companies f JOIN tenants t
