@@ -94,10 +94,11 @@ public interface CommonMapper {
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-18
    * @updatedAt : 2021-08-18
+   * @param tenantId
    * @param contractNo
    * @return
    */
-  String selectFactoringCompanyCode(@Param("contractNo") String contractNo);
+  String selectFactoringCompanyCode(@Param("tenantId") Integer tenantId, @Param("contractNo") String contractNo);
 
   /**
    * 営業日取得
