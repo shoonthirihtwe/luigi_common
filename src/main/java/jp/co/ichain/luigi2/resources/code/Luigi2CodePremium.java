@@ -1,11 +1,11 @@
 package jp.co.ichain.luigi2.resources.code;
 
 /**
- * 販売プラン：保険種類
+ * ステータス：保険料
  * 
- * @author : [AOT] g.kim
- * @createdAt : 2021-08-12
- * @updatedAt : 2021-08-12
+ * @author : [VJP] HoangNH
+ * @createdAt : 2021-08-30
+ * @updatedAt : 2021-08-30
  */
 public class Luigi2CodePremium {
 
