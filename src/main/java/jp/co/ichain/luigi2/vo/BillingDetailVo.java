@@ -73,13 +73,12 @@ public class BillingDetailVo {
   /**
    * 充当月
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date dueDate;
+  String dueDate;
 
   /**
    * 保険料請求額
    */
-  String premiumDueAmount;
+  Integer premiumDueAmount;
 
   /**
    * 銀行コード

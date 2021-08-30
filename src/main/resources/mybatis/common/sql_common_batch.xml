@@ -3,13 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.ichain.luigi2.mapper.CommonBatchMapper">
-	<select id="getMaxBillingHeaderNo"  resultType="hashmap" parameterType="hashmap">
+	<select id="selectMaxBillingHeaderNo"  resultType="Integer" parameterType="hashmap">
 		SELECT 
 		    case 
 				when count(*) = 0 then 1
 		        else max(billng_header_no) + 1
 			end as billingHeaderNo
-		FROM luigi2_test.billing_headers 
+		FROM billing_headers 
 		WHERE 
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
@@ -19,6 +19,7 @@
 			(
 			tenant_id,
 			billing_period,
+			payment_method_code,
 			billng_header_no,
 			group_code,
 			billing_header_status,
@@ -32,6 +33,7 @@
 			(
 			#{tenantId},
 			#{billingPeriod},
+			#{paymentMethodCode},
 			#{billngHeaderNo},
 			#{groupCode},
 			#{billingHeaderStatus},
@@ -54,7 +56,7 @@
 			premium_due_date,
 			premium_sequence_no,
 			due_date,
-			<!-- premium_due_amount, -->
+			premium_due_amount,
 			bank_code,
 			bank_branch_code,
 			bank_account_type,
@@ -80,7 +82,7 @@
 			#{premiumDueDate},
 			#{premiumSequenceNo},
 			#{dueDate},
-			<!-- #{premiumDueAmount}, -->
+			#{premiumDueAmount},
 			#{bankCode},
 			#{bankBranchCode},
 			#{bankAccountType},
