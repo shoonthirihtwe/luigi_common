@@ -33,6 +33,7 @@ public class ContractLogService {
     DESCRIPTION_MAP.put("02003", "保全（保全）請求　２次査定完了");
     DESCRIPTION_MAP.put("02004", "保全（保全）請求　１次査定者へ差戻し");
     DESCRIPTION_MAP.put("02005", "保全（保全）請求　不備");
+    DESCRIPTION_MAP.put("02006", "保全（保全）請求　取下");
 
     // 請収 030
     DESCRIPTION_MAP.put("03001", "保険料請求（カード日次）");
