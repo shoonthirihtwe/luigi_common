@@ -93,7 +93,7 @@ public class ContractBillingVo extends ObjectVo {
   /**
    * 充当月
    */
-  Date dueDate;
+  String dueDate;
 
   /**
    * 保険料請求額

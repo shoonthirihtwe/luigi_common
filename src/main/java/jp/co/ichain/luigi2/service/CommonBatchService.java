@@ -285,7 +285,7 @@ public class CommonBatchService {
   }
 
   /**
-   * 保険料請求情報に関わるテーブルを作成
+   * 請求詳細（billing_detail）データ追加
    * 
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-12
@@ -293,7 +293,7 @@ public class CommonBatchService {
    * @return
    */
   public void createBillingData(ContractBillingVo contractBillingVo, String createdBy) {
-    Integer billHeaderNo = 1;
+    int billHeaderNo = 1;
     // 連番計算：請求テーブルの請求月、払込方法コード単位で1からの連番を設定
     if (contractBillingVo.getPaymentMethodCode() != null
         && contractBillingVo.getBatchDate() != null) {
@@ -304,8 +304,7 @@ public class CommonBatchService {
       String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
       paramBillingHeaded.put("billingPeriod", billingPeriod);
       // 請求テーブルの請求月
-      billHeaderNo =
-          Integer.parseInt(mapper.getMaxBillingHeaderNo(paramBillingHeaded).get("billngHeaderNo"));
+      billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
     }
     // 請求（billing_headers）データを準備する
     BillingHeaderVo billingHeaderVo =
@@ -315,6 +314,65 @@ public class CommonBatchService {
     BillingDetailVo billingDetailVo =
         createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
     mapper.insertBillingDetails(billingDetailVo);
+  }
+
+  /**
+   *  請求（billing_headers）データ追加
+   * 
+   * @author : [VJP] HOANGNH
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   * @return
+   */
+  public void createBillingHeaders(List<ContractBillingVo> contractBillingVos, String createdBy) {
+    for (ContractBillingVo contractBillingVo : contractBillingVos) {
+      int billHeaderNo = 1;
+      // 連番計算：請求テーブルの請求月、払込方法コード単位で1からの連番を設定
+      if (contractBillingVo.getPaymentMethodCode() != null
+          && contractBillingVo.getBatchDate() != null) {
+        // パラムを準備する
+        Map<String, Object> paramBillingHeaded = new HashMap<>();
+        paramBillingHeaded.put("paymentMethodCode", contractBillingVo.getPaymentMethodCode());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+        String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
+        paramBillingHeaded.put("billingPeriod", billingPeriod);
+        // 請求テーブルの請求月
+        billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
+      }
+      // 請求（billing_headers）データを準備する
+      BillingHeaderVo billingHeaderVo =
+          createBillingHeader(contractBillingVo, billHeaderNo, createdBy);
+      mapper.insertBillingHeader(billingHeaderVo);
+    }
+  }
+  
+  /**
+   * 請求詳細（billing_detail）データ追加
+   * 
+   * @author : [VJP] HOANGNH
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   * @return
+   */
+  public void createBillingDetails(List<ContractBillingVo> contractBillingVos, String createdBy) {
+    for (ContractBillingVo contractBillingVo : contractBillingVos) {
+      int billHeaderNo = 1;
+      // 連番計算：請求テーブルの請求月、払込方法コード単位で1からの連番を設定
+      if (contractBillingVo.getPaymentMethodCode() != null
+          && contractBillingVo.getBatchDate() != null) {
+        // パラムを準備する
+        Map<String, Object> paramBillingHeaded = new HashMap<>();
+        paramBillingHeaded.put("paymentMethodCode", contractBillingVo.getPaymentMethodCode());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+        String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
+        paramBillingHeaded.put("billingPeriod", billingPeriod);
+        // 請求テーブルの請求月
+        billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
+      }
+      BillingDetailVo billingDetailVo =
+          createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
+      mapper.insertBillingDetails(billingDetailVo);
+    }
   }
 
   private BillingHeaderVo createBillingHeader(ContractBillingVo contractBilling,
@@ -377,7 +435,7 @@ public class CommonBatchService {
     // 証券番号枝番 = 保険料（premium_headers）.証券番号枝番
     billingDetailVo.setContractBranchNo(contractBilling.getContractBranchNo());
     // 保険料充当日 = 属性初期値
-    billingDetailVo.setPremiumDueDate(null);
+    billingDetailVo.setPremiumDueDate(contractBilling.getPremiumDueDate());
     // 保険料 連番 = 保険料（premium_headers）.保険料連番
     billingDetailVo.setPremiumSequenceNo(contractBilling.getPremiumSequenceNo());
     // 充当月 = 保険料（premium_headers).保険料収納月
@@ -385,7 +443,7 @@ public class CommonBatchService {
       billingDetailVo.setDueDate(contractBilling.getDueDate());
     }
     // 保険料請求額 = 保険料（premium_headers）.グロス保険料
-    billingDetailVo.setPremiumDueAmount(contractBilling.getPremiumDueAmount());
+    billingDetailVo.setPremiumDueAmount(contractBilling.getTotallBillerdAmount());
     // 銀行コード = 契約者払込方法= （policy_holders_pay_method）.銀行コード
     billingDetailVo.setBankCode(contractBilling.getBankCode());
     // 支店コード = 契約者払込方法= （policy_holders_pay_method）.支店コード
