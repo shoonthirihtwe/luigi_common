@@ -39,9 +39,10 @@
 		ORDER BY <if test ="table == 'maintenance_documents'">sequenceNo,</if>created_at
 	</select>
 	
-	<select id="selectAllDocumentsUrl"  resultType="string" parameterType="hashmap">
+	<select id="selectAllDocumentsUrl"  resultType="DocumentsVo" parameterType="hashmap">
 		SELECT
-			document_url as documentUrl
+			tenant_id as tenantId
+			,document_url as documentUrl
 		FROM ${table} 
 	</select>
 </mapper>

@@ -83,9 +83,9 @@ public class AwsS3Service {
   /**
    * 経理ダウンロードファイルEnumType
    * 
-   * FB_claims:支払用FBデータ 
-   * account_journal:会計仕訳データ 
-   * reserve_payment:支払備金データ 
+   * FB_claims:支払用FBデータ
+   * account_journal:会計仕訳データ
+   * reserve_payment:支払備金データ
    * commission_summary:代理店手数料集計
    * commission_detail:代理店手数料明細
    * 
@@ -178,7 +178,8 @@ public class AwsS3Service {
     documentsMapper.insertDocuments(dataMap);
 
     // file upload
-    awsS3Dao.upload(documents.name + dataMap.get("id") + "_" + encodeFileName, inputStream);
+    awsS3Dao.upload(tenantId, documents.name + dataMap.get("id") + "_" + encodeFileName,
+        inputStream);
   }
 
   /**
@@ -194,18 +195,17 @@ public class AwsS3Service {
    * @param month
    * @throws IOException
    */
-  public void upload(InputStream inputsteam, String fileName, FreeDocumentsType documentsType,
-      int tenantId, int year, int month) throws IOException {
+  public void upload(InputStream inputsteam, String fileName, int tenantId, int year, int month)
+      throws IOException {
 
     val serviceMap = serviceInstancesResources.get(tenantId, FREE_DOCUMENTS);
-    val folder = serviceMap.get(0).getInherentMap().get(documentsType.name);
+    val folder = serviceMap.get(0).getInherentMap().get(FreeDocumentsType.Text.name);
 
     StringBuffer sb = new StringBuffer();
-    sb.append(folder).append(tenantId).append("/").append(year).append("/").append(month)
-        .append("/").append(fileName);
+    sb.append(folder).append(year).append("/").append(month).append("/").append(fileName);
 
     // file upload
-    awsS3Dao.upload(new String(sb), inputsteam);
+    awsS3Dao.upload(tenantId, new String(sb), inputsteam);
   }
 
   /**
@@ -214,8 +214,8 @@ public class AwsS3Service {
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-30
    * @updatedAt : 2021-06-30
-   * @param documents
-   * @param id
+   * @param tenantId
+   * @param url
    * @return
    * @throws DecoderException
    * @throws InvalidKeySpecException
@@ -230,11 +230,11 @@ public class AwsS3Service {
    * @throws SdkClientException
    * @throws Exception
    */
-  public ResponseEntity<Resource> download(String url)
+  public ResponseEntity<Resource> download(Integer tenantId, String url)
       throws InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException,
       BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException,
       InvalidKeySpecException, DecoderException, IOException {
-    val s3stream = awsS3Dao.download(url);
+    val s3stream = awsS3Dao.download(tenantId, url);
     val result = new ByteArrayResource(IOUtils.toByteArray(s3stream));
     var fileName = url.split("/")[1];
     fileName = new String(Base64.decodeBase64(

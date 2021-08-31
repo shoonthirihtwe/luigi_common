@@ -38,6 +38,6 @@ public interface DocumentsMapper {
    * @return
    */
   List<DocumentsVo> selectDocuments(Map<String, Object> dataMap);
-  
-  List<String> selectAllDocumentsUrl(@Param("table") String table);
+
+  List<DocumentsVo> selectAllDocumentsUrl(@Param("table") String table);
 }

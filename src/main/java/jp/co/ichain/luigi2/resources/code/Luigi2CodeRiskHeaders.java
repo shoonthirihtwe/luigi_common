@@ -13,13 +13,14 @@ public class Luigi2CodeRiskHeaders {
    * 契約のステータス
    * 
    * 40:有効中
+   * 62:更新
    * 
    * @author : [VJP] タン
    * @createdAt : 2021-08-25
    * @updatedAt : 2021-08-25
    */
   public enum ProductStatus {
-    ENABLED("40");
+    ENABLED("40"), RENEWAL("62");
 
     String val;
 

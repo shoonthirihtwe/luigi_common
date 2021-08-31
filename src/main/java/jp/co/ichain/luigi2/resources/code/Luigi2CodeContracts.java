@@ -22,6 +22,7 @@ public class Luigi2CodeContracts {
    * 50:クーリングオフ
    * 60:解約
    * 61:保険金支払いによる契約終了
+   * 62:更新
    * 65:解除
    * 70:死亡
    * 71:高度障害（契約終了）
@@ -33,7 +34,7 @@ public class Luigi2CodeContracts {
    * @updatedAt : 2021-08-12
    */
   public enum ContractStatus {
-    ESTABLISHMENT(40), CANCEL(60), DELETE(65);
+    ESTABLISHMENT(40), CANCEL(60), RENEWAL(62), DELETE(65), EXPIRATION(80);
 
     int val;
 

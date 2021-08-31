@@ -67,7 +67,7 @@ public class AwsS3Dao {
    * @return
    * @throws IOException
    */
-  public PutObjectResult upload(String url, InputStream inputStream)
+  public PutObjectResult upload(Integer tenantId, String url, InputStream inputStream)
       throws IOException, WebException {
     ObjectMetadata meta = new ObjectMetadata();
     // size
@@ -80,7 +80,7 @@ public class AwsS3Dao {
       scanFile(f);
     }
 
-    return s3Client.putObject(bucketName, url, new ByteArrayInputStream(f), meta);
+    return s3Client.putObject(bucketName, tenantId + "/" + url, new ByteArrayInputStream(f), meta);
   }
 
   /**
@@ -95,10 +95,11 @@ public class AwsS3Dao {
    * @throws AmazonServiceException
    * @throws SdkClientException
    */
-  public InputStream download(String url) throws AmazonServiceException, SdkClientException {
+  public InputStream download(Integer tenantId, String url)
+      throws AmazonServiceException, SdkClientException {
     S3Object s3Object = null;
     try {
-      s3Object = s3Client.getObject(new GetObjectRequest(bucketName, url));
+      s3Object = s3Client.getObject(new GetObjectRequest(bucketName, tenantId + "/" + url));
     } catch (AmazonS3Exception e) {
       throw new WebAwsException(Luigi2ErrorCode.D0002, url);
     }
@@ -111,14 +112,15 @@ public class AwsS3Dao {
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-30
-   * @updatedAt : 2021-06-30
-   * @param directoryName
-   * @param key
+   * @updatedAt : 2021-08-30
+   * @param tenantId
+   * @param url
    * @throws AmazonServiceException
    * @throws SdkClientException
    */
-  public void delete(String url) throws AmazonServiceException, SdkClientException {
-    this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, url));
+  public void delete(Integer tenantId, String url)
+      throws AmazonServiceException, SdkClientException {
+    this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, tenantId + "/" + url));
   }
 
   AwsS3Dao(@Value("${aws.s3.region}") String region, @Value("${aws.s3.bucket}") String bucket,
@@ -147,7 +149,7 @@ public class AwsS3Dao {
 
     try {
       return sortAndPagination(
-          getS3ObjectList(directoryName + paramMap.get("tenantId").toString() + "/", paramMap),
+          getS3ObjectList(paramMap.get("tenantId").toString() + "/" + directoryName, paramMap),
           paramMap, fileTags);
     } catch (SdkClientException e) {
       e.printStackTrace();

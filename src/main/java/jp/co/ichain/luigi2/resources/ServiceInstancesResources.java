@@ -161,7 +161,7 @@ public class ServiceInstancesResources {
       this.initialize();
     }
 
-    return this.map.get(tenantId).get(sourceKey);
+    return this.map.get(tenantId) != null ? this.map.get(tenantId).get(sourceKey) : null;
   }
 
   /**
