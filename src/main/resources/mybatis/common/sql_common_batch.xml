@@ -205,8 +205,9 @@
 				ELSE 1
             END as premium_sequence_no,
 			premium_billing_period
-		FROM luigi2_test.premium_headers
+		FROM premium_headers
 		WHERE contract_no = #{contractNo}
+		GROUP BY premium_billing_period
     </select>
     <insert id="insertPremiumHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO premium_headers
