@@ -214,12 +214,16 @@
 			tenant_id,
 			contract_no,
 			contract_branch_no,
+			<if test="premiumHeader.premiumDueDate != null">
 			premium_due_date,
+			</if>
 			first_premium,
 			premium_sequence_no,
 			premium_billing_period,
 			effective_date,
+			<if test="premiumHeader.totalGrossPremium != null">
 			total_gross_premium,
+			</if>
 			frequency,
 			premium_status,
 			refunded_date,
@@ -232,15 +236,11 @@
 			#{premiumHeader.contractNo},
 			#{premiumHeader.contractBranchNo},
 			<if test="premiumHeader.premiumDueDate != null">#{premiumHeader.premiumDueDate},</if>
-			<if test="premiumHeader.premiumDueDate == null">'',</if>
 			#{premiumHeader.firstPremium},
 			#{premiumHeader.premiumSequenceNo},
 			#{premiumHeader.premiumBillingPeriod},
 			null,
-			
 			<if test="premiumHeader.totalGrossPremium != null">#{premiumHeader.totalGrossPremium},</if>
-			<if test="premiumHeader.totalGrossPremium == null">'',</if>
-			
 			#{premiumHeader.frequency},
 			#{premiumHeader.premiumStatus},
 			null,

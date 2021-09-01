@@ -21,9 +21,9 @@ import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.CashDetailStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.PaymentResultCode;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.BatchStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRoute;
-import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.PaymentMethodCode;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
@@ -247,7 +247,8 @@ public class CommonBatchService {
       depositHeadersVo.setEntryDate(batchDate); // 入力日 ＝ バッチ日付を設定
       depositHeadersVo.setBatchNo(batchNo); // バッチナンバー ＝ 入金テーブルの入力日単位で1からの連番を設定
       // 払込方法コード ＝ 3（カード）を設定
-      depositHeadersVo.setPaymentMethodCode(PaymentMethodCode.CARD.toString());
+      depositHeadersVo
+          .setPaymentMethodCode(Luigi2CodeDepositHeaders.PaymentMethodCode.CARD.toString());
       depositHeadersVo.setDepositDate(batchDate); // 入金日 ＝ バッチ日付を設定
       // 入金金額 ＝ 作成した入金詳細の「合計保険料金額」を合算して設定
       depositHeadersVo.setReceivedAmount(String.valueOf(receivedAmount));
@@ -317,7 +318,7 @@ public class CommonBatchService {
   }
 
   /**
-   *  請求（billing_headers）データ追加
+   * 請求（billing_headers）データ追加
    * 
    * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-12
@@ -345,7 +346,7 @@ public class CommonBatchService {
       mapper.insertBillingHeader(billingHeaderVo);
     }
   }
-  
+
   /**
    * 請求詳細（billing_detail）データ追加
    * 
