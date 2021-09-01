@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Luigi2TableInfo {
   public enum TableInfo {
-    Contracts, Customers, MaintenanceRequests, NewBusinessDocuments, ClaimDocuments, MaintenanceDocuments, ClaimTrxsId, Agencies
+    Contracts, Customers, MaintenanceRequests, NewBusinessDocuments, ClaimDocuments, MaintenanceDocuments, ClaimTrxsId, Agencies, AgencyBranches, SalesAgents
   }
 
   private static final Map<TableInfo, Map<String, Object>> TABLE_INFO_MAP;
@@ -64,12 +64,26 @@ public class Luigi2TableInfo {
     map.put("key", "claim_trxs_id");
     TABLE_INFO_MAP.put(TableInfo.ClaimTrxsId, map);
 
-    // claim_trxs_id
+    // agency_code
     map = new HashMap<String, Object>();
     map.put("table", "agencies");
     map.put("key", "agency_code");
     map.put("size", 5);
     TABLE_INFO_MAP.put(TableInfo.Agencies, map);
+
+    // agency_code
+    map = new HashMap<String, Object>();
+    map.put("table", "agency_branches");
+    map.put("key", "agency_branch_code");
+    map.put("size", 4);
+    TABLE_INFO_MAP.put(TableInfo.AgencyBranches, map);
+
+    // agency_code
+    map = new HashMap<String, Object>();
+    map.put("table", "sales_agents");
+    map.put("key", "agent_code");
+    map.put("size", 6);
+    TABLE_INFO_MAP.put(TableInfo.SalesAgents, map);
   }
 
   /**
