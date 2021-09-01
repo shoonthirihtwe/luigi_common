@@ -31,6 +31,17 @@ public interface CommonBatchMapper {
    * @return
    */
   int selectMaxBillingHeaderNo(Map<String, Object> param);
+  
+  /**
+   * 請求billing_headerのBillingHeaderNoの値取得
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-09-01
+   * @updatedAt : 2021-09-01
+   * @param param
+   * @return
+   */
+  int selectBillingHeaderNo(Map<String, Object> param);
 
   /**
    * 請求billing_headerを作成

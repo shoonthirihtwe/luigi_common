@@ -368,7 +368,7 @@ public class CommonBatchService {
         String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
         paramBillingHeaded.put("billingPeriod", billingPeriod);
         // 請求テーブルの請求月
-        billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
+        billHeaderNo = mapper.selectBillingHeaderNo(paramBillingHeaded);
       }
       BillingDetailVo billingDetailVo =
           createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
