@@ -14,6 +14,17 @@
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
 	</select>
+	<select id="selectBillingHeaderNo"  resultType="Integer" parameterType="hashmap">
+		SELECT 
+		    case 
+				when count(*) = 0 then 1
+		        else max(billng_header_no)
+			end as billingHeaderNo
+		FROM billing_headers
+		WHERE 
+			payment_method_code = #{paymentMethodCode} 
+			and billing_period = #{billingPeriod}
+	</select>
 	<insert id="insertBillingHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO billing_headers
 			(
