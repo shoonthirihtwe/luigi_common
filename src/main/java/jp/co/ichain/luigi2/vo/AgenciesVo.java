@@ -42,7 +42,7 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 財務局登録代理店コード
    */
-  String offcialAgencyCode;
+  String officialAgencyCode;
 
   /**
    * 個人/法人フラグ
@@ -67,7 +67,7 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 代理店名
    */
-  String agencyNameKnj;
+  String agencyNameOfficial;
 
   /**
    * 代理店名（カナ）
@@ -82,12 +82,12 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 郵便番号
    */
-  String zipCode;
+  String agencyZipCode;
 
   /**
    * 住所
    */
-  String address;
+  String agencyAddress;
 
   /**
    * 代表電話番号
@@ -97,12 +97,22 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 代表者名
    */
-  String repNameKnj;
+  String rep10eNameKnjSei;
+
+  /**
+   * 代表者名
+   */
+  String rep10eNameKnjMei;
 
   /**
    * 代表者名（カナ）
    */
-  String repNameKana;
+  String rep10eNameKanaSei;
+
+  /**
+   * 代表者名（カナ）
+   */
+  String rep10eNameKanaMei;
 
   /**
    * 代表者生年月日
@@ -113,12 +123,22 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 担当者名
    */
-  String personInChargeKnj;
+  String personInChargeKnjSei;
+
+  /**
+   * 担当者名
+   */
+  String personInChargeKnjMei;
 
   /**
    * 担当者名（カナ）
    */
-  String personInChargeKana;
+  String personInChargeKanaSei;
+
+  /**
+   * 担当者名（カナ）
+   */
+  String personInChargeKanaMei;
 
   /**
    * 担当者電話番号
@@ -186,7 +206,7 @@ public class AgenciesVo extends ObjectVo {
    * 廃業日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
-  Date terminationDate;
+  Date endDate;
 
   /**
    * 金融機関コード
@@ -222,46 +242,6 @@ public class AgenciesVo extends ObjectVo {
    * memo
    */
   String memo;
-
-  /**
-   * rep_name_sei_knj
-   */
-  String repNameSeiKnj;
-
-  /**
-   * rep_name_mei_knj
-   */
-  String repNameMeiKnj;
-
-  /**
-   * rep_name_sei_kana
-   */
-  String repNameSeiKana;
-
-  /**
-   * rep_name_mei_kana
-   */
-  String repNameMeiKana;
-
-  /**
-   * person_in_charge_sei_knj
-   */
-  String personInChargeSeiKnj;
-
-  /**
-   * person_in_charge_mei_knj
-   */
-  String personInChargeMeiKnj;
-
-  /**
-   * person_in_charge_sei_kana
-   */
-  String personInChargeSeiKana;
-
-  /**
-   * person_in_charge_mei_kana
-   */
-  String personInChargeMeiKana;
 
   /**
    * 手数料支払額
