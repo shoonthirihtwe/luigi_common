@@ -124,7 +124,7 @@ public class CsvUtils {
   public static ByteArrayOutputStream write(Map<String, String> titleMap,
       List<Map<String, Object>> dataList, boolean titleKeyFg) throws IOException {
     val mappingMap = new LinkedHashMap<String, String>();
-    if (titleMap != null) {
+    if (titleMap != null && titleKeyFg) {
       for (val entry : titleMap.entrySet()) {
         mappingMap.put(entry.getValue(), entry.getKey());
       }
