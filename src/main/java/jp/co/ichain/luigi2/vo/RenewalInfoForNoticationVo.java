@@ -58,6 +58,11 @@ public class RenewalInfoForNoticationVo {
   String renewalStatus;
 
   /**
+   * sendee
+   */
+  String sendee;
+  
+  /**
    * 更新タイプ
    */
   String renewalType;
