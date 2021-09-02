@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,5 +107,28 @@ public class CsvUtils {
       }
     }
     return result;
+  }
+
+  /**
+   * Csvを作成する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-09-02
+   * @updatedAt : 2021-09-02
+   * @param titleMap
+   * @param dataList
+   * @param titleKeyFg
+   * @return
+   * @throws IOException
+   */
+  public static ByteArrayOutputStream write(Map<String, String> titleMap,
+      List<Map<String, Object>> dataList, boolean titleKeyFg) throws IOException {
+    val mappingMap = new LinkedHashMap<String, String>();
+    if (titleMap != null) {
+      for (val entry : titleMap.entrySet()) {
+        mappingMap.put(entry.getValue(), entry.getKey());
+      }
+    }
+    return write(mappingMap, dataList);
   }
 }

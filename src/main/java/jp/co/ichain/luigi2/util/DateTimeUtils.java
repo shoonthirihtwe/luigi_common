@@ -20,6 +20,19 @@ public class DateTimeUtils {
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
   /**
+   * yyyyMMdd形式で日付を返す
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-09-02
+   * @updatedAt : 2021-09-02
+   * @param date
+   * @return
+   */
+  public static String convertSimpleFormat(Date date) {
+    return date == null ? null : formatter.format(date);
+  }
+
+  /**
    * convert Date to String with format yyyyMM
    * 
    * @param date
