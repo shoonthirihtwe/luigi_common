@@ -83,6 +83,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String salesPlanTypeCode;
 
   /**
+   * 画面表示名
+   */
+  String salesPlanNameDisplay;
+
+  /**
    * 合計保険料
    */
   Integer totalPremium;
@@ -119,6 +124,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String nameKnjMei;
 
   /**
+   * 氏名漢字:個人顧客:姓+名, 法人顧客: corp_name_official
+   */
+  String nameKnj;
+
+  /**
    * 住所カナ 県
    */
   String addrKnjPref;
@@ -134,6 +144,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   String addrKnj2;
 
   /**
+   * 住所漢字:
+   */
+  String address;
+
+  /**
    * insEmail
    */
   String insEmail;
@@ -142,7 +157,7 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 申込日
    */
   Date applicationDate;
-  
+
   /**
    * 受付日
    */
@@ -158,6 +173,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 被保険者氏名漢字 名
    */
   String insNameKnjMei;
+
+  /**
+   * 氏名漢字:個人顧客:姓+名, 法人顧客: corp_name_official
+   */
+  String insNameKnj;
 
   /**
    * 被保険者住所カナ 県
@@ -176,4 +196,9 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
 
   @JsonSerialize(using = JsonDateSerializer.class)
   Date insDateOfBirth;
+
+  /**
+   * 被保険者住所漢字
+   */
+  String insAddress;
 }
