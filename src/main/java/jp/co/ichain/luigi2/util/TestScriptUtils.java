@@ -206,4 +206,31 @@ public class TestScriptUtils {
       awsS3Dao.delete(document.getTenantId(), document.getDocumentUrl());
     }
   }
+
+  /**
+   * オンライン日付更新
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @param "yyyy-MM-dd"
+   * @param tenantId
+   * @return
+   * @throws ParseException
+   * @throws SQLException
+   * @throws ScriptException
+   */
+  public void updateOnlineDate(String date, Integer... tenantId)
+      throws JsonParseException, JsonMappingException, JsonProcessingException,
+      UnsupportedEncodingException, IOException, ParseException {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    val paramMap = new HashMap<String, Object>();
+    paramMap.put("onlineDate", sdf.parse(date));
+    if (tenantId.length != 0) {
+      paramMap.put("tenantId", tenantId);
+    }
+    commonMapper.updateOnlineDate(paramMap);
+
+  }
 }

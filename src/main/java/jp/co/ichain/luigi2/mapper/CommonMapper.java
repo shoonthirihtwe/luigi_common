@@ -135,6 +135,17 @@ public interface CommonMapper {
    * @return
    */
   int updateBatchDate(Map<String, Object> paramMap);
+  
+  /**
+   * オンライン日付更新
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-29
+   * @updatedAt : 2021-07-29
+   * @param paramMap
+   * @return
+   */
+  int updateOnlineDate(Map<String, Object> paramMap);
 
   /**
    * 権限関数名取得

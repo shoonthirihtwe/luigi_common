@@ -104,6 +104,20 @@
 			</if>
      	</where>
 	</update>
+	<update id="updateOnlineDate" parameterType="hashmap">
+		update 
+			tenants
+		SET
+			online_date=#{onlineDate}
+		<where>
+			<if test="tenantId != null">
+				id IN
+				<foreach collection="tenantId" item="id" index="index" separator="," open="(" close=")">
+        		#{id}
+     			</foreach>
+			</if>
+     	</where>
+	</update>
 	<select id="selectResourcesLastUpdatedAt" resultType="VoHashMap">
 		SELECT -1 as tenant_id, UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
 		FROM tenants
