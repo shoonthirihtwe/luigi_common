@@ -105,6 +105,11 @@ public class AwsMailDao {
       paramMap.put("refundInfo", appendNotification.get("refundInfo"));
     }
 
+    Boolean mypageYn = (Boolean) contentInfo.getInherentMap().get("mypageUrl");
+    if (mypageYn != null && mypageYn) {
+      paramMap.put("mypageUrl", appendNotification.get("mypageUrl"));
+    }
+
     contentInfo.getInherentText().chars().forEach((ci) -> {
       val c = (char) ci;
       if (c == '\r') {
