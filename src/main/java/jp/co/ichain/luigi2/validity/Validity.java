@@ -76,7 +76,7 @@ public class Validity {
     formatRegexMap.put("HANKANA", "\\uFF65-\\uFF9F");
     formatRegexMap.put("KANJI", "\\u4E00-\\u9FFF々ヶ");
     formatRegexMap.put("ALPHA", "a-zA-Z");
-    formatRegexMap.put("HYPHEN_SPACE", "-ー 　");
+    formatRegexMap.put("HYPHEN_SPACE", "-ー－‐ 　");
   }
 
 
