@@ -20,7 +20,7 @@
 		resultType="string">
 		SELECT
 			<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests" and tableInfo.table != "claim_trxs_id"'>LPAD(</if>
-			max(${tableInfo.key})<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests" and tableInfo.table != "claim_trxs_id"'>+1,#{tableInfo.size},'0')</if>
+			IFNULL(max(${tableInfo.key}),0)<if test='tableInfo.table != "contracts" and tableInfo.table != "maintenance_requests" and tableInfo.table != "claim_trxs_id"'>+1,#{tableInfo.size},'0')</if>
 		FROM 
 			<choose>
 			<when test='tableInfo.table == "contracts"'>contract_no</when>
