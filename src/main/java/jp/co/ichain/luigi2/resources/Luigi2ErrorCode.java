@@ -51,7 +51,12 @@ public class Luigi2ErrorCode {
    * 項目のみで不正
    */
   public static final String V0008 = "V0008";
-  
+
+  /**
+   * 項目の値が不正です。
+   */
+  public static final String V0009 = "V0009";
+
   /**
    * キーパラメータ中腹
    */
