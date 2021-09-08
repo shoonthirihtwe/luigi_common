@@ -56,16 +56,16 @@
 					customers_corporate
 					WHERE 
 					corp_name_kana=#{nameKanaSei}
-					AND corp_addr_zip_code=#{postalCode}
+					AND corp_addr_zip_code=#{addrZipNo}
 				</when>
 				<otherwise>
 					customers_individual
 					WHERE 
 					name_kana_sei = #{nameKanaSei}
 					AND name_kana_mei = #{nameKanaMei}
-					AND date_of_birth=DATE_FORMAT(#{dateOfBirth}, '%Y-%m-%d')
+					AND date_of_birth=DATE_FORMAT(FROM_UNIXTIME(#{dateOfBirth}/1000), '%Y-%m-%d')
 					AND sex=#{sex}
-					AND addr_zip_code=#{postalCode}
+					AND addr_zip_code=#{addrZipNo}
 				</otherwise>
 			</choose>
 				AND tenant_id=#{tenantId}
