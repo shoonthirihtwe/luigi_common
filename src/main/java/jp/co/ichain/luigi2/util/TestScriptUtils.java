@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.mapper.DocumentsMapper;
+import jp.co.ichain.luigi2.resources.TenantResources;
 import lombok.val;
 
 /**
@@ -53,6 +54,9 @@ public class TestScriptUtils {
 
   @Autowired
   private AwsS3Dao awsS3Dao;
+
+  @Autowired
+  private TenantResources tenantResources;
 
   /**
    * execute Sql
@@ -172,12 +176,15 @@ public class TestScriptUtils {
    * @param tenantId
    * @return
    * @throws ParseException
+   * @throws SecurityException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
    * @throws SQLException
    * @throws ScriptException
    */
-  public void updateBatchDate(String date, Integer... tenantId)
-      throws JsonParseException, JsonMappingException, JsonProcessingException,
-      UnsupportedEncodingException, IOException, ParseException {
+  public void updateBatchDate(String date, Integer... tenantId) throws JsonParseException,
+      JsonMappingException, JsonProcessingException, UnsupportedEncodingException, IOException,
+      ParseException, InstantiationException, IllegalAccessException, SecurityException {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     val paramMap = new HashMap<String, Object>();
@@ -186,6 +193,8 @@ public class TestScriptUtils {
       paramMap.put("tenantId", tenantId);
     }
     commonMapper.updateBatchDate(paramMap);
+
+    tenantResources.refreshing();
 
   }
 
@@ -217,12 +226,15 @@ public class TestScriptUtils {
    * @param tenantId
    * @return
    * @throws ParseException
+   * @throws SecurityException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
    * @throws SQLException
    * @throws ScriptException
    */
-  public void updateOnlineDate(String date, Integer... tenantId)
-      throws JsonParseException, JsonMappingException, JsonProcessingException,
-      UnsupportedEncodingException, IOException, ParseException {
+  public void updateOnlineDate(String date, Integer... tenantId) throws JsonParseException,
+      JsonMappingException, JsonProcessingException, UnsupportedEncodingException, IOException,
+      ParseException, InstantiationException, IllegalAccessException, SecurityException {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     val paramMap = new HashMap<String, Object>();
@@ -232,5 +244,6 @@ public class TestScriptUtils {
     }
     commonMapper.updateOnlineDate(paramMap);
 
+    tenantResources.refreshing();
   }
 }
