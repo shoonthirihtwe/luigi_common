@@ -50,11 +50,35 @@ public class RenewalInfoVo {
   String renewalContractBranchNo;
 
   /**
+   * 契約者ID
+   */
+  String contractorCustomerId;
+
+  /**
+   * 契約者名
+   */
+  String nameKnj;
+
+  /**
+   * 非保険ID
+   */
+  String insuredCustomerId;
+
+  /**
+   * 被保険者名
+   */
+  String insNameKnj;
+
+  /**
+   * 
+   */
+
+  /**
    * 更新判定日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date renewalJudgeDate;
-
+  
   /**
    * 更新ステータス
    */
@@ -72,15 +96,38 @@ public class RenewalInfoVo {
   Date renewalDate;
 
   /**
+   * 受付日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date receivedDate;
+
+  /**
+   * 現契約日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date issueDate;
+
+  /**
    * 更新後満期日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date renewalExpirationDate;
 
   /**
+   * 更新後満期日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date expirationDate;
+
+  /**
    * 販売プランコード
    */
   String salesPlanCode;
+
+  /**
+   * 保険商品・プラン
+   */
+  String salesPlanName;
 
   /**
    * 販売プラン種別コード
