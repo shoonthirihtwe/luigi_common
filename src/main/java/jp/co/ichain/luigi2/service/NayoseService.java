@@ -2,11 +2,12 @@ package jp.co.ichain.luigi2.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jp.co.ichain.luigi2.mapper.UserMapper;
-import jp.co.ichain.luigi2.vo.NayoseRequestVo;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeCommon;
 import jp.co.ichain.luigi2.vo.NayoseResultVo;
 import lombok.val;
 
@@ -38,7 +39,7 @@ public class NayoseService {
    * @param postalCode
    */
   @Transactional(transactionManager = "luigi2TransactionManager", readOnly = true)
-  public NayoseResultVo nayose(NayoseRequestVo param) {
+  public NayoseResultVo nayose(Map<String, Object> param) {
 
     var resultList = userMapper.selectNayoseCustomerMatch(param);
     if (resultList != null && resultList.size() != 0) {
@@ -50,7 +51,8 @@ public class NayoseService {
       return resultList.get(0);
     }
 
-    if (resultList != null && resultList.size() == 0 && !param.getSex().equals("3")) {
+    if (resultList != null && resultList.size() == 0
+        && !param.get("sex").equals(Luigi2CodeCommon.SexCode.CORPORATE.toString())) {
       resultList = userMapper.selectNayoseCustomerIndividualPartialMatch(param);
     }
 

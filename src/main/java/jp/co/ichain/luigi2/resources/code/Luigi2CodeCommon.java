@@ -34,4 +34,30 @@ public class Luigi2CodeCommon {
     }
   }
 
+  /**
+   * SexCode
+   * 
+   * 1:男子
+   * 2:女子
+   * 3:法人
+   * 4:その他
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-12
+   * @updatedAt : 2021-08-12
+   */
+  public enum SexCode {
+    MAN("1"), WOMAN("2"), CORPORATE("3"), ETC("4");
+
+    String val;
+
+    SexCode(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }
