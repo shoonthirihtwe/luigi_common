@@ -24,6 +24,7 @@ import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.PaymentResult
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.BatchStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRoute;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodePremium.PremiumStatus;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
@@ -278,10 +279,11 @@ public class CommonBatchService {
    */
   public void createPremiumHeaderData(ContractPremiumHeader contractPremiumHeader,
       String createdBy) {
-
+    //データ準備
     PremiumHeadersVo premiumHeader = convertToPremiumHeadersVo(contractPremiumHeader, createdBy);
     Map<String, Object> paramPremiumHeader = new HashMap<>();
     paramPremiumHeader.put("premiumHeader", premiumHeader);
+    //データ追加
     mapper.insertPremiumHeader(paramPremiumHeader);
   }
 
@@ -337,6 +339,7 @@ public class CommonBatchService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
         String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
         paramBillingHeaded.put("billingPeriod", billingPeriod);
+        paramBillingHeaded.put("tenantId", contractBillingVo.getTenantId());
         // 請求テーブルの請求月
         billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
       }
@@ -367,6 +370,7 @@ public class CommonBatchService {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
         String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
         paramBillingHeaded.put("billingPeriod", billingPeriod);
+        paramBillingHeaded.put("tenantId", contractBillingVo.getTenantId());
         // 請求テーブルの請求月
         billHeaderNo = mapper.selectBillingHeaderNo(paramBillingHeaded);
       }
@@ -491,12 +495,12 @@ public class CommonBatchService {
     premiumHeader.setTotalGrossPremium(contractPremiumHeader.getTotalPremium());
 
     // ステータス（premium_status）＝ 固定値：P（Pending）を設定
-    premiumHeader.setPremiumStatus("P");
+    premiumHeader.setPremiumStatus(PremiumStatus.PENDING.toString());
 
     // 同一証券番号のmax(保険料.保険料連番)+1
     Map<String, Object> paramMaxPremiumSequenNo = new HashMap<>();
     paramMaxPremiumSequenNo.put("contractNo", contractPremiumHeader.getContractNo());
-
+    paramMaxPremiumSequenNo.put("tenantId", contractPremiumHeader.getTenantId());
     PremiumHeadersVo maxPremiumSequenNo = mapper.getMaxPremiumSequenceNo(paramMaxPremiumSequenNo);
     // 保険料連番（premium_headers）.premium_sequence_no 保険料 = 保険料連番 premium_sequence_no
     // 同一証券番号のmax(保険料.保険料連番)+1
@@ -506,6 +510,7 @@ public class CommonBatchService {
     // 同一証券番号のmax(保険料.保険料連番)の行から取得した（保険料収納月+12/保険料払込回数）の年月
     // 1件目は契約日と同じ。また払込回数=00はBD-008の対象外。
     Integer frequency = Integer.parseInt(contractPremiumHeader.getFrequency());
+
     if (maxPremiumSequenNo.getPremiumSequenceNo() > 1 && frequency != 0) {
       String premiumBillingPeriod = DateTimeUtils
           .addMonthToYearMonth(maxPremiumSequenNo.getPremiumBillingPeriod(), 12 / frequency);
@@ -518,8 +523,8 @@ public class CommonBatchService {
           DateTimeUtils.addDayToYearMonth(premiumBillingPeriod, Integer.parseInt(premiumDueDate)));
     }
 
-    // 保険料払込回数 = 保険料払込回数.frequency
-    premiumHeader.setFrequency(null);
+    // frequency = 契約（contracts）の保険料払込回数(frequency)
+    premiumHeader.setFrequency(Integer.valueOf(contractPremiumHeader.getFrequency()));
     // 返金日（refunded_date）＝ 属性初期値
     premiumHeader.setRefundeDate(null);
     // 取消日（canceled_date）＝ 属性初期値
