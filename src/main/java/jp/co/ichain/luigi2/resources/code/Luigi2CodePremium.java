@@ -13,13 +13,14 @@ public class Luigi2CodePremium {
    * PremiumStatus
    * 
    * M:マッチ
+   * P:保留中
    * 
    * @author : [VJP] HoangNH
    * @createdAt : 2021-08-30
    * @updatedAt : 2021-08-30
    */
   public enum PremiumStatus {
-    MATCHED("M");
+    MATCHED("M"), PENDING("P");
 
     String val;
 

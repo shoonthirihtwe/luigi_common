@@ -13,6 +13,7 @@
 		WHERE 
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
+			and tenant_id = #{tenantId}
 	</select>
 	<select id="selectBillingHeaderNo"  resultType="Integer" parameterType="hashmap">
 		SELECT 
@@ -218,6 +219,7 @@
 			premium_billing_period
 		FROM premium_headers
 		WHERE contract_no = #{contractNo}
+		AND tenant_id = #{tenantId}
 		GROUP BY premium_billing_period
     </select>
     <insert id="insertPremiumHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
