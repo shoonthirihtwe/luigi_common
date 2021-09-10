@@ -36,13 +36,14 @@ public class Luigi2CodeDepositHeaders {
    * ステータス
    * 
    * A:入力完了：マッチング待ち
+   * P:PROCESSED
    * 
    * @author : [VJP] タン
    * @createdAt : 2021-08-27
    * @updatedAt : 2021-08-27
    */
   public enum BatchStatus {
-    WAITING("A");
+    WAITING("A"),PROCESSED("P");
 
     String val;
 
