@@ -62,7 +62,9 @@ public class CsvUtils {
     List<Map<String, Object>> csvMapList = new ArrayList<Map<String, Object>>();
     for (int i = 1; i < size; i++) {
       val lines = csvLineList.get(i);
-
+      if(lines.length != headers.length) {
+        continue;
+      }
       Map<String, Object> map = new HashMap<String, Object>();
       for (int j = 0; j < headers.length; j++) {
         map.put(headers[j], lines[j]);
@@ -105,6 +107,7 @@ public class CsvUtils {
         }
         csvWriter.writeNext(lines);
       }
+
     }
     return result;
   }
