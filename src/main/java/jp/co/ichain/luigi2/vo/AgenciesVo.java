@@ -97,22 +97,22 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 代表者名
    */
-  String rep10eNameKnjSei;
+  String repNameKnjSei;
 
   /**
    * 代表者名
    */
-  String rep10eNameKnjMei;
+  String repNameKnjMei;
 
   /**
    * 代表者名（カナ）
    */
-  String rep10eNameKanaSei;
+  String repNameKanaSei;
 
   /**
    * 代表者名（カナ）
    */
-  String rep10eNameKanaMei;
+  String repNameKanaMei;
 
   /**
    * 代表者生年月日
@@ -207,6 +207,12 @@ public class AgenciesVo extends ObjectVo {
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date endDate;
+  
+  /**
+   * 募集停止日
+   */
+  @JsonSerialize(using = JsonDateSerializer.class)
+  Date suspendedDate;
 
   /**
    * 金融機関コード
