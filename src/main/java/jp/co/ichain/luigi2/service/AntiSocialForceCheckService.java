@@ -34,6 +34,9 @@ public class AntiSocialForceCheckService {
   @Value("${antisocial.url}")
   String antisocialUrl;
 
+  @Value("${antisocial.x-api-key}")
+  String xApiKey;
+
   private static String ANTISOCIAL_DATE = "2019-11-03";
 
   /**
@@ -69,9 +72,12 @@ public class AntiSocialForceCheckService {
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
       String address, String retrievalMethod) throws ClientProtocolException, IOException {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
-    String dateOfbirthday = dateOfBirth.format(formatter);
-
+    String dateOfbirthday = "";
+    if(birtday != null) {
+      LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
+      dateOfbirthday = dateOfBirth == null ?  "": dateOfBirth.format(formatter);
+    }
+ 
     Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
@@ -90,7 +96,7 @@ public class AntiSocialForceCheckService {
     StringEntity entity = new StringEntity(jsonStr, ContentType.APPLICATION_JSON);
     httpPost.setEntity(entity);
     httpPost.setHeader("Accept", "application/json");
-    httpPost.setHeader("x-api-key", "8FXt7noqvF7umEYS4xfb11QNgpZ8fr1g3GHtkgQt");
+    httpPost.setHeader("x-api-key", xApiKey);
     CloseableHttpResponse response = client.execute(httpPost);
     String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 
