@@ -262,4 +262,15 @@
 			#{premiumHeader.createdBy}
 			)
 	</insert>
+
+	<update id="updateBillingHeader" parameterType="BillingHeaderVo">
+		UPDATE billing_headers
+		SET 
+			billing_header_status = #{billingHeaderStatus}
+			, update_count=update_count+1
+			, updated_by=#{updatedBy}
+		WHERE id =#{id} 
+	</update>
+	
+	
 </mapper>

@@ -19,6 +19,7 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders.BillingHeaderStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.CashDetailStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.PaymentResultCode;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders;
@@ -239,6 +240,13 @@ public class CommonBatchService {
         // 作成した入金詳細の「入金金額」を合算して設定
         batchTotalAmount += validGmo ? premiumDueAmount : 0;
       }
+
+      BillingHeaderVo billingHeaderVo = new BillingHeaderVo();
+      billingHeaderVo.setBillingHeaderStatus(BillingHeaderStatus.BILLED.toString());
+      billingHeaderVo.setUpdatedBy(createdBy);
+      billingHeaderVo.setId(String.valueOf(billingDetail.getBillingHeaderId()));
+      
+      mapper.updateBillingHeader(billingHeaderVo);
     }
 
     if (billingDetails != null && billingDetails.size() > 0) {
@@ -405,7 +413,7 @@ public class CommonBatchService {
     billingHeaderVo.setBillngHeaderNo(billingHeaderNo);
     // 請求ヘッダー状態コード = B(Billed)を設定
     billingHeaderVo
-        .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.BILLED.toString());
+        .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.DATA_CREATED.toString());
     // 団体コード = 属性初期値
     billingHeaderVo.setGroupCode(null);
     // 収納代行会社コード = 収納代行会社コード
