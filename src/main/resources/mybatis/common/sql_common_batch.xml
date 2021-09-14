@@ -220,7 +220,6 @@
 		FROM premium_headers
 		WHERE contract_no = #{contractNo}
 		AND tenant_id = #{tenantId}
-		GROUP BY premium_billing_period
     </select>
     <insert id="insertPremiumHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO premium_headers
