@@ -38,7 +38,7 @@ public class ControllerUtils {
 
   @Autowired
   TenantResources tenantResources;
-  
+
   @Value("${external.api.flag}")
   Boolean isExternalApi;
 
@@ -220,9 +220,9 @@ public class ControllerUtils {
     if (curUser != null) {
       tenantVo = tenantResources.get(curUser.getTenantId());
       paramMap.put("tenantId", tenantVo.getId());
-      if(isExternalApi) {
-        paramMap.put("updatedBy", endpoint); 
-      }else {
+      if (isExternalApi) {
+        paramMap.put("updatedBy", endpoint);
+      } else {
         paramMap.put("updatedBy", curUser.getId());
       }
       paramMap.put("onlineDate", tenantVo.getOnlineDate());
