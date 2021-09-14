@@ -62,7 +62,7 @@ public class CsvUtils {
     List<Map<String, Object>> csvMapList = new ArrayList<Map<String, Object>>();
     for (int i = 1; i < size; i++) {
       val lines = csvLineList.get(i);
-      if(lines.length != headers.length) {
+      if (lines.length != headers.length) {
         continue;
       }
       Map<String, Object> map = new HashMap<String, Object>();
