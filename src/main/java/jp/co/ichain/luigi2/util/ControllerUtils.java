@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class ControllerUtils {
 
   @Autowired
   TenantResources tenantResources;
+  
+  @Value("${external.api.flag}")
+  Boolean isExternalApi;
 
   /**
    * Controller Function
@@ -216,7 +220,11 @@ public class ControllerUtils {
     if (curUser != null) {
       tenantVo = tenantResources.get(curUser.getTenantId());
       paramMap.put("tenantId", tenantVo.getId());
-      paramMap.put("updatedBy", curUser.getId());
+      if(isExternalApi) {
+        paramMap.put("updatedBy", endpoint); 
+      }else {
+        paramMap.put("updatedBy", curUser.getId());
+      }
       paramMap.put("onlineDate", tenantVo.getOnlineDate());
     } else {
       String domain = request.getHeader("x-frontend-domain");
