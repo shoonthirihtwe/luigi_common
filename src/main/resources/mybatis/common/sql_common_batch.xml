@@ -25,6 +25,7 @@
 		WHERE 
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
+			and tenant_id = #{tenantId}
 	</select>
 	<insert id="insertBillingHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO billing_headers

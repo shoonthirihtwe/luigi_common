@@ -245,7 +245,7 @@ public class CommonBatchService {
       billingHeaderVo.setBillingHeaderStatus(BillingHeaderStatus.BILLED.toString());
       billingHeaderVo.setUpdatedBy(createdBy);
       billingHeaderVo.setId(String.valueOf(billingDetail.getBillingHeaderId()));
-      
+
       mapper.updateBillingHeader(billingHeaderVo);
     }
 
@@ -280,18 +280,20 @@ public class CommonBatchService {
   /**
    * 保険料請求情報に関わるテーブルを作成
    * 
-   * @author : [AOT] g.kim
+   * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    * @return
    */
   public void createPremiumHeaderData(ContractPremiumHeader contractPremiumHeader,
-      String createdBy) {
-    //データ準備
-    PremiumHeadersVo premiumHeader = convertToPremiumHeadersVo(contractPremiumHeader, createdBy);
+      boolean isFirstPremium, String createdBy) {
+    // データ準備
+    PremiumHeadersVo premiumHeader =
+        convertToPremiumHeadersVo(contractPremiumHeader, isFirstPremium, createdBy);
+
     Map<String, Object> paramPremiumHeader = new HashMap<>();
     paramPremiumHeader.put("premiumHeader", premiumHeader);
-    //データ追加
+    // データ追加
     mapper.insertPremiumHeader(paramPremiumHeader);
   }
 
@@ -314,6 +316,7 @@ public class CommonBatchService {
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
       String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
       paramBillingHeaded.put("billingPeriod", billingPeriod);
+      paramBillingHeaded.put("tenantId", contractBillingVo.getTenantId());
       // 請求テーブルの請求月
       billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
     }
@@ -412,8 +415,8 @@ public class CommonBatchService {
     // 連番
     billingHeaderVo.setBillngHeaderNo(billingHeaderNo);
     // 請求ヘッダー状態コード = B(Billed)を設定
-    billingHeaderVo
-        .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.DATA_CREATED.toString());
+    billingHeaderVo.setBillingHeaderStatus(
+        Luigi2CodeBillingHeaders.BillingHeaderStatus.DATA_CREATED.toString());
     // 団体コード = 属性初期値
     billingHeaderVo.setGroupCode(null);
     // 収納代行会社コード = 収納代行会社コード
@@ -487,7 +490,7 @@ public class CommonBatchService {
   }
 
   private PremiumHeadersVo convertToPremiumHeadersVo(ContractPremiumHeader contractPremiumHeader,
-      String createdBy) {
+      boolean isFirstPremium, String createdBy) {
     PremiumHeadersVo premiumHeader = new PremiumHeadersVo();
     // tenantId
     premiumHeader.setTenantId(contractPremiumHeader.getTenantId());
@@ -495,8 +498,13 @@ public class CommonBatchService {
     premiumHeader.setContractNo(contractPremiumHeader.getContractNo());
     // 証券番号枝番 = 契約（contracts）.証券番号枝番
     premiumHeader.setContractBranchNo(contractPremiumHeader.getContractBranchNo());
-    // 初回保険料フラグ(first_premium) = 属性初期値
-    premiumHeader.setFirstPremium("0");
+
+    if (isFirstPremium) {
+      premiumHeader.setFirstPremium("1");
+    } else {
+      // 初回保険料フラグ(first_premium) = 属性初期値
+      premiumHeader.setFirstPremium("0");
+    }
     // 異動日（effective_date）＝ 属性初期値
     premiumHeader.setEffectiveDate(null);
     // グロス保険料 total_gross_premium = 契約（contracts）. 合計保険料(total_premium)
@@ -509,6 +517,7 @@ public class CommonBatchService {
     Map<String, Object> paramMaxPremiumSequenNo = new HashMap<>();
     paramMaxPremiumSequenNo.put("contractNo", contractPremiumHeader.getContractNo());
     paramMaxPremiumSequenNo.put("tenantId", contractPremiumHeader.getTenantId());
+
     PremiumHeadersVo maxPremiumSequenNo = mapper.getMaxPremiumSequenceNo(paramMaxPremiumSequenNo);
     // 保険料連番（premium_headers）.premium_sequence_no 保険料 = 保険料連番 premium_sequence_no
     // 同一証券番号のmax(保険料.保険料連番)+1
@@ -529,6 +538,10 @@ public class CommonBatchService {
 
       premiumHeader.setPremiumDueDate(
           DateTimeUtils.addDayToYearMonth(premiumBillingPeriod, Integer.parseInt(premiumDueDate)));
+    } else {
+      premiumHeader.setPremiumBillingPeriod(
+          DateTimeUtils.convertDateToYearMonth(contractPremiumHeader.getIssueDate()));
+      premiumHeader.setPremiumDueDate(contractPremiumHeader.getIssueDate());
     }
 
     // frequency = 契約（contracts）の保険料払込回数(frequency)
