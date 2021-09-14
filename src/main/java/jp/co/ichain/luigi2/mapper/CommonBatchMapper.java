@@ -118,6 +118,17 @@ public interface CommonBatchMapper {
    * @param param
    * @return
    */
-  int selectBatchNo(Date batchDate);
+ int selectBatchNo(Date batchDate);
+ 
+ 
+ /**
+  * 請求テーブルの請求ヘッダー状態コード変更
+   * 
+   * @author : [VJP] n.h.hoang
+   * @createdAt : 2021-09-13
+   * @updatedAt : 2021-09-13
+  * @param billingHeader
+  */
+ void updateBillingHeader(BillingHeaderVo billingHeaderVo);
 
 }
