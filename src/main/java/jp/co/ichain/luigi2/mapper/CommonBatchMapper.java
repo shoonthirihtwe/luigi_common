@@ -31,7 +31,7 @@ public interface CommonBatchMapper {
    * @return
    */
   int selectMaxBillingHeaderNo(Map<String, Object> param);
-  
+
   /**
    * 請求billing_headerのBillingHeaderNoの値取得
    * 
@@ -118,17 +118,17 @@ public interface CommonBatchMapper {
    * @param param
    * @return
    */
- int selectBatchNo(Date batchDate);
- 
- 
- /**
-  * 請求テーブルの請求ヘッダー状態コード変更
+  int selectBatchNo(Date batchDate);
+
+
+  /**
+   * 請求テーブルの請求ヘッダー状態コード変更
    * 
    * @author : [VJP] n.h.hoang
    * @createdAt : 2021-09-13
    * @updatedAt : 2021-09-13
-  * @param billingHeader
-  */
- void updateBillingHeader(BillingHeaderVo billingHeaderVo);
+   * @param billingHeader
+   */
+  void updateBillingHeader(BillingHeaderVo billingHeaderVo);
 
 }
