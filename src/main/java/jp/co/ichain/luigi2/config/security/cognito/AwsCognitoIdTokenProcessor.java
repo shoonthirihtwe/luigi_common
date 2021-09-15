@@ -66,23 +66,32 @@ public class AwsCognitoIdTokenProcessor {
       authorities = authService.getAdminAuth(userVo);
     }
 
-    String domain = request.getHeader("x-frontend-domain");
-
     TenantsVo tenantsVo = null;
-    if (domain.indexOf(":") == -1) {
-      tenantsVo = tenantResources.get(domain);
-    } else {
-      tenantsVo = tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]);
-    }
 
     // 外部APIの場合、Cognito認証をSkip
     if (isExternalApi) {
+      tenantsVo = authService.getExternalApiTenants(request.getHeader("x-api-key"));
+      if (tenantsVo == null) {
+        return null;
+      }
       userVo = new UsersVo();
       userVo.setTenantId(tenantsVo.getId());
       userVo.setId(1);
       userVo.setLastLoginAt(tenantsVo.getOnlineDate());
       authorities = authService.getAdminAuth(userVo);
     } else {
+      String domain = request.getHeader("x-frontend-domain");
+
+      if (domain == null) {
+        return null;
+      }
+
+      if (domain.indexOf(":") == -1) {
+        tenantsVo = tenantResources.get(domain);
+      } else {
+        tenantsVo = tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]);
+      }
+
       String idToken = request.getHeader(this.jwtConfiguration.getHttpHeader());
       if (idToken != null) {
         String bearerToken = this.getBearerToken(idToken);
@@ -105,7 +114,6 @@ public class AwsCognitoIdTokenProcessor {
         }
       }
     }
-
 
     if (authorities != null) {
       List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
