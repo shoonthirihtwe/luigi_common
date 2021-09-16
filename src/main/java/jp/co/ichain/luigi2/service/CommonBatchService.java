@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ import jp.co.ichain.luigi2.vo.ContractBillingVo;
 import jp.co.ichain.luigi2.vo.ContractPremiumHeader;
 import jp.co.ichain.luigi2.vo.DepositDetailsVo;
 import jp.co.ichain.luigi2.vo.DepositHeadersVo;
+import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
@@ -145,7 +147,7 @@ public class CommonBatchService {
 
       // GMO決済サービス
       PaymentVo paymentVo = new PaymentVo();
-      String errMessage = ""; // エラーメッセージ
+      String errInfo = ""; // エラー情報
       String accessId = ""; // 取引ID
       String accessPass = ""; // 取引パスワード
       try {
@@ -158,7 +160,11 @@ public class CommonBatchService {
         }
       } catch (GmoPaymentException e) {
         validGmo = false;
-        errMessage = e.getMessage();
+        Map<String, PaymentErrorVo> errorMap = new HashMap<String, PaymentErrorVo>();
+        errorMap = e.getGmoPaymentVo().getErrorMap();
+        for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
+          errInfo = pay.getValue().getErrInfo();
+        }
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
@@ -193,7 +199,7 @@ public class CommonBatchService {
           depositDetailsVo.setPaymentResultCode(PaymentResultCode.SUCCESS.toString()); // 決済OK（エラーなし）
         } else {
           // GMOエラー詳細コードチェック
-          switch (errMessage) {
+          switch (errInfo) {
             case "42G120000":
             case "42G220000":
             case "42G300000":

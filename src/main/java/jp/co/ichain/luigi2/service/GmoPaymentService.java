@@ -43,19 +43,27 @@ class GmoPaymentService {
   @Value("${gmo.shop-pass}")
   private String shopPass;
 
+  @Value("${gmo.entry.tran}")
+  private String entryTran;
+
+  @Value("${gmo.exec.tran}")
+  private String execTran;
+
+  @Value("${gmo.search.card}")
+  private String searchCard;
+
+  @Value("${gmo.regist.member}")
+  private String registMember;
+
+  @Value("${gmo.regist.card}")
+  private String registCard;
+
+  @Value("${gmo.alter.tran}")
+  private String alterTran;
+
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyyyMMddHHmm");
 
-  @SuppressWarnings("serial")
-  private static Map<String, String> API_URL_MAP = new HashMap<String, String>() {
-    {
-      put("EntryTran", "https://pt01.mul-pay.jp/payment/EntryTran.idPass");
-      put("ExecTran", "https://pt01.mul-pay.jp/payment/ExecTran.idPass");
-      put("SearchCard", "https://pt01.mul-pay.jp/payment/SearchCard.idPass");
-      put("RegistMember", "https://pt01.mul-pay.jp/payment/SaveMember.idPass");
-      put("RegistCard", "https://pt01.mul-pay.jp/payment/SaveCard.idPass");
-      put("AlterTran", "https://pt01.mul-pay.jp/payment/AlterTran.idPass");
-    }
-  };
+  private Map<String, String> API_URL_MAP = new HashMap<String, String>();
 
   @SuppressWarnings("serial")
   private static Map<String, String> ERROR_MAP = new HashMap<String, String>() {
@@ -84,6 +92,25 @@ class GmoPaymentService {
   };
 
   /**
+   * API_URL_MAPを設定
+   * 
+   * @author : [VJP] タン
+   * @createdAt : 2021-09-15
+   * @updatedAt : 2021-09-15
+   * @param
+   * @return
+   * @throws
+   */
+  void setApiUrlMap() {
+    API_URL_MAP.put("EntryTran", entryTran);
+    API_URL_MAP.put("ExecTran", execTran);
+    API_URL_MAP.put("SearchCard", searchCard);
+    API_URL_MAP.put("RegistMember", registMember);
+    API_URL_MAP.put("RegistCard", registCard);
+    API_URL_MAP.put("AlterTran", alterTran);
+  }
+
+  /**
    * 決済実行
    * 
    * @author : [AOT] s.paku
@@ -103,6 +130,8 @@ class GmoPaymentService {
   PaymentVo pay(String contractNo, String cardCustNumber, String dueDate, Integer premiumDueAmount)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
+    // API_URL_MAPを設定
+    setApiUrlMap();
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
@@ -112,8 +141,7 @@ class GmoPaymentService {
      * 証券番号billing_details.contract_no + 決済処理日(システム日付yymmdd) + システム時刻(hhmm) +
      * 充当月billing_details.due_date(yyyymm) を設定
      */
-    gmoPaymentVo
-        .setOrderID(contractNo + systemDateForamt.format(now) + dueDate);
+    gmoPaymentVo.setOrderID(contractNo + systemDateForamt.format(now) + dueDate);
 
     // 保険料請求額billing_details.premium_due_amountを設定する
     gmoPaymentVo.setAmount((long) premiumDueAmount);
@@ -156,6 +184,8 @@ class GmoPaymentService {
   PaymentVo cancel(String accessId, String accessPassword, Date suspenceDate)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
+    // API_URL_MAPを設定
+    setApiUrlMap();
     // 取引IDセット
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     gmoPaymentVo.setAccessID(accessId);
