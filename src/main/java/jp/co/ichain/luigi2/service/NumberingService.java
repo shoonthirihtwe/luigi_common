@@ -45,13 +45,18 @@ public class NumberingService {
     for (val tenant : tenantResources.getAll()) {
       val tenantId = tenant.getId();
       if (numberingMapper.selectIncrementNumber(Luigi2TableInfo.getLockTable(TableInfo.Contracts),
-          tenantId) == null) {
+          tenantId).equals("0")) {
         numberingMapper.insertNo(Luigi2TableInfo.getLockTable(TableInfo.Contracts), tenantId, null,
             "cachingAI");
       }
       if (numberingMapper.selectIncrementNumber(
-          Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests), tenantId) == null) {
+          Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests), tenantId).equals("0")) {
         numberingMapper.insertNo(Luigi2TableInfo.getLockTable(TableInfo.MaintenanceRequests),
+            tenantId, null, "cachingAI");
+      }
+      if (numberingMapper.selectIncrementNumber(
+          Luigi2TableInfo.getLockTable(TableInfo.ClaimTrxsId), tenantId).equals("0")) {
+        numberingMapper.insertNo(Luigi2TableInfo.getLockTable(TableInfo.ClaimTrxsId),
             tenantId, null, "cachingAI");
       }
     }
