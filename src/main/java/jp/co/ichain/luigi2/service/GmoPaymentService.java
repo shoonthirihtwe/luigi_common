@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
@@ -92,7 +93,7 @@ class GmoPaymentService {
   };
 
   /**
-   * API_URL_MAPを設定
+   * API_URL_MAPを初期化
    * 
    * @author : [VJP] タン
    * @createdAt : 2021-09-15
@@ -101,7 +102,8 @@ class GmoPaymentService {
    * @return
    * @throws
    */
-  void setApiUrlMap() {
+  @PostConstruct
+  void initApiUrlMap() {
     API_URL_MAP.put("EntryTran", entryTran);
     API_URL_MAP.put("ExecTran", execTran);
     API_URL_MAP.put("SearchCard", searchCard);
@@ -130,8 +132,6 @@ class GmoPaymentService {
   PaymentVo pay(String contractNo, String cardCustNumber, String dueDate, Integer premiumDueAmount)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
-    // API_URL_MAPを設定
-    setApiUrlMap();
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
@@ -184,8 +184,6 @@ class GmoPaymentService {
   PaymentVo cancel(String accessId, String accessPassword, Date suspenceDate)
       throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
       ParseException {
-    // API_URL_MAPを設定
-    setApiUrlMap();
     // 取引IDセット
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     gmoPaymentVo.setAccessID(accessId);
