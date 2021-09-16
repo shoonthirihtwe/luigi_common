@@ -70,7 +70,6 @@ public class AntiSocialForceCheckService {
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
       String address, String retrievalMethod) throws ClientProtocolException, IOException {
-    Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
@@ -83,7 +82,7 @@ public class AntiSocialForceCheckService {
       String dateOfbirthday = dateOfBirth.format(formatter);
       inputMap.put("DOB", dateOfbirthday);
     }
-
+    Gson gsonObj = new Gson();
     // convert map to JSON String
     String jsonStr = gsonObj.toJson(inputMap);
 
