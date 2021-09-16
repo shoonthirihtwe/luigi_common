@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeAntiSocialForceCheck.RetrievalMethod;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.AntiSocialForceCheckVo;
 
@@ -52,7 +53,8 @@ public class AntiSocialForceCheckService {
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
       String address) throws ClientProtocolException, IOException {
-    return this.antisocialCheck(tenantsId, name, birtday, address, "0");
+    return this.antisocialCheck(tenantsId, name, birtday, address,
+        RetrievalMethod.ACCORD_ALL.toString());
   }
 
   /**
