@@ -103,9 +103,6 @@ public class AuthService {
    * @return
    */
   public TenantsVo getExternalApiTenants(String apiKey) {
-    //TODO:テナント情報取得 by g.kim
-    
-
-    return null;
+    return userMapper.getExternalApiTenant(apiKey);
   }
 }
