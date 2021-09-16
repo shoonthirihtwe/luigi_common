@@ -79,8 +79,8 @@ public class AwsS3Dao {
     if (isDebugMode == false) {
       scanFile(f);
     }
-
-    return s3Client.putObject(bucketName, tenantId + "/" + url, new ByteArrayInputStream(f), meta);
+    
+    return s3Client.putObject("ichaininc-luigi2-dev-pims-storage", tenantId + "/" + url, new ByteArrayInputStream(f), meta);
   }
 
   /**
