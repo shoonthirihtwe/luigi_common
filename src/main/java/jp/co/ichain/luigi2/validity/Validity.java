@@ -273,7 +273,7 @@ public class Validity {
 
       // codeMaster
       if (validiateCodeMaster(tenantId, validityVo.getCodeMaster(), data) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0009, key));
       }
 
       // fixed
