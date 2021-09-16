@@ -63,7 +63,7 @@ class GmoPaymentService {
 
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyyyMMddHHmm");
 
-  private Map<String, String> API_URL_MAP = new HashMap<String, String>();
+  private static Map<String, String> API_URL_MAP = new HashMap<String, String>();
 
   @SuppressWarnings("serial")
   private static Map<String, String> ERROR_MAP = new HashMap<String, String>() {
