@@ -83,4 +83,13 @@
 			AND tenant_id=#{tenantId}
 		ORDER BY updated_at DESC
 	</select>
+	<select id="getExternalApiTenant"  resultType="TenantsVo" parameterType="String">
+		SELECT
+			*
+		FROM
+			tenants
+		WHERE 
+			api_key=#{apiKey}
+		LIMIT 1
+	</select>
 </mapper>
