@@ -73,6 +73,15 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
   Date expirationDate;
 
   /**
+   * 保険者の法人/個人区分
+   */
+  String corporateIndividualFlag;
+
+  /**
+   * 被保険者の法人/個人区分
+   */
+  String insCorporateIndividualFlag;
+  /**
    * 販売プランコード
    */
   String salesPlanCode;
