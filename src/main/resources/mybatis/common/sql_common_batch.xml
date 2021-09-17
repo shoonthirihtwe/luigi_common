@@ -223,7 +223,7 @@
 		WHERE
 		    contract_no = #{contractNo}
 		    AND contract_branch_no = #{contractBranchNo}
-			AND tenant_id = 1
+			AND tenant_id = #{tenantId}
 			AND premium_sequence_no = (
 				SELECT 
 		            CASE
