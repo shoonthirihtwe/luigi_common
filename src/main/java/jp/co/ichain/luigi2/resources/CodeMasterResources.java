@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -100,6 +101,32 @@ public class CodeMasterResources {
     }
 
     return this.map.get(tenantId).get(key);
+  }
+
+  /**
+   * コード名取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-09-17
+   * @updatedAt : 2021-09-17
+   * @param tenantId
+   * @param key
+   * @param codeValue
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public String getName(Integer tenantId, String key, String codeValue)
+      throws JsonMappingException, JsonProcessingException {
+    if (this.map == null) {
+      this.initialize();
+    }
+    val list = this.map.get(tenantId).get(key);
+    if (list != null && codeValue != null) {
+      return list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
+          .collect(Collectors.reducing((a, b) -> null)).get().getCodeName();
+    }
+    return null;
   }
 
   /**
