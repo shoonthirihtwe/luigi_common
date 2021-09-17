@@ -523,6 +523,7 @@ public class CommonBatchService {
     Map<String, Object> paramMaxPremiumSequenNo = new HashMap<>();
     paramMaxPremiumSequenNo.put("contractNo", contractPremiumHeader.getContractNo());
     paramMaxPremiumSequenNo.put("tenantId", contractPremiumHeader.getTenantId());
+    paramMaxPremiumSequenNo.put("contractBranchNo", contractPremiumHeader.getContractBranchNo());
 
     PremiumHeadersVo maxPremiumSequenNo = mapper.getMaxPremiumSequenceNo(paramMaxPremiumSequenNo);
     // 保険料連番（premium_headers）.premium_sequence_no 保険料 = 保険料連番 premium_sequence_no
