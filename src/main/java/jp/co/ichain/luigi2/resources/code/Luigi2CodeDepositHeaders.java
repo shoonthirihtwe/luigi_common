@@ -43,7 +43,7 @@ public class Luigi2CodeDepositHeaders {
    * @updatedAt : 2021-08-27
    */
   public enum BatchStatus {
-    WAITING("A"),PROCESSED("P");
+    WAITING("A"), PROCESSED("P");
 
     String val;
 

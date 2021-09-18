@@ -76,6 +76,36 @@
 			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
 		},
 		{
+			"name": "gmo.entry.tran",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.exec.tran",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.search.card",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.regist.member",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.regist.card",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "gmo.alter.tran",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
 			"name": "aws.credential.access.key",
 			"type": "java.lang.String",
 			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
@@ -137,6 +167,11 @@
 		},
 		{
 			"name": "clamav.port",
+			"type": "java.lang.String",
+			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "external.api.flag",
 			"type": "java.lang.String",
 			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
 		}

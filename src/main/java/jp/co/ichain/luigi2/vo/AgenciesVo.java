@@ -92,33 +92,27 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 代表電話番号
    */
-  String repTel;
+  String rep10eTel;
 
   /**
    * 代表者名
    */
-  String repNameKnjSei;
+  String rep10eNameKnjSei;
 
   /**
    * 代表者名
    */
-  String repNameKnjMei;
+  String rep10eNameKnjMei;
 
   /**
    * 代表者名（カナ）
    */
-  String repNameKanaSei;
+  String rep10eNameKanaSei;
 
   /**
    * 代表者名（カナ）
    */
-  String repNameKanaMei;
-
-  /**
-   * 代表者生年月日
-   */
-  @JsonSerialize(using = JsonDateSerializer.class)
-  Date repDateOfBirth;
+  String rep10eNameKanaMei;
 
   /**
    * 担当者名

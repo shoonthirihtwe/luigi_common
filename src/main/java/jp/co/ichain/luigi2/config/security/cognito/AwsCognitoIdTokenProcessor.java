@@ -51,6 +51,9 @@ public class AwsCognitoIdTokenProcessor {
   @Value("${env.debug.mode}")
   Boolean isDebugMode;
 
+  @Value("${external.api.flag}")
+  Boolean isExternalApi;
+
   public Authentication authenticate(HttpServletRequest request) throws Exception {
 
     List<AuthoritiesVo> authorities = null;
@@ -63,35 +66,52 @@ public class AwsCognitoIdTokenProcessor {
       authorities = authService.getAdminAuth(userVo);
     }
 
-    String idToken = request.getHeader(this.jwtConfiguration.getHttpHeader());
-    if (idToken != null) {
-      String bearerToken = this.getBearerToken(idToken);
-      if (bearerToken == null) {
+    TenantsVo tenantsVo = null;
+
+    // 外部APIの場合、Cognito認証をSkip
+    if (isExternalApi) {
+      tenantsVo = authService.getExternalApiTenants(request.getHeader("x-api-key"));
+      if (tenantsVo == null) {
+        return null;
+      }
+      userVo = new UsersVo();
+      userVo.setTenantId(tenantsVo.getId());
+      userVo.setId(1);
+      userVo.setLastLoginAt(tenantsVo.getOnlineDate());
+      authorities = authService.getAdminAuth(userVo);
+    } else {
+      String domain = request.getHeader("x-frontend-domain");
+
+      if (domain == null) {
         return null;
       }
 
-      String domain = request.getHeader("x-frontend-domain");
-
-      TenantsVo tenantsVo = null;
       if (domain.indexOf(":") == -1) {
         tenantsVo = tenantResources.get(domain);
       } else {
         tenantsVo = tenantResources.get(request.getHeader("x-frontend-domain").split(":")[0]);
       }
 
-      configurableJwtProcessor =
-          beanFactory.getBean(CognitoConfig.class).configurableJwtProcessor(tenantsVo.getId());
+      String idToken = request.getHeader(this.jwtConfiguration.getHttpHeader());
+      if (idToken != null) {
+        String bearerToken = this.getBearerToken(idToken);
+        if (bearerToken == null) {
+          return null;
+        }
+        configurableJwtProcessor =
+            beanFactory.getBean(CognitoConfig.class).configurableJwtProcessor(tenantsVo.getId());
 
-      JWTClaimsSet claims = this.configurableJwtProcessor.process(bearerToken, null);
-      validateIssuer(claims, tenantsVo.getId());
-      verifyIfIdToken(claims, tenantsVo.getId());
-      val username = getUserNameFrom(claims);
-      if (username != null) {
-        userVo = new UsersVo();
-        userVo.setSub(username);
-        userVo.setTenantId(tenantsVo.getId());
-        userVo.setLastLoginAt(tenantsVo.getOnlineDate());
-        authorities = authService.loginUser(userVo);
+        JWTClaimsSet claims = this.configurableJwtProcessor.process(bearerToken, null);
+        validateIssuer(claims, tenantsVo.getId());
+        verifyIfIdToken(claims, tenantsVo.getId());
+        val username = getUserNameFrom(claims);
+        if (username != null) {
+          userVo = new UsersVo();
+          userVo.setSub(username);
+          userVo.setTenantId(tenantsVo.getId());
+          userVo.setLastLoginAt(tenantsVo.getOnlineDate());
+          authorities = authService.loginUser(userVo);
+        }
       }
     }
 

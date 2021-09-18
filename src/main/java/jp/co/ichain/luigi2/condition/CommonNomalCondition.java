@@ -48,7 +48,7 @@ public class CommonNomalCondition {
    */
   public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList)
       throws InstantiationException, IllegalAccessException, SecurityException {
-    return ((long) data) <= tenantResources.get(tenantId).getOnlineDate().getTime();
+    return ((Long) data) >= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**
@@ -66,7 +66,7 @@ public class CommonNomalCondition {
    */
   public boolean underCurrentDate(Object data, Integer tenantId, List<Object> paramList)
       throws InstantiationException, IllegalAccessException, SecurityException {
-    return ((long) data) >= tenantResources.get(tenantId).getOnlineDate().getTime();
+    return ((Long) data) <= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**

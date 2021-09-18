@@ -17,7 +17,7 @@ public class Luigi2CodeBillingHeaders {
    * @updatedAt : 2021-08-12
    */
   public enum BillingHeaderStatus {
-    BILLED("B"), CASH_BATCH_CREATED("C"), MONEY_RECEIVED("R");
+    BILLED("B"), CASH_BATCH_CREATED("C"), DATA_CREATED("D"), MONEY_RECEIVED("R");
 
     String val;
 

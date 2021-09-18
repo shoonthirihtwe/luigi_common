@@ -11,6 +11,7 @@ import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.UserMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.AuthoritiesVo;
+import jp.co.ichain.luigi2.vo.TenantsVo;
 import jp.co.ichain.luigi2.vo.UsersVo;
 import lombok.val;
 
@@ -91,5 +92,17 @@ public class AuthService {
     val authorities = userMapper.getAdminAuth(userVo);
 
     return authorities;
+  }
+  
+  /**
+   * 外部APIのテナント情報取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-28
+   * @updatedAt : 2021-07-28
+   * @return
+   */
+  public TenantsVo getExternalApiTenants(String apiKey) {
+    return userMapper.getExternalApiTenant(apiKey);
   }
 }

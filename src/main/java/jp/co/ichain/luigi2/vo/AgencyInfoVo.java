@@ -23,13 +23,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AgencyInfoVo extends ObjectVo {
 
-  String[] generalAgentFlag;
+  String agencyCode1;
 
-  String[] agencyCode1;
+  String agentCode1;
 
-  String[] agentCode1;
-
-  String[] agentShare1;
+  String agentShare1;
+  
+  String generalAgentFlag;
 
   @JsonIgnore
   Date createdAt;

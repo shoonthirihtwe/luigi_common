@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeAntiSocialForceCheck.RetrievalMethod;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.AntiSocialForceCheckVo;
 
@@ -55,7 +56,8 @@ public class AntiSocialForceCheckService {
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
       String address) throws ClientProtocolException, IOException {
-    return this.antisocialCheck(tenantsId, name, birtday, address, "0");
+    return this.antisocialCheck(tenantsId, name, birtday, address,
+        RetrievalMethod.ACCORD_ALL.toString());
   }
 
   /**
@@ -71,22 +73,19 @@ public class AntiSocialForceCheckService {
    */
   public AntiSocialForceCheckVo antisocialCheck(Integer tenantsId, String name, Date birtday,
       String address, String retrievalMethod) throws ClientProtocolException, IOException {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    String dateOfbirthday = "";
-    if(birtday != null) {
-      LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
-      dateOfbirthday = dateOfBirth == null ?  "": dateOfBirth.format(formatter);
-    }
- 
-    Gson gsonObj = new Gson();
     Map<String, String> inputMap = new HashMap<String, String>();
     inputMap.put("InsurerCodeSeq", String.format("%012d", tenantsId));
     inputMap.put("InsurerInceptionDate", ANTISOCIAL_DATE);
     inputMap.put("RetrievalMethod", retrievalMethod);
     inputMap.put("NameKanji", name);
-    inputMap.put("DOB", dateOfbirthday);
     inputMap.put("Address", address);
-
+    if (birtday != null) {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      LocalDate dateOfBirth = DateTimeUtils.convertDateToLocalDate(birtday);
+      String dateOfbirthday = dateOfBirth.format(formatter);
+      inputMap.put("DOB", dateOfbirthday);
+    }
+    Gson gsonObj = new Gson();
     // convert map to JSON String
     String jsonStr = gsonObj.toJson(inputMap);
 

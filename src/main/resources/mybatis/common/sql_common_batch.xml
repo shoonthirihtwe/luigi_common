@@ -25,6 +25,7 @@
 		WHERE 
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
+			and tenant_id = #{tenantId}
 	</select>
 	<insert id="insertBillingHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO billing_headers
@@ -211,16 +212,30 @@
 		)
 	</insert>
 	<select id="getMaxPremiumSequenceNo"  resultType="PremiumHeadersVo" parameterType="hashmap">
-    	SELECT
-			case 
-				when MAX(premium_sequence_no)  is not null then MAX(premium_sequence_no) + 1
-				ELSE 1
-            END as premium_sequence_no,
-			premium_billing_period
-		FROM premium_headers
-		WHERE contract_no = #{contractNo}
-		AND tenant_id = #{tenantId}
-		GROUP BY premium_billing_period
+		SELECT 
+			CASE
+				WHEN premium_sequence_no IS NOT NULL THEN premium_sequence_no + 1
+		    ELSE 1
+		    END AS premium_sequence_no,
+		    premium_billing_period
+		FROM
+		    premium_headers
+		WHERE
+		    contract_no = #{contractNo}
+		    AND contract_branch_no = #{contractBranchNo}
+			AND tenant_id = #{tenantId}
+			AND premium_sequence_no = (
+				SELECT 
+		            CASE
+		                    WHEN MAX(premium_sequence_no) IS NOT NULL THEN MAX(premium_sequence_no)
+		                    ELSE NULL
+		                END AS premium_sequence_no
+		        FROM
+		            premium_headers
+		        WHERE
+		            contract_no = #{contractNo}
+		            AND contract_branch_no = #{contractBranchNo}
+		                AND tenant_id = #{tenantId})
     </select>
     <insert id="insertPremiumHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO premium_headers
@@ -262,4 +277,12 @@
 			#{premiumHeader.createdBy}
 			)
 	</insert>
+	<update id="updateBillingHeader" parameterType="BillingHeaderVo">
+		UPDATE billing_headers
+		SET 
+			billing_header_status = #{billingHeaderStatus}
+			, update_count=update_count+1
+			, updated_by=#{updatedBy}
+		WHERE id =#{id} 
+	</update>
 </mapper>

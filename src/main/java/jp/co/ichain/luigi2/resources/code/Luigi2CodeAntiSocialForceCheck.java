@@ -35,4 +35,28 @@ public class Luigi2CodeAntiSocialForceCheck {
       return this.val;
     }
   }
+  
+  /**
+   * 検索方法
+   * 0: 完全一致
+   * 1: 漢字氏名一致
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-09-15
+   * @updatedAt : 2021-09-15
+   */
+  public enum RetrievalMethod {
+    ACCORD_ALL("0"), ACCORD_NAME("1");
+
+    String val;
+
+    RetrievalMethod(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }

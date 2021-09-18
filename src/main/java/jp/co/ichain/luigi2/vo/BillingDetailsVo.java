@@ -23,6 +23,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillingDetailsVo extends ObjectVo {
+  
+  /**
+   * Billing Header ID
+   */
+  int billingHeaderId;
+  
   /**
    * 証券番号
    */

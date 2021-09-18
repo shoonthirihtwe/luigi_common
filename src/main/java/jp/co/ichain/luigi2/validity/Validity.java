@@ -273,7 +273,7 @@ public class Validity {
 
       // codeMaster
       if (validiateCodeMaster(tenantId, validityVo.getCodeMaster(), data) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0009, key));
       }
 
       // fixed
@@ -353,7 +353,12 @@ public class Validity {
             }
           }
         } catch (Exception e) {
-          exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+          val errArgs = (List<Object>) argsMap.get("errArgs");
+          if (errArgs != null && errArgs.size() > 0) {
+            exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs));
+          } else {
+            exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+          }
         }
       }
     }

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders.BillingHeaderStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.CashDetailStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.PaymentResultCode;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders;
@@ -34,6 +36,7 @@ import jp.co.ichain.luigi2.vo.ContractBillingVo;
 import jp.co.ichain.luigi2.vo.ContractPremiumHeader;
 import jp.co.ichain.luigi2.vo.DepositDetailsVo;
 import jp.co.ichain.luigi2.vo.DepositHeadersVo;
+import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
@@ -144,7 +147,7 @@ public class CommonBatchService {
 
       // GMO決済サービス
       PaymentVo paymentVo = new PaymentVo();
-      String errMessage = ""; // エラーメッセージ
+      String errInfo = ""; // エラー情報
       String accessId = ""; // 取引ID
       String accessPass = ""; // 取引パスワード
       try {
@@ -157,7 +160,11 @@ public class CommonBatchService {
         }
       } catch (GmoPaymentException e) {
         validGmo = false;
-        errMessage = e.getMessage();
+        Map<String, PaymentErrorVo> errorMap = new HashMap<String, PaymentErrorVo>();
+        errorMap = e.getGmoPaymentVo().getErrorMap();
+        for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
+          errInfo = pay.getValue().getErrInfo();
+        }
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
@@ -192,7 +199,7 @@ public class CommonBatchService {
           depositDetailsVo.setPaymentResultCode(PaymentResultCode.SUCCESS.toString()); // 決済OK（エラーなし）
         } else {
           // GMOエラー詳細コードチェック
-          switch (errMessage) {
+          switch (errInfo) {
             case "42G120000":
             case "42G220000":
             case "42G300000":
@@ -239,6 +246,13 @@ public class CommonBatchService {
         // 作成した入金詳細の「入金金額」を合算して設定
         batchTotalAmount += validGmo ? premiumDueAmount : 0;
       }
+
+      BillingHeaderVo billingHeaderVo = new BillingHeaderVo();
+      billingHeaderVo.setBillingHeaderStatus(BillingHeaderStatus.BILLED.toString());
+      billingHeaderVo.setUpdatedBy(createdBy);
+      billingHeaderVo.setId(String.valueOf(billingDetail.getBillingHeaderId()));
+
+      mapper.updateBillingHeader(billingHeaderVo);
     }
 
     if (billingDetails != null && billingDetails.size() > 0) {
@@ -272,18 +286,20 @@ public class CommonBatchService {
   /**
    * 保険料請求情報に関わるテーブルを作成
    * 
-   * @author : [AOT] g.kim
+   * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
    * @return
    */
   public void createPremiumHeaderData(ContractPremiumHeader contractPremiumHeader,
-      String createdBy) {
-    //データ準備
-    PremiumHeadersVo premiumHeader = convertToPremiumHeadersVo(contractPremiumHeader, createdBy);
+      boolean isFirstPremium, String createdBy) {
+    // データ準備
+    PremiumHeadersVo premiumHeader =
+        convertToPremiumHeadersVo(contractPremiumHeader, isFirstPremium, createdBy);
+
     Map<String, Object> paramPremiumHeader = new HashMap<>();
     paramPremiumHeader.put("premiumHeader", premiumHeader);
-    //データ追加
+    // データ追加
     mapper.insertPremiumHeader(paramPremiumHeader);
   }
 
@@ -306,6 +322,7 @@ public class CommonBatchService {
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
       String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
       paramBillingHeaded.put("billingPeriod", billingPeriod);
+      paramBillingHeaded.put("tenantId", contractBillingVo.getTenantId());
       // 請求テーブルの請求月
       billHeaderNo = mapper.selectMaxBillingHeaderNo(paramBillingHeaded);
     }
@@ -404,8 +421,8 @@ public class CommonBatchService {
     // 連番
     billingHeaderVo.setBillngHeaderNo(billingHeaderNo);
     // 請求ヘッダー状態コード = B(Billed)を設定
-    billingHeaderVo
-        .setBillingHeaderStatus(Luigi2CodeBillingHeaders.BillingHeaderStatus.BILLED.toString());
+    billingHeaderVo.setBillingHeaderStatus(
+        Luigi2CodeBillingHeaders.BillingHeaderStatus.DATA_CREATED.toString());
     // 団体コード = 属性初期値
     billingHeaderVo.setGroupCode(null);
     // 収納代行会社コード = 収納代行会社コード
@@ -479,7 +496,7 @@ public class CommonBatchService {
   }
 
   private PremiumHeadersVo convertToPremiumHeadersVo(ContractPremiumHeader contractPremiumHeader,
-      String createdBy) {
+      boolean isFirstPremium, String createdBy) {
     PremiumHeadersVo premiumHeader = new PremiumHeadersVo();
     // tenantId
     premiumHeader.setTenantId(contractPremiumHeader.getTenantId());
@@ -487,8 +504,13 @@ public class CommonBatchService {
     premiumHeader.setContractNo(contractPremiumHeader.getContractNo());
     // 証券番号枝番 = 契約（contracts）.証券番号枝番
     premiumHeader.setContractBranchNo(contractPremiumHeader.getContractBranchNo());
-    // 初回保険料フラグ(first_premium) = 属性初期値
-    premiumHeader.setFirstPremium("0");
+
+    if (isFirstPremium) {
+      premiumHeader.setFirstPremium("1");
+    } else {
+      // 初回保険料フラグ(first_premium) = 属性初期値
+      premiumHeader.setFirstPremium("0");
+    }
     // 異動日（effective_date）＝ 属性初期値
     premiumHeader.setEffectiveDate(null);
     // グロス保険料 total_gross_premium = 契約（contracts）. 合計保険料(total_premium)
@@ -501,6 +523,8 @@ public class CommonBatchService {
     Map<String, Object> paramMaxPremiumSequenNo = new HashMap<>();
     paramMaxPremiumSequenNo.put("contractNo", contractPremiumHeader.getContractNo());
     paramMaxPremiumSequenNo.put("tenantId", contractPremiumHeader.getTenantId());
+    paramMaxPremiumSequenNo.put("contractBranchNo", contractPremiumHeader.getContractBranchNo());
+
     PremiumHeadersVo maxPremiumSequenNo = mapper.getMaxPremiumSequenceNo(paramMaxPremiumSequenNo);
     // 保険料連番（premium_headers）.premium_sequence_no 保険料 = 保険料連番 premium_sequence_no
     // 同一証券番号のmax(保険料.保険料連番)+1
@@ -521,6 +545,10 @@ public class CommonBatchService {
 
       premiumHeader.setPremiumDueDate(
           DateTimeUtils.addDayToYearMonth(premiumBillingPeriod, Integer.parseInt(premiumDueDate)));
+    } else {
+      premiumHeader.setPremiumBillingPeriod(
+          DateTimeUtils.convertDateToYearMonth(contractPremiumHeader.getIssueDate()));
+      premiumHeader.setPremiumDueDate(contractPremiumHeader.getIssueDate());
     }
 
     // frequency = 契約（contracts）の保険料払込回数(frequency)
