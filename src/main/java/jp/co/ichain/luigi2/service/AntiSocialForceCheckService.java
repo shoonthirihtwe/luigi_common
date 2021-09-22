@@ -35,6 +35,9 @@ public class AntiSocialForceCheckService {
   @Value("${antisocial.url}")
   String antisocialUrl;
 
+  @Value("${antisocial.x-api-key}")
+  String xApiKey;
+
   private static String ANTISOCIAL_DATE = "2019-11-03";
 
   /**
@@ -92,7 +95,7 @@ public class AntiSocialForceCheckService {
     StringEntity entity = new StringEntity(jsonStr, ContentType.APPLICATION_JSON);
     httpPost.setEntity(entity);
     httpPost.setHeader("Accept", "application/json");
-    httpPost.setHeader("x-api-key", "8FXt7noqvF7umEYS4xfb11QNgpZ8fr1g3GHtkgQt");
+    httpPost.setHeader("x-api-key", xApiKey);
     CloseableHttpResponse response = client.execute(httpPost);
     String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 
