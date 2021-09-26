@@ -96,7 +96,6 @@ public class DataSourceConfig {
     factoryBean.setTypeAliasesPackage(typeAliasPackage);
     org.apache.ibatis.session.Configuration config = new org.apache.ibatis.session.Configuration();
     config.setMapUnderscoreToCamelCase(true);
-    config.setReturnInstanceForEmptyRow(true);
     factoryBean.setConfiguration(config);
     factoryBean.setMapperLocations(applicationContext.getResources("classpath:mybatis/**/*.xml"));
     return factoryBean.getObject();
