@@ -528,14 +528,18 @@ public class CommonBatchService {
     PremiumHeadersVo maxPremiumSequenNo = mapper.getMaxPremiumSequenceNo(paramMaxPremiumSequenNo);
     // 保険料連番（premium_headers）.premium_sequence_no 保険料 = 保険料連番 premium_sequence_no
     // 同一証券番号のmax(保険料.保険料連番)+1
-    premiumHeader.setPremiumSequenceNo(maxPremiumSequenNo.getPremiumSequenceNo());
-
+    if (maxPremiumSequenNo != null) {
+      premiumHeader.setPremiumSequenceNo(maxPremiumSequenNo.getPremiumSequenceNo());
+    } else {
+      premiumHeader.setPremiumSequenceNo(1);
+    }
     // 保険料収納月(premium_billing_period) =
     // 同一証券番号のmax(保険料.保険料連番)の行から取得した（保険料収納月+12/保険料払込回数）の年月
     // 1件目は契約日と同じ。また払込回数=00はBD-008の対象外。
     Integer frequency = Integer.parseInt(contractPremiumHeader.getFrequency());
 
-    if (maxPremiumSequenNo.getPremiumSequenceNo() > 1 && frequency != 0) {
+    if (maxPremiumSequenNo != null && maxPremiumSequenNo.getPremiumSequenceNo() > 1
+        && frequency != 0) {
       String premiumBillingPeriod = DateTimeUtils
           .addMonthToYearMonth(maxPremiumSequenNo.getPremiumBillingPeriod(), 12 / frequency);
       premiumHeader.setPremiumBillingPeriod(premiumBillingPeriod);
