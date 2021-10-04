@@ -15,6 +15,11 @@ public class Luigi2ErrorCode {
   public static final String S0000 = "S0000";
 
   /**
+   * 通信不調
+   */
+  public static final String S0001 = "S0001";
+
+  /**
    * パラメーター不正
    */
   public static final String V0000 = "V0000";
