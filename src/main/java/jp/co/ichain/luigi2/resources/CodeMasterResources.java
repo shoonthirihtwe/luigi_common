@@ -104,32 +104,6 @@ public class CodeMasterResources {
   }
 
   /**
-   * コード名取得
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-09-17
-   * @updatedAt : 2021-09-17
-   * @param tenantId
-   * @param key
-   * @param codeValue
-   * @return
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
-   */
-  public String getName(Integer tenantId, String key, String codeValue)
-      throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
-    val list = this.map.get(tenantId).get(key);
-    if (list != null && codeValue != null) {
-      return list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
-          .collect(Collectors.reducing((a, b) -> null)).get().getCodeName();
-    }
-    return null;
-  }
-
-  /**
    * 情報取得
    *
    * @author : [AOT] g.kim
@@ -168,6 +142,32 @@ public class CodeMasterResources {
 
     return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
         : this.map.get(tenantId);
+  }
+
+  /**
+   * コード名取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-09-17
+   * @updatedAt : 2021-09-17
+   * @param tenantId
+   * @param key
+   * @param codeValue
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public String getName(Integer tenantId, String key, String codeValue)
+      throws JsonMappingException, JsonProcessingException {
+    if (this.map == null) {
+      this.initialize();
+    }
+    val list = this.map.get(tenantId).get(key);
+    if (list != null && codeValue != null) {
+      return list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
+          .collect(Collectors.reducing((a, b) -> null)).get().getCodeName();
+    }
+    return null;
   }
 
   /**
