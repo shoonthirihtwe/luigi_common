@@ -108,8 +108,11 @@ public class WebControllerErrorAdvice {
     try {
       result.setCode(e.getCode());
       if (e.getErrArgs() != null) {
+
         result.setItems(e.getErrArgs().stream()
-            .map(ex -> new ErrorVo(((WebException) ex).getCode(), ((WebException) ex).getErrArgs()))
+            .map(
+                ex -> new ErrorVo(((WebException) ex).getCode(), ((WebException) ex).getErrArgs(),
+                    ((WebException) ex).getParentKey(), ((WebException) ex).getArrayIndex()))
             .collect(Collectors.toList()));
       }
     } catch (Exception ex) {

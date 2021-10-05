@@ -16,4 +16,6 @@ import lombok.Setter;
 public class ErrorVo {
   String code;
   List<? extends Object> errArgs;
+  String parentKey;
+  Integer arrayIndex;
 }

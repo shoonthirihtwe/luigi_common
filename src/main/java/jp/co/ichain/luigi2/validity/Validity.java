@@ -114,7 +114,7 @@ public class Validity {
    */
   @SuppressWarnings("unchecked")
   public void validate(Map<String, ValidityVo> validityMap, Map<String, Object> serviceInstanceMap,
-      Integer tenantId, Map<String, Object> paramMap, List<WebException> exList)
+      Integer tenantId, String parentKey, Map<String, Object> paramMap, List<WebException> exList)
       throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
@@ -140,21 +140,22 @@ public class Validity {
         } else if (data != null) {
 
           // condition
-          validateCondition(validityVo, key, data, tenantId, exList);
+          validateCondition(validityVo, parentKey, null, key, data, tenantId, exList);
 
           // Object recursive call
           if (validityVo.getArray()) {
             if (data instanceof List) {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                validate(validityMap, objValidityMap, tenantId, map, exList);
+                validate(validityMap, objValidityMap, tenantId, key, map, exList);
               }
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
           } else {
             if (data instanceof Map) {
-              validate(validityMap, objValidityMap, tenantId, (Map<String, Object>) data, exList);
+              validate(validityMap, objValidityMap, tenantId, key, (Map<String, Object>) data,
+                  exList);
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
@@ -168,20 +169,23 @@ public class Validity {
         if (validityVo.getArray()) {
           // Condition
           if (validityVo.getIsChildrenCondition() == false) {
-            validateCondition(validityVo, key, data, tenantId, exList);
+            validateCondition(validityVo, parentKey, null, key, data, tenantId, exList);
           }
           if (data instanceof List) {
             if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
               List<Object> list = (List<Object>) data;
-              for (val item : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, item, tenantId,
+              int size = list.size();
+
+              for (int i = 0; i < size; i++) {
+                val item = list.get(i);
+                validate(validityVo, serviceInstanceMap, exList, parentKey, i, key, item, tenantId,
                     validityVo.getIsChildrenCondition());
               }
             } else {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, key, map, tenantId,
-                    validityVo.getIsChildrenCondition());
+                validate(validityVo, serviceInstanceMap, exList, parentKey, null, key, map,
+                    tenantId, validityVo.getIsChildrenCondition());
               }
             }
 
@@ -193,10 +197,11 @@ public class Validity {
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          vdata = convert(validityVo, key, vdata, tenantId, exList);
+          vdata = convert(validityVo, parentKey, null, key, vdata, tenantId, exList);
 
           paramMap.put(key, vdata);
-          validate(validityVo, serviceInstanceMap, exList, key, vdata, tenantId, true);
+          validate(validityVo, serviceInstanceMap, exList, parentKey, null, key, vdata, tenantId,
+              true);
         }
       }
     }
@@ -206,37 +211,40 @@ public class Validity {
    * 検証する
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-08
-   * @updatedAt : 2021-06-08
+   * @createdAt : 2021-10-05
+   * @updatedAt : 2021-10-05
    * @param validityVo
    * @param serviceInstanceMap
-   * @param paramMap
    * @param exList
-   * @param validity
+   * @param parentKey
+   * @param idx
    * @param key
    * @param data
+   * @param tenantId
+   * @param isChildrenCondition
    * @throws UnsupportedEncodingException
-   * @throws JsonProcessingException
    * @throws JsonMappingException
-   * @throws InvocationTargetException
-   * @throws IllegalArgumentException
+   * @throws JsonProcessingException
    * @throws IllegalAccessException
+   * @throws IllegalArgumentException
+   * @throws InvocationTargetException
    */
   private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
-      List<WebException> exList, String key, Object data, Integer tenantId,
-      boolean isChildrenCondition)
+      List<WebException> exList, String parentKey, Integer idx, String key, Object data,
+      Integer tenantId, boolean isChildrenCondition)
       throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
     // Required
     if (validityVo.getRequired() && data == null) {
-      exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key));
+      exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key).setParentKey(parentKey)
+          .setArrayIndex(idx));
     }
 
     if (data != null) {
       // Condition
       if (isChildrenCondition) {
-        validateCondition(validityVo, key, data, tenantId, exList);
+        validateCondition(validityVo, parentKey, idx, key, data, tenantId, exList);
       }
       // type is string
       if (Vtype.STRING.toString().equals(validityVo.getType())) {
@@ -252,36 +260,41 @@ public class Validity {
           }
           // min
           if (validityVo.getMin() != null && validityVo.getMin() > length) {
-            exList.add(new WebParameterException(Luigi2ErrorCode.V0002, key, validityVo.getMin()));
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0002, key, validityVo.getMin())
+                .setParentKey(parentKey).setArrayIndex(idx));
           }
           // max
           if (validityVo.getMax() != null && validityVo.getMax() < length) {
-            exList.add(new WebParameterException(Luigi2ErrorCode.V0003, key, validityVo.getMax()));
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0003, key, validityVo.getMax())
+                .setParentKey(parentKey).setArrayIndex(idx));
           }
         }
 
         // formats
         if (validityVo.getFormats() != null) {
-          validateFormat(key, validityVo.getFormats(), strData, exList);
+          validateFormat(parentKey, idx, key, validityVo.getFormats(), strData, exList);
         }
 
         // regex
         if (validityVo.getRegex() != null) {
-          validateRegex(key, validityVo.getRegex(), strData, exList);
+          validateRegex(parentKey, idx, key, validityVo.getRegex(), strData, exList);
         }
       }
 
       // codeMaster
       if (validiateCodeMaster(tenantId, validityVo.getCodeMaster(), data) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0009, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0009, key).setParentKey(parentKey)
+            .setArrayIndex(idx));
       }
 
       // fixed
       if (validiateFixedList(validityVo.getFixedList(), data) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
+            .setArrayIndex(idx));
       }
       if (validiateIntFixedList(validityVo.getIntFixedList(), data) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
+            .setArrayIndex(idx));
       }
     }
   }
@@ -302,7 +315,8 @@ public class Validity {
    * @throws IllegalArgumentException
    * @throws InvocationTargetException
    */
-  public Object convert(ValidityVo validityVo, String key, Object data, Integer tenantId,
+  public Object convert(ValidityVo validityVo, String parentKey, Integer idx, String key,
+      Object data, Integer tenantId,
       List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     if (validityVo.getConversion() != null && data != null) {
@@ -311,9 +325,10 @@ public class Validity {
         data = conversionUtils.convert(conditionMethod, tenantId, data);
       } catch (InvocationTargetException e) {
         if (e.getCause() instanceof WebException) {
-          exList.add((WebException) e.getCause());
+          exList.add(((WebException) e.getCause()).setParentKey(parentKey).setArrayIndex(idx));
         } else {
-          exList.add(new WebConversionException(Luigi2ErrorCode.V0006, key));
+          exList.add(new WebConversionException(Luigi2ErrorCode.V0006, key).setParentKey(parentKey)
+              .setArrayIndex(idx));
         }
       }
     }
@@ -333,7 +348,8 @@ public class Validity {
    * @throws InvocationTargetException
    */
   @SuppressWarnings("unchecked")
-  public void validateCondition(ValidityVo validityVo, String key, Object data, Integer tenantId,
+  public void validateCondition(ValidityVo validityVo, String parentKey, Integer idx, String key,
+      Object data, Integer tenantId,
       List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
@@ -347,17 +363,21 @@ public class Validity {
               (List<Object>) argsMap.get("args")) == false) {
             val errArgs = (List<Object>) argsMap.get("errArgs");
             if (errArgs != null && errArgs.size() > 0) {
-              exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs));
+              exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs)
+                  .setParentKey(parentKey).setArrayIndex(idx));
             } else {
-              exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+              exList.add(new WebConditionException((String) argsMap.get("errCode"), key)
+                  .setParentKey(parentKey).setArrayIndex(idx));
             }
           }
         } catch (Exception e) {
           val errArgs = (List<Object>) argsMap.get("errArgs");
           if (errArgs != null && errArgs.size() > 0) {
-            exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs));
+            exList.add(new WebConditionException((String) argsMap.get("errCode"), errArgs)
+                .setParentKey(parentKey).setArrayIndex(idx));
           } else {
-            exList.add(new WebConditionException((String) argsMap.get("errCode"), key));
+            exList.add(new WebConditionException((String) argsMap.get("errCode"), key)
+                .setParentKey(parentKey).setArrayIndex(idx));
           }
         }
       }
@@ -376,15 +396,18 @@ public class Validity {
    * @param exList
    */
   @SuppressWarnings("unchecked")
-  private void validateFormat(String key, Object formats, String strData,
+  private void validateFormat(String parentKey, Integer idx, String key, Object formats,
+      String strData,
       List<WebException> exList) {
     if (formats instanceof String) {
       if (FormatType.valueOf((String) formats) != null) {
         if (strData.matches(formatRegexMap.get(formats)) == false) {
-          exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
+              .setArrayIndex(idx));
         }
       } else {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats)
+            .setParentKey(parentKey).setArrayIndex(idx));
       }
     } else if (formats instanceof List) {
       val sb = new StringBuffer();
@@ -393,12 +416,14 @@ public class Validity {
         if (FormatType.valueOf(format) != null) {
           sb.append(formatRegexMap.get(format));
         } else {
-          exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats));
+          exList.add(new WebParameterException(Luigi2ErrorCode.V0006, key, formats)
+              .setParentKey(parentKey).setArrayIndex(idx));
         }
       }
       sb.append("]+$");
       if (strData.matches(sb.toString()) == false) {
-        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+        exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
+            .setArrayIndex(idx));
       }
     }
   }
@@ -414,10 +439,12 @@ public class Validity {
    * @param strData
    * @param exList
    */
-  private void validateRegex(String key, String regex, String strData,
+  private void validateRegex(String parentKey, Integer idx, String key, String regex,
+      String strData,
       List<WebException> exList) {
     if (strData.matches(regex) == false) {
-      exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key));
+      exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
+          .setArrayIndex(idx));
     }
   }
 
