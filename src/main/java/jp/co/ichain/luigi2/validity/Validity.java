@@ -114,7 +114,8 @@ public class Validity {
    */
   @SuppressWarnings("unchecked")
   public void validate(Map<String, ValidityVo> validityMap, Map<String, Object> serviceInstanceMap,
-      Integer tenantId, String parentKey, Map<String, Object> paramMap, List<WebException> exList)
+      Integer tenantId, String parentKey, Integer idx, Map<String, Object> paramMap,
+      List<WebException> exList)
       throws JsonMappingException, JsonProcessingException, UnsupportedEncodingException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
@@ -146,15 +147,18 @@ public class Validity {
           if (validityVo.getArray()) {
             if (data instanceof List) {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
-              for (val map : list) {
-                validate(validityMap, objValidityMap, tenantId, key, map, exList);
+              int size = list.size();
+
+              for (int i = 0; i < size; i++) {
+                val map = list.get(i);
+                validate(validityMap, objValidityMap, tenantId, key, i, map, exList);
               }
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
             }
           } else {
             if (data instanceof Map) {
-              validate(validityMap, objValidityMap, tenantId, key, (Map<String, Object>) data,
+              validate(validityMap, objValidityMap, tenantId, key, null, (Map<String, Object>) data,
                   exList);
             } else {
               exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
@@ -169,7 +173,7 @@ public class Validity {
         if (validityVo.getArray()) {
           // Condition
           if (validityVo.getIsChildrenCondition() == false) {
-            validateCondition(validityVo, parentKey, null, key, data, tenantId, exList);
+            validateCondition(validityVo, parentKey, idx, key, data, tenantId, exList);
           }
           if (data instanceof List) {
             if (Vtype.valueOf(validityVo.getType()) != Vtype.OBJECT) {
@@ -184,7 +188,7 @@ public class Validity {
             } else {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, parentKey, null, key, map,
+                validate(validityVo, serviceInstanceMap, exList, parentKey, idx, key, map,
                     tenantId, validityVo.getIsChildrenCondition());
               }
             }
@@ -197,10 +201,10 @@ public class Validity {
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
           }
-          vdata = convert(validityVo, parentKey, null, key, vdata, tenantId, exList);
+          vdata = convert(validityVo, parentKey, idx, key, vdata, tenantId, exList);
 
           paramMap.put(key, vdata);
-          validate(validityVo, serviceInstanceMap, exList, parentKey, null, key, vdata, tenantId,
+          validate(validityVo, serviceInstanceMap, exList, parentKey, idx, key, vdata, tenantId,
               true);
         }
       }
