@@ -1,6 +1,8 @@
 package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -104,4 +106,9 @@ public class DepositHeadersVo extends ObjectVo {
    * 最終更新者
    */
   String updatedBy;
+  
+  /**
+   * 詳細入金一覧
+   */
+  List<DepositDetailsVo> depositDetails;
 }

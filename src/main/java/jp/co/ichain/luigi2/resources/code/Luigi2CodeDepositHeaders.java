@@ -11,6 +11,7 @@ public class Luigi2CodeDepositHeaders {
   /**
    * 払込方法コード
    * 
+   * 1:現金
    * 3:カード
    * 
    * @author : [VJP] タン
@@ -18,7 +19,7 @@ public class Luigi2CodeDepositHeaders {
    * @updatedAt : 2021-08-27
    */
   public enum PaymentMethodCode {
-    CARD("3");
+    CASH("1"), CARD("3");
 
     String val;
 
