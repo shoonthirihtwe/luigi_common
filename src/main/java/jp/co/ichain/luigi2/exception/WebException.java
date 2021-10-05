@@ -22,6 +22,10 @@ public class WebException extends RuntimeException {
   List<? extends Object> errArgs = null;
   /** 原因となった例外 */
   Throwable cause;
+  /** 親キー **/
+  String parentKey;
+  /** 配列Index **/
+  Integer arrayIndex;
 
   public WebException(String code) {
     this.code = code;
@@ -42,5 +46,15 @@ public class WebException extends RuntimeException {
   public WebException(String code, List<? extends Object> errArgs) {
     this.code = code;
     this.errArgs = errArgs;
+  }
+
+  public WebException setParentKey(String parentKey) {
+    this.parentKey = parentKey;
+    return this;
+  }
+
+  public WebException setArrayIndex(Integer arrayIndex) {
+    this.arrayIndex = arrayIndex;
+    return this;
   }
 }
