@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.input.BOMInputStream;
 import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -42,7 +43,8 @@ public class CsvUtils {
   public static List<Map<String, Object>> get(MultipartFile csvFile,
       Map<String, String> matchingData) throws IOException, CsvException {
 
-    CSVReader reader = new CSVReader(new InputStreamReader(csvFile.getInputStream()));
+    CSVReader reader =
+        new CSVReader(new InputStreamReader(new BOMInputStream(csvFile.getInputStream(), false)));
 
     val csvLineList = reader.readAll();
 

@@ -47,7 +47,7 @@ public class AgenciesVo extends ObjectVo {
   /**
    * 個人/法人フラグ
    */
-  String corporationIndividualFlag;
+  String corporateIndividualFlag;
 
   /**
    * 登録種別
