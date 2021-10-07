@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -70,9 +71,8 @@ public class CodeMasterResources {
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
     ObjectMapper objMapper = new ObjectMapper();
     val codeList = serviceInstancesResources.get(tenantId, "code_master");
-    Map<String, List<CodeMasterVo>> codeMap =
-        objMapper.readValue(codeList.get(0).getInherentJson(),
-            new TypeReference<Map<String, List<CodeMasterVo>>>() {});
+    Map<String, List<CodeMasterVo>> codeMap = objMapper.readValue(codeList.get(0).getInherentJson(),
+        new TypeReference<Map<String, List<CodeMasterVo>>>() {});
     this.map.put(tenantId, codeMap);
 
     // 日付登録
@@ -142,6 +142,36 @@ public class CodeMasterResources {
 
     return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
         : this.map.get(tenantId);
+  }
+
+  /**
+   * コードValue取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-01
+   * @updatedAt : 2021-10-01
+   * @param tenantId
+   * @param key
+   * @param codeValue
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public String getValue(Integer tenantId, String key, String codeName)
+      throws JsonMappingException, JsonProcessingException {
+    if (this.map == null) {
+      this.initialize();
+    }
+    val list = this.map.get(tenantId).get(key);
+    if (list != null && codeName != null) {
+      Optional<CodeMasterVo> resultOptional =
+          list.stream().filter(vo -> codeName.equals(vo.getCodeName()))
+              .collect(Collectors.reducing((a, b) -> null));
+      if (resultOptional.isPresent()) {
+        return resultOptional.get().getCodeValue();
+      }
+    }
+    return null;
   }
 
   /**
