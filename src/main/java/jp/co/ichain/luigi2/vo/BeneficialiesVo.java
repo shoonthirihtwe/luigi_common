@@ -53,6 +53,18 @@ public class BeneficialiesVo extends ObjectVo {
 
   String relShipToInsured;
 
+  String sex;
+
+  Date dateOfBirth;
+
+  String addrZipCode;
+
+  String addrKnjPref;
+
+  String addrKnj1;
+
+  String addrKnj2;
+
   @JsonIgnore
   Date createdAt;
 
