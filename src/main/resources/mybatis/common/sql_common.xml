@@ -128,4 +128,14 @@
 		FROM service_instances
 		GROUP BY tenant_id
 	</select>
+		<select id="selectInherentData" resultType="String" parameterType="hashmap">
+		SELECT 
+			data
+		FROM 
+			service_objects
+		WHERE 
+			tenant_id=#{tenantId}
+			AND contract_no=#{contractNo}
+			AND contract_branch_no=#{contractBranchNo}
+	</select>
 </mapper>

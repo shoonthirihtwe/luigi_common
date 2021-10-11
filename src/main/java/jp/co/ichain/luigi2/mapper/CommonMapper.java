@@ -167,4 +167,15 @@ public interface CommonMapper {
    * @return
    */
   List<Map<String, Object>> selectResourcesLastUpdatedAt();
+  
+  /**
+   * 固有情報取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-11
+   * @updatedAt : 2021-10-11
+   * @param param
+   * @return
+   */
+  String selectInherentData(Map<String, Object> param);
 }
