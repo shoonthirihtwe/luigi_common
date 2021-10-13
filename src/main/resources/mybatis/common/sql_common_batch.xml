@@ -268,7 +268,7 @@
 			#{premiumHeader.firstPremium},
 			#{premiumHeader.premiumSequenceNo},
 			#{premiumHeader.premiumBillingPeriod},
-			null,
+			#{premiumHeader.effectiveDate},
 			<if test="premiumHeader.totalGrossPremium != null">#{premiumHeader.totalGrossPremium},</if>
 			#{premiumHeader.frequency},
 			#{premiumHeader.premiumStatus},

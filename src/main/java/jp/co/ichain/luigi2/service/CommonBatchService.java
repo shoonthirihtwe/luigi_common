@@ -507,12 +507,14 @@ public class CommonBatchService {
 
     if (isFirstPremium) {
       premiumHeader.setFirstPremium("1");
+      premiumHeader.setEffectiveDate(contractPremiumHeader.getBatchDate());
     } else {
       // 初回保険料フラグ(first_premium) = 属性初期値
       premiumHeader.setFirstPremium("0");
+      // 異動日（effective_date）＝ 属性初期値
+      premiumHeader.setEffectiveDate(null);
     }
-    // 異動日（effective_date）＝ 属性初期値
-    premiumHeader.setEffectiveDate(null);
+
     // グロス保険料 total_gross_premium = 契約（contracts）. 合計保険料(total_premium)
     premiumHeader.setTotalGrossPremium(contractPremiumHeader.getTotalPremium());
 

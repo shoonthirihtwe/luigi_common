@@ -52,4 +52,8 @@ public class ContractPremiumHeader extends ObjectVo {
    */
   String frequency;
   
+  /**
+   * batchDate
+   */
+  Date batchDate;
 }
