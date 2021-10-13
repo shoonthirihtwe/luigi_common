@@ -138,4 +138,16 @@
 			AND contract_no=#{contractNo}
 			AND contract_branch_no=#{contractBranchNo}
 	</select>
+	<update id="updateTableStatus" parameterType="UpdateStatusVo">
+		update 
+			${tableName}
+		SET
+			${columnName}=#{status}
+		WHERE 
+			tenant_id=#{tenantId}
+			AND contract_no=#{contractNo}
+			<if test="contractBranchNo != null">
+			AND contract_branch_no=#{contractBranchNo}
+			</if>
+	</update>
 </mapper>

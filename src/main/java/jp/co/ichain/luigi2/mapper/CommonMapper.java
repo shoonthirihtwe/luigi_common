@@ -10,6 +10,7 @@ import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import jp.co.ichain.luigi2.vo.SalesProductsVo;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
+import jp.co.ichain.luigi2.vo.UpdateStatusVo;
 
 /**
  * Common Mapper
@@ -178,4 +179,15 @@ public interface CommonMapper {
    * @return
    */
   String selectInherentData(Map<String, Object> param);
+  
+  /**
+   * ステータス変更
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-11
+   * @updatedAt : 2021-10-11
+   * @param paramMap
+   * @return
+   */
+  int updateTableStatus(UpdateStatusVo param);
 }

@@ -27,7 +27,7 @@ public class Luigi2CodeUnderwritings {
    * @updatedAt : 2021-08-12
    */
   public enum ContractStatus {
-    CHECK_FOR_PAYMENT_METHOD("05"), ESTABLISHMENT("31");
+    WAITING_FOR_PAYMENT("01"), CHECK_FOR_PAYMENT_METHOD("05"), ESTABLISHMENT("31");
 
     String val;
 
