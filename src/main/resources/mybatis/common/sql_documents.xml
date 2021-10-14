@@ -32,7 +32,7 @@
 	<select id="selectDocuments"  resultType="DocumentsVo" parameterType="hashmap">
 		SELECT
 			sequence_no as sequenceNo,
-			document_title as documentIitle,
+			document_title as documentTitle,
 			document_url as documentUrl,
 			upload_date as uploadDate
 		FROM ${table} WHERE tenant_id=#{tenantId} AND ${key}=#{ownerCode}

@@ -77,7 +77,7 @@ public class NumberingService {
     val map = Luigi2TableInfo.getLockTable(tableInfo);
     String code = numberingMapper.selectIncrementNumber(map, tenantId);
     numberingMapper.pessimisticLockKey(map, tenantId, code);
-    if (tableInfo == TableInfo.Contracts || tableInfo == TableInfo.MaintenanceDocuments
+    if (tableInfo == TableInfo.Contracts || tableInfo == TableInfo.MaintenanceRequests
         || tableInfo == TableInfo.ClaimTrxsId) {
       numberingMapper.updateNo(map, tenantId, code, updatedBy);
       numberingMapper.insertNo(map, tenantId, code, updatedBy);
