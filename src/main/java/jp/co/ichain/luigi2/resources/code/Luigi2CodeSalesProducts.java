@@ -33,4 +33,28 @@ public class Luigi2CodeSalesProducts {
     }
   }
 
+  public enum RoundingType {
+    ROUNDUP("1"), ROUNDDOWN("2"), ROUND("3");
+
+    String val;
+
+    RoundingType(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+
+    public static RoundingType get(String key) {
+      for (RoundingType v : values()) {
+        if (v.toString().equals(key)) {
+          return v;
+        }
+      }
+      return null;
+    }
+  }
+
 }
