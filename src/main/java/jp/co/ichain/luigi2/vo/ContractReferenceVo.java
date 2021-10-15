@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
+import jp.co.ichain.luigi2.config.web.JsonDateSimpleFormatSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,19 +48,19 @@ public class ContractReferenceVo extends ObjectVo {
   /**
    * 申込年月日
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date applicationDate;
 
   /**
    * 受付年月日
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date receivedDate;
 
   /**
    * 契約開始日
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date inceptionDate;
 
   /**
@@ -161,4 +161,53 @@ public class ContractReferenceVo extends ObjectVo {
    * 固有データ
    */
   String data;
+  /**
+   * 契約満了日
+   */
+  String expirationDate;
+  /**
+   * 契約消滅日
+   */
+  String terminationDate;
+  /**
+   * 契約ステータス名
+   */
+  String contractStatusName;
+  /**
+   * 販売プラン名
+   */
+  String salesPlanName;
+  /**
+   * 支店コード1
+   */
+  String agencyBranchCode1;
+  /**
+   * 支店名1
+   */
+  String agencyBranchName1;
+  /**
+   * 代理店名1
+   */
+  String agenyName1;
+  /**
+   * 代理店名2
+   */
+  String agencyName2;
+  /**
+   * 支店コード2
+   */
+  String agencyBranchCode2;
+  /**
+   * 支店名2
+   */
+  String agencyBranchName2;
+  /**
+   * 募集人名1
+   */
+  String agentName1;
+  /**
+   * 募集人名2
+   */
+  String agentName2;
+
 }

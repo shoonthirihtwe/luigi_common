@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jp.co.ichain.luigi2.config.web.JsonDateSerializer;
+import jp.co.ichain.luigi2.config.web.JsonDateSimpleFormatSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,7 +59,7 @@ public class InsuredReferenceVo extends ObjectVo {
   /**
    * 被保険者・生年月日
    */
-  @JsonSerialize(using = JsonDateSerializer.class)
+  @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date inDateOfBirth;
 
   /**
