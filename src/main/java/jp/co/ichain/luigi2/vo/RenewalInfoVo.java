@@ -70,8 +70,9 @@ public class RenewalInfoVo {
   String insNameKnj;
 
   /**
-   * 
+   * 更新回数
    */
+  Integer updateCnt;
 
   /**
    * 更新判定日
