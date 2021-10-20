@@ -150,4 +150,17 @@
 			AND contract_branch_no=#{contractBranchNo}
 			</if>
 	</update>
+	<select id="selectSenderEmailsByContractNo" resultType="String" parameterType="map">
+		SELECT REPLACE(JSON_EXTRACT(p.${recieverInfo}, '$.${mailType}'),'"','') as email  
+		FROM  
+			contracts c 
+			join sales_products sp ON sp.sales_plan_code=c.sales_plan_code
+				AND sp.sales_plan_type_code=c.sales_plan_type_code
+    			AND sp.tenant_id=c.tenant_id
+			join products p ON sp.product_code=p.product_code
+				AND p.tenant_id=sp.tenant_id
+		WHERE 
+			c.contract_no=#{param.contractNo}
+			AND c.tenant_id=#{param.tenantId}
+	</select>
 </mapper>

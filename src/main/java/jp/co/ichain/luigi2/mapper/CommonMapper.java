@@ -99,7 +99,8 @@ public interface CommonMapper {
    * @param contractNo
    * @return
    */
-  String selectFactoringCompanyCode(@Param("tenantId") Integer tenantId, @Param("contractNo") String contractNo);
+  String selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
+      @Param("contractNo") String contractNo);
 
   /**
    * 営業日取得
@@ -136,7 +137,7 @@ public interface CommonMapper {
    * @return
    */
   int updateBatchDate(Map<String, Object> paramMap);
-  
+
   /**
    * オンライン日付更新
    * 
@@ -168,7 +169,7 @@ public interface CommonMapper {
    * @return
    */
   List<Map<String, Object>> selectResourcesLastUpdatedAt();
-  
+
   /**
    * 固有情報取得
    *
@@ -179,7 +180,7 @@ public interface CommonMapper {
    * @return
    */
   String selectInherentData(Map<String, Object> param);
-  
+
   /**
    * ステータス変更
    * 
@@ -190,4 +191,16 @@ public interface CommonMapper {
    * @return
    */
   int updateTableStatus(UpdateStatusVo param);
+
+  /**
+   * テナント向け送信用メールアドレス取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-11
+   * @updatedAt : 2021-10-11
+   * @param paramMap
+   * @return
+   */
+  String selectSenderEmailsByContractNo(@Param("recieverInfo") String recieverInfo,
+      @Param("mailType") String mailType, @Param("param") Map<String, Object> param);
 }
