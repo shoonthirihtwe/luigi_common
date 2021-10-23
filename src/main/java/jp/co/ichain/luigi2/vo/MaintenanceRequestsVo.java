@@ -230,6 +230,11 @@ public class MaintenanceRequestsVo extends ObjectVo {
   Integer cashValue;
 
   /**
+   * 契約者からみた続柄
+   */
+  String relationship;
+
+  /**
    * 住所変更顧客情報
    */
   MaintenanceRequestsTransferVo transfer;
