@@ -194,8 +194,6 @@ public class TestScriptUtils {
     }
     commonMapper.updateBatchDate(paramMap);
 
-    tenantResources.refreshing();
-
   }
 
   /**
@@ -243,7 +241,5 @@ public class TestScriptUtils {
       paramMap.put("tenantId", tenantId);
     }
     commonMapper.updateOnlineDate(paramMap);
-
-    tenantResources.refreshing();
   }
 }

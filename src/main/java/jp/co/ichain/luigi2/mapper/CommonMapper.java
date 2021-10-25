@@ -44,7 +44,7 @@ public interface CommonMapper {
    * @param updatedAt
    * @return
    */
-  List<TenantsVo> selectTenants(@Param("updatedAt") Date updatedAt);
+  List<TenantsVo> selectTenants(Map<String, Object> param);
 
   /**
    * ServiceInstances取得

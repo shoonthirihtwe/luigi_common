@@ -34,13 +34,15 @@
 		max(updated_at) from ${table}
 	</select>
 	
-	<select id="selectTenants" parameterType="TenantsVo" resultType="TenantsVo">
+	<select id="selectTenants" parameterType="hashmap" resultType="TenantsVo">
 		SELECT
 			*
 		FROM
 			tenants
 		<where>
 			<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
+			<if test="id != null">id=#{id}</if>
+			<if test="domain != null">site_url=#{domain}</if>
 		</where>
 		ORDER BY updated_at DESC
 	</select>

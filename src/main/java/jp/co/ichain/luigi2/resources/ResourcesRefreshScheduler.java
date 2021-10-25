@@ -58,13 +58,13 @@ public class ResourcesRefreshScheduler {
     updatedAtResult.forEach(item -> {
       val tenantId = ((Long) item.get("tenantId")).intValue();
       if (tenantId == -1) {
-        // tenantResources
         try {
-          if (tenantResources.updatedAt.getTime() < (long) item.get("updatedAt")) {
-            tenantResources.initialize();
+          if (numberingService.getUpdatedAt() == null
+              || numberingService.getUpdatedAt().getTime() < (long) item.get("updatedAt")) {
             numberingService.initialize();
-            System.out.println("[Resources Refresh] tenantResources Refresh : " + tenantId + " "
-                + sdf.format(new Date()));
+            numberingService.setUpdatedAt(new Date((long) item.get("updatedAt")));
+            System.out.println(
+                "[NumberingService Refresh] NumberingService Refresh : " + sdf.format(new Date()));
           }
         } catch (InstantiationException | IllegalAccessException | SecurityException e) {
           e.printStackTrace();
@@ -73,8 +73,7 @@ public class ResourcesRefreshScheduler {
         // serviceInstancesResources
         try {
           val updatedAt = serviceInstancesResources.updatedAtMap.get(tenantId);
-          if (updatedAt
-              .getTime() < (long) item.get("updatedAt")) {
+          if (updatedAt.getTime() < (long) item.get("updatedAt")) {
             serviceInstancesResources.initialize(tenantId);
             codeMasterResources.initialize(tenantId);
             validityResources.initialize(tenantId);

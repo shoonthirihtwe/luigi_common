@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -28,6 +29,8 @@ public class NumberingService {
   @Autowired
   NumberingMapper numberingMapper;
 
+  private Date updatedAt;
+  
   /**
    * 起動時採番
    * 
@@ -84,4 +87,30 @@ public class NumberingService {
     }
     return code;
   }
+  
+  /**
+   * 採番初期化更新日取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-25
+   * @updatedAt : 2021-10-25
+   * @return
+   */
+  public Date getUpdatedAt() {
+    return updatedAt;
+  }
+  
+  /**
+   * 採番初期化更新日更新
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-10-25
+   * @updatedAt : 2021-10-25
+   * @return
+   */
+  public void setUpdatedAt(Date updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+  
+  
 }
