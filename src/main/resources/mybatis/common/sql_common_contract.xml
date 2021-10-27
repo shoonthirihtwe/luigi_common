@@ -35,5 +35,6 @@
 			ct.tenant_id = #{tenantId}
 			AND ct.contract_no = #{contractNo}
 			AND FROM_UNIXTIME(#{baseDate}/1000) between r.risk_start_date and r.risk_end_date
+		ORDER BY risk_sequence_no ASC
 	</select>
 </mapper>
