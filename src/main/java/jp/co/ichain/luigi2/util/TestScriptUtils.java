@@ -29,7 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.mapper.DocumentsMapper;
-import jp.co.ichain.luigi2.resources.TenantResources;
 import lombok.val;
 
 /**
@@ -54,9 +53,6 @@ public class TestScriptUtils {
 
   @Autowired
   private AwsS3Dao awsS3Dao;
-
-  @Autowired
-  private TenantResources tenantResources;
 
   /**
    * execute Sql
