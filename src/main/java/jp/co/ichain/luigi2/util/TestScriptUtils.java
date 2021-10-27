@@ -54,6 +54,8 @@ public class TestScriptUtils {
   @Autowired
   private AwsS3Dao awsS3Dao;
 
+  java.sql.Connection connection;
+
   /**
    * execute Sql
    * 
@@ -66,8 +68,10 @@ public class TestScriptUtils {
    * @throws ScriptException
    */
   public void executeSqlScript(String sqlPath) throws ScriptException, SQLException {
-
-    ScriptUtils.executeSqlScript(dataSource.getConnection(),
+    if (connection == null) {
+      connection = dataSource.getConnection();
+    }
+    ScriptUtils.executeSqlScript(connection,
         new EncodedResource(new ClassPathResource(sqlPath)), true, true, "--", "^;", "/*", "*/");
   }
 
