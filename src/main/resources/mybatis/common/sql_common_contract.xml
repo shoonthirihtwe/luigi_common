@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.CommonContractMapper">
+	<select id="selectContracts" resultType="ContractsVo" parameterType="hashmap">
+		SELECT
+			tenant_id,
+			contract_no,
+			contract_branch_no
+		FROM
+			contracts
+		WHERE
+			tenant_id = #{tenantId}
+			AND contract_no = #{contractNo}
+			<![CDATA[AND FROM_UNIXTIME(#{baseDate}/1000) between issue_date and expiration_date]]>
+			<![CDATA[AND (termination_date is null OR FROM_UNIXTIME(#{baseDate}/1000) <= termination_date)]]>
+	</select>
+	<select id="selectBenefit" resultType="RiskHeadersVo" parameterType="hashmap">
+		SELECT
+			r.risk_sequence_no,
+			r.benefit_code,
+			r.benefit_text,
+			r.payment_code,
+			r.payment_text,
+			r.benefit_base_amount,
+			r.benefit_base_unit
+		FROM
+			risk_headers r
+		INNER JOIN contracts ct
+			ON r.tenant_id = ct.tenant_id
+			AND r.contract_no = ct.contract_no
+			AND r.contract_branch_no = ct.contract_branch_no
+		WHERE
+			ct.tenant_id = #{tenantId}
+			AND ct.contract_no = #{contractNo}
+			AND FROM_UNIXTIME(#{baseDate}/1000) between r.risk_start_date and r.risk_end_date
+	</select>
+</mapper>
