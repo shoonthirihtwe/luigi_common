@@ -226,6 +226,7 @@ public class ControllerUtils {
         paramMap.put("updatedBy", curUser.getId());
       }
       paramMap.put("onlineDate", tenantVo.getOnlineDate());
+      paramMap.put("batchDate", tenantVo.getBatchDate());
     } else {
       String domain = request.getHeader("x-frontend-domain");
       if (domain.indexOf(":") == -1) {
@@ -237,6 +238,7 @@ public class ControllerUtils {
       if (tenantVo != null) {
         paramMap.put("tenantId", tenantVo.getId());
         paramMap.put("onlineDate", tenantVo.getOnlineDate());
+        paramMap.put("batchDate", tenantVo.getBatchDate());
       }
     }
 
