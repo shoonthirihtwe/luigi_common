@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.vo.ClaimContractSearchVo;
+import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
 import jp.co.ichain.luigi2.vo.RiskHeadersVo;
 
@@ -54,6 +55,15 @@ public class CommonContractService {
       claimContractSearchVo.setTenantId(contracts.getTenantId()); // テナントID
       claimContractSearchVo.setContractNo(contracts.getContractNo()); // 証券番号
       claimContractSearchVo.setContractBranchNo(contracts.getContractBranchNo()); // 証券番号枝番
+
+      param.put("contractBranchNo", contracts.getContractBranchNo());
+      // 被保険者
+      ClaimCustomerVo insured = mapper.selectInsured(param);
+      claimContractSearchVo.setInsured(insured);
+
+      // 死亡保険金受取人
+      List<ClaimCustomerVo> beneficiaries = mapper.selectBeneficiaries(param);
+      claimContractSearchVo.setBeneficiaries(beneficiaries);
 
       // 保障内容取得
       List<RiskHeadersVo> benefits = mapper.selectBenefit(param);

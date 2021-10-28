@@ -36,6 +36,16 @@ public class ClaimContractSearchVo extends ObjectVo {
   String contractBranchNo;
 
   /**
+   * 被保険者
+   */
+  ClaimCustomerVo insured;
+
+  /**
+   * 死亡保険金受取人
+   */
+  List<ClaimCustomerVo> beneficiaries;
+
+  /**
    * 保障内容Vo
    */
   List<RiskHeadersVo> benefits;
