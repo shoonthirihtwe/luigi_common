@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.condition;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class CommonNomalCondition {
 
   static final String ZIP_REX = "^[0-9]{7}$";
 
+  private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
   /**
    * 日付が現時刻以上
    * 
@@ -48,7 +51,13 @@ public class CommonNomalCondition {
    */
   public boolean overCurrentDate(Object data, Integer tenantId, List<Object> paramList)
       throws InstantiationException, IllegalAccessException, SecurityException {
-    return ((Long) data) >= tenantResources.get(tenantId).getOnlineDate().getTime();
+    Long time = null;
+    try {
+      time = sdf.parse(data.toString()).getTime();
+    } catch (Exception e) {
+      time = (Long) data;
+    }
+    return time >= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**
@@ -66,7 +75,13 @@ public class CommonNomalCondition {
    */
   public boolean underCurrentDate(Object data, Integer tenantId, List<Object> paramList)
       throws InstantiationException, IllegalAccessException, SecurityException {
-    return ((Long) data) <= tenantResources.get(tenantId).getOnlineDate().getTime();
+    Long time = null;
+    try {
+      time = sdf.parse(data.toString()).getTime();
+    } catch (Exception e) {
+      time = (Long) data;
+    }
+    return time <= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
 
   /**
