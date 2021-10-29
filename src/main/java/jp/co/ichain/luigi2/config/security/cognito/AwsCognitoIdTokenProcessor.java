@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.config.security.cognito;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.BeanFactory;
@@ -62,7 +63,12 @@ public class AwsCognitoIdTokenProcessor {
     // テストのためのログイン認証
     // idTokenがあればその認証情報に上書きされる
     if (isDebugMode) {
-      userVo = authService.getCurrentUser();
+      userVo = new UsersVo();
+      userVo.setTenantId(1);
+      userVo.setId(1);
+      userVo.setEmail("test@aot.co.jp");
+      userVo.setSub("a1234");
+      userVo.setLastLoginAt(new Date());
       authorities = authService.getAdminAuth(userVo);
     }
 

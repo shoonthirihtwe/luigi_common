@@ -40,17 +40,6 @@ public class AuthService {
    * @return
    */
   public UsersVo getCurrentUser() {
-    // TODO: g.kim テストのため、後で削除予定 
-    if (isDebugMode) {
-      val result = new UsersVo();
-      result.setTenantId(1);
-      result.setId(1);
-      result.setEmail("test@aot.co.jp");
-      result.setSub("a1234");
-      result.setLastLoginAt(new Date());
-      return result;
-    }
-
     try {
       SecurityUserDetails userDetails =
           (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -93,7 +82,7 @@ public class AuthService {
 
     return authorities;
   }
-  
+
   /**
    * 外部APIのテナント情報取得
    * 

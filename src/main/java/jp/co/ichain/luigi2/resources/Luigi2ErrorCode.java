@@ -111,4 +111,8 @@ public class Luigi2ErrorCode {
    * CSVファイルのデータ不備
    */
   public static final String F0003 = "F0003";
+  /**
+   * 責任開始日前の契約
+   */
+  public static final String C0001 = "C0001";
 }
