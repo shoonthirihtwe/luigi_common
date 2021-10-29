@@ -13,6 +13,7 @@ public class Luigi2CodeUnderwritings {
    * 明細のステータス
    * 
    * 00:受付済
+   * 01:1次査定待
    * 02:1次査済
    * 03:初回保険料決済待
    * 04:条件付契約査定中
@@ -27,7 +28,8 @@ public class Luigi2CodeUnderwritings {
    * @updatedAt : 2021-08-12
    */
   public enum ContractStatus {
-    WAITING_FOR_PAYMENT("01"), CHECK_FOR_PAYMENT_METHOD("05"), ESTABLISHMENT("31");
+    WAITING_FOR_FIRST_ASSESSMENT("01"), WAITING_FOR_FIRST_PAYMENT("03"), CHECK_FOR_PAYMENT_METHOD(
+        "05"), ESTABLISHMENT("31");
 
     String val;
 
@@ -40,11 +42,11 @@ public class Luigi2CodeUnderwritings {
       return this.val;
     }
   }
-  
+
   /**
    * 反社会的勢力チェック
    * 
-   * 0:非該当
+   * 0:非該当 
    * 1:該当
    * 
    * @author : [AOT] g.kim

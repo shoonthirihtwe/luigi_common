@@ -71,8 +71,8 @@ public class TestScriptUtils {
     if (connection == null) {
       connection = dataSource.getConnection();
     }
-    ScriptUtils.executeSqlScript(connection,
-        new EncodedResource(new ClassPathResource(sqlPath)), true, true, "--", "^;", "/*", "*/");
+    ScriptUtils.executeSqlScript(connection, new EncodedResource(new ClassPathResource(sqlPath)),
+        true, true, "--", "^;", "/*", "*/");
   }
 
   /**

@@ -23,11 +23,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AgencyInfoVo extends ObjectVo {
 
-  String agencyCode1;
+  String agencyCode;
 
-  String agentCode1;
+  String agentCode;
 
-  String agentShare1;
+  String agentShare;
   
   String generalAgentFlag;
 
