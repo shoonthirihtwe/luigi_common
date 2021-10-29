@@ -36,6 +36,8 @@ TRUNCATE TABLE luigi2_test.maintenance_documents;
 TRUNCATE TABLE luigi2_test.maintenance_requests;
 TRUNCATE TABLE luigi2_test.maintenance_requests_beneficiaries;
 TRUNCATE TABLE luigi2_test.maintenance_requests_customer;
+TRUNCATE TABLE luigi2_test.maintenance_requests_customer_corporate;
+TRUNCATE TABLE luigi2_test.maintenance_requests_customer_individual;
 TRUNCATE TABLE luigi2_test.maintenance_requests_no;
 TRUNCATE TABLE luigi2_test.new_business_documents;
 TRUNCATE TABLE luigi2_test.notifications;
