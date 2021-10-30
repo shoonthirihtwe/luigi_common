@@ -11,6 +11,7 @@ import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.vo.ClaimContractSearchVo;
 import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
+import jp.co.ichain.luigi2.vo.ClaimHeadersVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
 import jp.co.ichain.luigi2.vo.RiskHeadersVo;
 
@@ -66,6 +67,10 @@ public class CommonContractService {
     // 被保険者
     ClaimCustomerVo insured = mapper.selectInsured(param);
     claimContractSearchVo.setInsured(insured);
+
+    // 請求者情報
+    ClaimHeadersVo claimHeader = mapper.selectClaimHeader(param);
+    claimContractSearchVo.setClaimHeader(claimHeader);
 
     // 死亡保険金受取人
     List<ClaimCustomerVo> beneficiaries = mapper.selectBeneficiaries(param);

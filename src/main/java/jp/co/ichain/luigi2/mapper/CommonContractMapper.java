@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
+import jp.co.ichain.luigi2.vo.ClaimHeadersVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
 import jp.co.ichain.luigi2.vo.RiskHeadersVo;
 
@@ -40,6 +41,17 @@ public interface CommonContractMapper {
    * @return
    */
   List<RiskHeadersVo> selectBenefit(Map<String, Object> param);
+
+  /**
+   * 請求者情報
+   * 
+   * @author : [VJP] ホアン
+   * @createdAt : 2021-10-30
+   * @updatedAt : 2021-10−30
+   * @param param
+   * @return
+   */
+  ClaimHeadersVo selectClaimHeader(Map<String, Object> param);
 
   /**
    * 被保険者取得
