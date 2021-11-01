@@ -37,83 +37,79 @@
 			AND FROM_UNIXTIME(#{baseDate}/1000) between r.risk_start_date and r.risk_end_date
 		ORDER BY risk_sequence_no ASC
 	</select>
+	<select id="selectClaimHeader" resultType="ClaimHeadersVo" parameterType="hashmap">
+		SELECT
+			claim_headers.claimant_category,
+		    claim_headers.claimant_sei_knj,
+		    claim_headers.claimant_mei_knj,
+		    claim_headers.claimant_sei_kana,
+		    claim_headers.claimant_sei_kana,
+		    claim_headers.claimant_date_of_birth,
+		    claim_headers.claimant_address AS address,
+		    claim_headers.tel_no,
+		    claim_headers.contact_tel_no,
+		    claim_headers.email
+		FROM
+		    claim_headers
+		WHERE
+			claim_headers.tenant_id = #{tenantId}
+			AND claim_headers.contract_no = #{contractNo}
+			AND claim_headers.contract_branch_no = #{contractBranchNo}
+		LIMIT 1
+	</select>
 	<select id="selectInsured" resultType="ClaimCustomerVo" parameterType="hashmap">
 		SELECT 
 		    contracts.id AS contractId,
 		    CASE
-		        WHEN (claim_headers.claimant_sei_knj IS NOT NULL) THEN claim_headers.claimant_sei_knj
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_knj_sei
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_knj_sei
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_knj_sei
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_knj_sei
+		        ELSE NULL
 		    END AS name_knj_sei,
 		    CASE
-		        WHEN (claim_headers.claimant_mei_knj IS NOT NULL) THEN claim_headers.claimant_mei_knj
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_knj_mei
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_knj_mei
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_knj_mei
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_knj_mei
+		        ELSE NULL
 		    END AS name_knj_mei,
 		    CASE
-		        WHEN (claim_headers.claimant_sei_kana IS NOT NULL) THEN claim_headers.claimant_sei_kana
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_kana_sei
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_kana_sei
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_kana_sei
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_kana_sei
+		        ELSE NULL
 		    END AS name_kana_sei,
 		    CASE
-		        WHEN (claim_headers.claimant_sei_kana IS NOT NULL) THEN claim_headers.claimant_mei_kana
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_kana_mei
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_kana_mei
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.name_kana_mei
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_name_kana_mei
+		        ELSE NULL
 		    END AS name_kana_mei,
 		    CASE
-		        WHEN (claim_headers.claimant_date_of_birth IS NOT NULL) THEN claim_headers.claimant_date_of_birth
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.date_of_birth
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_date_of_birth
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.date_of_birth
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_date_of_birth
+		        ELSE NULL
 		    END AS date_of_birth,
 		    CASE
-		        WHEN (claim_headers.claimant_address IS NOT NULL) THEN claim_headers.claimant_address
-		        ELSE CASE
-		            WHEN
-		                customers.corporate_individual_flag = '1'
-		            THEN
-		                CONCAT(customers_individual.addr_knj_pref,
-		                        customers_individual.addr_knj_1,
-		                        customers_individual.addr_knj_2)
-		            WHEN
-		                customers.corporate_individual_flag = '2'
-		            THEN
-		                CONCAT(customers_corporate.rep10e_addr_knj_pref,
-		                        customers_corporate.rep10e_addr_knj_1,
-		                        customers_corporate.rep10e_addr_knj_2)
-		            ELSE NULL
-		        END
+		        WHEN
+		            customers.corporate_individual_flag = '1'
+		        THEN
+		            CONCAT(customers_individual.addr_knj_pref,
+		                    customers_individual.addr_knj_1,
+		                    customers_individual.addr_knj_2)
+		        WHEN
+		            customers.corporate_individual_flag = '2'
+		        THEN
+		            CONCAT(customers_corporate.rep10e_addr_knj_pref,
+		                    customers_corporate.rep10e_addr_knj_1,
+		                    customers_corporate.rep10e_addr_knj_2)
+		        ELSE NULL
 		    END AS address,
 		    CASE
-		        WHEN (claim_headers.tel_no IS NOT NULL) THEN claim_headers.tel_no
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.addr_tel1
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_addr_tel1
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.addr_tel1
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.rep10e_addr_tel1
+		        ELSE NULL
 		    END AS tel_no,
 		    claim_headers.contact_tel_no,
 		    CASE
-		        WHEN (claim_headers.email IS NOT NULL) THEN claim_headers.email
-		        ELSE CASE
-		            WHEN customers.corporate_individual_flag = '1' THEN customers_individual.email
-		            WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.contact_email
-		            ELSE NULL
-		        END
+		        WHEN customers.corporate_individual_flag = '1' THEN customers_individual.email
+		        WHEN customers.corporate_individual_flag = '2' THEN customers_corporate.contact_email
+		        ELSE NULL
 		    END AS email
 		FROM
 		    contracts
