@@ -7,7 +7,7 @@
 		SELECT
 			tenant_id,
 			contract_no,
-			max(contract_branch_no)
+			contract_branch_no
 		FROM
 			contracts
 		WHERE
