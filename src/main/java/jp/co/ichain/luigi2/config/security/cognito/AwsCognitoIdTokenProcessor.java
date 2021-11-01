@@ -1,7 +1,6 @@
 package jp.co.ichain.luigi2.config.security.cognito;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.BeanFactory;
