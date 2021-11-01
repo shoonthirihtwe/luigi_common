@@ -63,12 +63,7 @@ public class AwsCognitoIdTokenProcessor {
     // テストのためのログイン認証
     // idTokenがあればその認証情報に上書きされる
     if (isDebugMode) {
-      userVo = new UsersVo();
-      userVo.setTenantId(1);
-      userVo.setId(1);
-      userVo.setEmail("test@aot.co.jp");
-      userVo.setSub("a1234");
-      userVo.setLastLoginAt(new Date());
+      userVo = authService.getCurrentUser();
       authorities = authService.getAdminAuth(userVo);
     }
 

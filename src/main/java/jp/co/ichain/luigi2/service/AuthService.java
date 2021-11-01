@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,11 +40,24 @@ public class AuthService {
    * @return
    */
   public UsersVo getCurrentUser() {
+    UsersVo userVo = null;
     try {
       SecurityUserDetails userDetails =
           (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+
       return userDetails.getCurrentUser();
+
     } catch (Exception e) {
+
+      if (isDebugMode) {
+        userVo = new UsersVo();
+        userVo.setTenantId(1);
+        userVo.setId(1);
+        userVo.setEmail("test@aot.co.jp");
+        userVo.setSub("a1234");
+        userVo.setLastLoginAt(new Date());
+        return userVo;
+      }
       return null;
     }
   }
