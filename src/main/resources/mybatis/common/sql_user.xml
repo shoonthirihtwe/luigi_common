@@ -69,7 +69,7 @@
 				</otherwise>
 			</choose>
 				AND tenant_id=#{tenantId}
-		ORDER BY updated_at DESC
+		ORDER BY updated_at DESC,customerId
 	</select>
 	<select id="selectNayoseCustomerIndividualPartialMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
 		SELECT
