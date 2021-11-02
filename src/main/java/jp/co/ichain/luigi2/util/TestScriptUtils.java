@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,11 +18,11 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -58,6 +57,9 @@ public class TestScriptUtils {
 
   @Autowired
   private AwsS3Dao awsS3Dao;
+
+  @Autowired
+  private ResourceLoader resourceLoader;
 
   java.sql.Connection connection;
 
@@ -166,7 +168,7 @@ public class TestScriptUtils {
   public String loadJsonToString(String path) throws JsonParseException, JsonMappingException,
       JsonProcessingException, UnsupportedEncodingException, IOException {
 
-    InputStream inputStream = getClass().getResourceAsStream("/" + path);
+    InputStream inputStream = resourceLoader.getResource("classpath:" + path).getInputStream();
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
     return reader.lines().collect(Collectors.joining(System.lineSeparator()));
   }
