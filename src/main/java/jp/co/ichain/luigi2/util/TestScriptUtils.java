@@ -5,6 +5,7 @@ package jp.co.ichain.luigi2.util;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -160,10 +162,10 @@ public class TestScriptUtils {
    */
   public String loadJsonToString(String path) throws JsonParseException, JsonMappingException,
       JsonProcessingException, UnsupportedEncodingException, IOException {
-    ObjectMapper mapper = new ObjectMapper();
     ClassPathResource resource = new ClassPathResource(path);
-    return mapper.writeValueAsString(
-        mapper.readValue(new InputStreamReader(resource.getInputStream(), "UTF-8"), HashMap.class));
+    byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+    return new String(bdata, StandardCharsets.UTF_8);
+
   }
 
   /**
