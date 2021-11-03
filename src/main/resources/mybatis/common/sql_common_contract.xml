@@ -15,6 +15,8 @@
 			AND contract_no = #{contractNo}
 			<![CDATA[AND FROM_UNIXTIME(#{baseDate}/1000) between effective_date and expiration_date]]>
 			<![CDATA[AND (termination_date is null OR FROM_UNIXTIME(#{baseDate}/1000) <= termination_date)]]>
+		ORDER BY contract_branch_no desc
+		LIMIT 1
 	</select>
 	<select id="selectBenefit" resultType="RiskHeadersVo" parameterType="hashmap">
 		SELECT
