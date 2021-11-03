@@ -143,6 +143,11 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者反社チェック結果コード
    */
   String resultCode;
+  
+  /**
+   * フロント側で反社チェック結果判断するフラグ
+   */
+  boolean antiSocialFlag;
 
   /**
    * 親権者（被保険者）
