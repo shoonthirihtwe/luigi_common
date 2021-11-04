@@ -7,6 +7,7 @@ import javax.ejb.LockType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.mapper.NumberingMapper;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
@@ -28,6 +29,9 @@ public class NumberingService {
 
   @Autowired
   NumberingMapper numberingMapper;
+  
+  @Autowired
+  CommonMapper mapper;
 
   private Date updatedAt;
   
@@ -63,6 +67,7 @@ public class NumberingService {
             tenantId, null, "cachingAI");
       }
     }
+    setUpdatedAt(mapper.selectLastUpdatedAt("tenants"));
   }
 
   /**
