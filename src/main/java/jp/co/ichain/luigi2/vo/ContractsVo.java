@@ -88,7 +88,7 @@ public class ContractsVo extends ObjectVo {
   
   Integer numberOfInsured;
 
-  Integer coverageYear;
+  Integer coverageTerm;
 
   String cardCustNumber;
 
