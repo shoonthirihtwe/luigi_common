@@ -79,7 +79,9 @@ public class ServiceInstancesResources {
    */
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
     this.map = new HashMap<Integer, Map<String, List<ServiceInstancesVo>>>();
-    this.updatedAtMap = new HashMap<Integer, Date>();
+    if (this.updatedAtMap == null) {
+      this.updatedAtMap = new HashMap<Integer, Date>();
+    }
 
     val list = commonMapper.selectServiceInstances(tenantId);
     this.initialize(tenantId, list);

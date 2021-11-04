@@ -73,7 +73,7 @@ public class ResourcesRefreshScheduler {
         // serviceInstancesResources
         try {
           val updatedAt = serviceInstancesResources.updatedAtMap.get(tenantId);
-          if (updatedAt.getTime() < (long) item.get("updatedAt")) {
+          if (updatedAt == null || updatedAt.getTime() < (long) item.get("updatedAt")) {
             serviceInstancesResources.initialize(tenantId);
             codeMasterResources.initialize(tenantId);
             validityResources.initialize(tenantId);
