@@ -130,9 +130,24 @@ public class ClaimHeadersVo extends ObjectVo {
   Date claimantDateOfBirth;
 
   /**
-   * 請求者住所
+   * 請求者住所1(漢字)
    */
-  String claimantAddress;
+  String claimantAddrKnj1;
+  
+  /**
+   * 請求者住所2(漢字)
+   */
+  String claimantAddrKnj2;
+  
+  /**
+   * 請求者郵便番号
+   */
+  String claimantAddrZipCode;
+  
+  /**
+   * 請求者住所―県(漢字)
+   */
+  String claimantAddrKnjPref;
 
   /**
    * 請求者（被保険者）との続柄

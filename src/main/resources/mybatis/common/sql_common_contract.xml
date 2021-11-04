@@ -47,7 +47,10 @@
 		    claim_headers.claimant_sei_kana,
 		    claim_headers.claimant_sei_kana,
 		    claim_headers.claimant_date_of_birth,
-		    claim_headers.claimant_address AS address,
+		    claim_headers.claimant_addr_knj_1,
+		    claim_headers.claimant_addr_knj_2,
+		    claim_headers.claimant_addr_knj_pref,
+		    claim_headers.claimant_addr_zip_code,
 		    claim_headers.tel_no,
 		    claim_headers.contact_tel_no,
 		    claim_headers.email
