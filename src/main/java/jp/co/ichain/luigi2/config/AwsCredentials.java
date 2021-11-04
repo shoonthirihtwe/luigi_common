@@ -7,7 +7,11 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
+import com.amazonaws.auth.WebIdentityTokenCredentialsProvider;
 
 /**
  * AWS認証
@@ -31,7 +35,10 @@ public class AwsCredentials {
 
   @Bean
   public AWSCredentialsProvider makeAwsCredentials() {
-    return new AWSCredentialsProviderChain(new InstanceProfileCredentialsProvider(true),
-        new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)));
+    return new AWSCredentialsProviderChain(new EnvironmentVariableCredentialsProvider(),
+        new SystemPropertiesCredentialsProvider(), WebIdentityTokenCredentialsProvider.create(),
+        new InstanceProfileCredentialsProvider(true),
+        new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)),
+        new EC2ContainerCredentialsProviderWrapper());
   }
 }
