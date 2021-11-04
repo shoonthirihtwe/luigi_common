@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jp.co.ichain.luigi2.config.WebExistsCondition;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.service.NumberingService;
 import lombok.val;
@@ -20,6 +22,7 @@ import lombok.val;
  */
 @Singleton
 @Component
+@Conditional(WebExistsCondition.class)
 public class ResourcesRefreshScheduler {
 
   @Autowired
