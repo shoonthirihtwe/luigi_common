@@ -43,18 +43,20 @@ public class CommonContractService {
    */
   public ClaimContractSearchVo getRiskHeaders(Map<String, Object> param) throws SecurityException,
       IllegalArgumentException, IllegalAccessException, InstantiationException, IOException {
+
+    // 保障内容照会情報を取得
+    ContractsVo contracts = mapper.selectContracts(param);
+
+    if (contracts == null) {
+      throw new WebException(Luigi2ErrorCode.C0001);
+    }
+
     // 指定なしの場合は当日
     if (param.get("baseDate") == null) {
       // 基準日
       Date baseDate = (Date) param.get("onlineDate");
       // パラメーターを設定
       param.put("baseDate", baseDate.getTime());
-    }
-    // 保障内容照会情報を取得
-    ContractsVo contracts = mapper.selectContracts(param);
-
-    if (contracts == null) {
-      throw new WebException(Luigi2ErrorCode.C0001);
     }
 
     ClaimContractSearchVo claimContractSearchVo = new ClaimContractSearchVo();
