@@ -40,8 +40,6 @@ public class BeneficialiesVo extends ObjectVo {
   String roleType;
 
   String corporateIndividualFlag;
-  
-  String personType;
 
   String nameKanaSei;
 
