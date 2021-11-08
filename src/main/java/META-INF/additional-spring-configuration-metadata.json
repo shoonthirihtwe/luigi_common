@@ -174,6 +174,36 @@
 			"name": "external.api.flag",
 			"type": "java.lang.String",
 			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
+		},
+		{
+			"name": "project.domain",
+			"type": "java.lang.String",
+			"description": "A description for 'project.domain'"
+		},
+		{
+			"name": "project.url",
+			"type": "java.lang.String",
+			"description": "A description for 'project.url'"
+		},
+		{
+			"name": "dynamo.url",
+			"type": "java.lang.String",
+			"description": "A description for 'dynamo.url'"
+		},
+		{
+			"name": "dynamo.region",
+			"type": "java.lang.String",
+			"description": "A description for 'dynamo.region'"
+		},
+		{
+			"name": "dynamo.ba002.keys",
+			"type": "java.lang.String",
+			"description": "A description for 'dynamo.ba002.keys'"
+		},
+		{
+			"name": "dynamo.ba002.table",
+			"type": "java.lang.String",
+			"description": "A description for 'dynamo.ba002.table'"
 		}
 	]
 }
