@@ -21,6 +21,7 @@ import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ClientMailType;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.MailType;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ReceiverInfo;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.TenantMailType;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
@@ -60,6 +61,9 @@ public class AwsMailDao {
 
   @Value("${renewal.sender.email.clients}")
   String renewalClientsSender;
+
+  @Value("${sender.email.tenants}")
+  String senderEmailTenants;
 
   /**
    * 直メール発送
@@ -214,6 +218,10 @@ public class AwsMailDao {
    */
   public String getSender(ReceiverInfo receiverInfo, MailType mailType, Map<String, Object> param) {
 
+    if (receiverInfo == ReceiverInfo.sender_emails_to_tenants) {
+      return senderEmailTenants;
+    }
+
     String sender =
         mapper.selectSenderEmailsByContractNo(receiverInfo.name(), mailType.getName(), param);
 
@@ -238,5 +246,22 @@ public class AwsMailDao {
     }
 
     return sender;
+  }
+
+  /**
+   * オペレータメール取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-11-09
+   * @updatedAt : 2021-11-09
+   * @param ReceiverInfo
+   * @param MailType
+   * @param paramMap : tenantId, contractNo必須
+   * @return
+   */
+  public String getTenantsEmail(TenantMailType mailType, Map<String, Object> param) {
+
+    return mapper.selectSenderEmailsByContractNo(
+        ReceiverInfo.sender_emails_to_tenants.name(), mailType.getName(), param);
   }
 }

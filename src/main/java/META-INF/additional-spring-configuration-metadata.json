@@ -229,6 +229,11 @@
 			"name": "renewal.sender.email.clients",
 			"type": "java.lang.String",
 			"description": "A description for 'renewal.sender.email.clients'"
+		},
+		{
+			"name": "sender.email.tenants",
+			"type": "java.lang.String",
+			"description": "A description for 'sender.email.tenants'"
 		}
 	]
 }
