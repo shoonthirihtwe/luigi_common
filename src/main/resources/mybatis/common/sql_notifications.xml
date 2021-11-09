@@ -40,8 +40,8 @@
 				when '1' then cui.email
 				when '2' then cuc.contact_email
 				ELSE null END,</if>
-			#{emailSender},
 			#{errorFlag},
+			#{emailSender},
 			#{updatedBy}
 		FROM contracts co LEFT OUTER JOIN customers cu
 		ON co.tenant_id=cu.tenant_id AND co.contractor_customer_id = cu.customer_id
