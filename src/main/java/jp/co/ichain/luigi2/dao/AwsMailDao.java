@@ -17,6 +17,10 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import jp.co.ichain.luigi2.mapper.CommonMapper;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ClientMailType;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.MailType;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ReceiverInfo;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
@@ -39,6 +43,24 @@ public class AwsMailDao {
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
 
+  @Autowired
+  CommonMapper mapper;
+
+  @Value("${newbusiness.sender.email.clients}")
+  String newBusinessClientsSender;
+
+  @Value("${policy.sender.email.clients}")
+  String policyClientsSender;
+
+  @Value("${claim.sender.email.clients}")
+  String claimClientsSender;
+
+  @Value("${billing.sender.email.clients}")
+  String billingClientsSender;
+
+  @Value("${renewal.sender.email.clients}")
+  String renewalClientsSender;
+
   /**
    * 直メール発送
    * 
@@ -48,10 +70,11 @@ public class AwsMailDao {
    * @param templateNumber
    * @param to
    * @param paramMap : tenantId必須
+   * @param sender
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  public void send(String templateNumber, String to, Map<String, Object> paramMap)
+  public void send(String templateNumber, String to, Map<String, Object> paramMap, String sender)
       throws JsonMappingException, JsonProcessingException {
 
     val contentInfo = serviceInstancesResources
@@ -71,9 +94,8 @@ public class AwsMailDao {
             .withData(makeBody(contentInfo, appendNotification, paramMap))));
 
     // Send the email
-    // TODO s.paku 発信元Email決まったら変更
-    client.sendEmail(new SendEmailRequest().withSource("no-reply@lg2.ichain.co.jp")
-        .withDestination(destination).withMessage(message));
+    client.sendEmail(new SendEmailRequest().withSource(sender).withDestination(destination)
+        .withMessage(message));
   }
 
 
@@ -177,5 +199,44 @@ public class AwsMailDao {
     client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(region)
         .withCredentials(credentialsProvider).build();
     dateFormat = new SimpleDateFormat(new String(mailDateFormat.getBytes("ISO-8859-1"), "UTF-8"));
+  }
+
+  /**
+   * Sender取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-11-09
+   * @updatedAt : 2021-11-09
+   * @param ReceiverInfo
+   * @param MailType
+   * @param paramMap : tenantId, contractNo必須
+   * @return
+   */
+  public String getSender(ReceiverInfo receiverInfo, MailType mailType, Map<String, Object> param) {
+
+    String sender =
+        mapper.selectSenderEmailsByContractNo(receiverInfo.name(), mailType.getName(), param);
+
+    if (sender == null && receiverInfo == ReceiverInfo.sender_emails_to_clients) {
+      switch (((ClientMailType) mailType)) {
+        case new_business:
+          sender = newBusinessClientsSender;
+          break;
+        case policy_management:
+          sender = policyClientsSender;
+          break;
+        case claim:
+          sender = claimClientsSender;
+          break;
+        case billing:
+          sender = billingClientsSender;
+          break;
+        case renewal:
+          sender = renewalClientsSender;
+          break;
+      }
+    }
+
+    return sender;
   }
 }

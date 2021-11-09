@@ -204,6 +204,31 @@
 			"name": "dynamo.ba002.table",
 			"type": "java.lang.String",
 			"description": "A description for 'dynamo.ba002.table'"
+		},
+		{
+			"name": "newbusiness.sender.email.clients",
+			"type": "java.lang.String",
+			"description": "A description for 'newbusiness.sender.email.clients'"
+		},
+		{
+			"name": "policy.sender.email.clients",
+			"type": "java.lang.String",
+			"description": "A description for 'policy.sender.email.clients'"
+		},
+		{
+			"name": "claim.sender.email.clients",
+			"type": "java.lang.String",
+			"description": "A description for 'claim.sender.email.clients'"
+		},
+		{
+			"name": "billing.sender.email.clients",
+			"type": "java.lang.String",
+			"description": "A description for 'billing.sender.email.clients'"
+		},
+		{
+			"name": "renewal.sender.email.clients",
+			"type": "java.lang.String",
+			"description": "A description for 'renewal.sender.email.clients'"
 		}
 	]
 }
