@@ -25,6 +25,7 @@
 			a.tenant_id=#{tenantId}
 			AND a.allow_deny=1
 			AND a.api_yn=1
+			AND a.role_id='admin'
 	</select>
 
 	<update id="updateLoginUser" parameterType="UsersVo">
