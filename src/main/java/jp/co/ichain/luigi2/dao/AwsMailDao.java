@@ -36,7 +36,6 @@ import lombok.val;
 @Service
 public class AwsMailDao {
 
-
   private final SimpleDateFormat dateFormat;
 
   private final AmazonSimpleEmailService client;
@@ -101,7 +100,6 @@ public class AwsMailDao {
     client.sendEmail(new SendEmailRequest().withSource(sender).withDestination(destination)
         .withMessage(message));
   }
-
 
   /**
    * メール内容を生成
@@ -242,6 +240,8 @@ public class AwsMailDao {
         case renewal:
           sender = renewalClientsSender;
           break;
+        default:
+          break;
       }
     }
 
@@ -260,8 +260,7 @@ public class AwsMailDao {
    * @return
    */
   public String getTenantsEmail(TenantMailType mailType, Map<String, Object> param) {
-
-    return mapper.selectSenderEmailsByContractNo(
-        ReceiverInfo.sender_emails_to_tenants.name(), mailType.getName(), param);
+    return mapper.selectSenderEmailsByContractNo(ReceiverInfo.sender_emails_to_tenants.name(),
+        mailType.getName(), param);
   }
 }
