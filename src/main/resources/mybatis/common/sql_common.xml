@@ -165,7 +165,7 @@
 			c.contract_no=#{param.contractNo}
 			AND c.tenant_id=#{param.tenantId}
 			<if test='param.contractBranchNo != null'>
-			AND c.contract_branch_no=#{contractBranchNo}
+			AND c.contract_branch_no=#{param.contractBranchNo}
 			</if>
 		ORDER BY c.contract_branch_no desc
         LIMIT 1
