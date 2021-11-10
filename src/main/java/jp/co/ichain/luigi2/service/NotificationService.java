@@ -6,8 +6,11 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jp.co.ichain.luigi2.dao.AwsMailDao;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.mapper.NotificationMapper;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.MailType;
+import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ReceiverInfo;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
 
@@ -27,6 +30,9 @@ public class NotificationService {
   @Autowired
   NotificationMapper mapper;
 
+  @Autowired
+  AwsMailDao mailDao;
+
   /**
    * 通知登録
    * 
@@ -42,7 +48,7 @@ public class NotificationService {
    */
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
   public void registerNotification(String templateNumber, Map<String, Object> param,
-      String... appendRegisterFieldNames) {
+      ReceiverInfo receiverInfo, MailType mailType, String... appendRegisterFieldNames) {
 
     // data (json) add
     Map<String, Object> appendMap = new HashMap<String, Object>();
@@ -57,6 +63,11 @@ public class NotificationService {
     // notificationMethod
     if (param.get("notificationMethod") == null) {
       param.put("notificationMethod", "00");
+    }
+    
+    // sender設定
+    if (param.get("emailSender") == null) {
+      param.put("emailSender", mailDao.getSender(receiverInfo, mailType, param));
     }
 
     // 通知登録
