@@ -164,7 +164,7 @@
 		WHERE 
 			c.contract_no=#{param.contractNo}
 			AND c.tenant_id=#{param.tenantId}
-			<if test='contractBranchNo != null'>
+			<if test='param.contractBranchNo != null'>
 			AND c.contract_branch_no=#{contractBranchNo}
 			</if>
 		ORDER BY c.contract_branch_no desc
