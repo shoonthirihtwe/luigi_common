@@ -170,4 +170,12 @@
 		ORDER BY c.contract_branch_no desc
         LIMIT 1
 	</select>
+	<select id="selectFactoringCompanies" resultType="FactoringCompaniesVo" parameterType="hashmap">
+		SELECT DISTINCT tenant_id, site_id, site_pass, shop_id, shop_pass 
+		FROM  
+			factoring_companies
+		WHERE tenant_id=#{tenantId}
+		ORDER BY updated_at
+		LIMIT 1
+	</select>
 </mapper>

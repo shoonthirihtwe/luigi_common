@@ -57,7 +57,8 @@ public class PaymentService {
     PaymentVo result = null;
     switch (factoringCompanyCode) {
       case "CARD01":
-        result = gmoPaymentService.pay(contractNo, cardCustNumber, dueDate, premiumDueAmount);
+        result =
+            gmoPaymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
@@ -83,9 +84,9 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo cancel(Integer tenantId, String contractNo, String accessId, String accessPassword, Date suspenceDate)
-      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
-      ParseException {
+  public PaymentVo cancel(Integer tenantId, String contractNo, String accessId,
+      String accessPassword, Date suspenceDate) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
     String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
 
@@ -96,7 +97,7 @@ public class PaymentService {
     PaymentVo result = null;
     switch (factoringCompanyCode) {
       case "CARD01":
-        result = gmoPaymentService.cancel(accessId, accessPassword, suspenceDate);
+        result = gmoPaymentService.cancel(tenantId, accessId, accessPassword, suspenceDate);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
