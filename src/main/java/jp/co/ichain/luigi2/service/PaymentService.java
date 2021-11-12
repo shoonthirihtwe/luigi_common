@@ -38,6 +38,7 @@ public class PaymentService {
    * @param cardCustNumber
    * @param dueDate
    * @param premiumDueAmount
+   * @param nowDate(onlineDate, バッチの場合 batchDate)
    * @return
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -46,11 +47,11 @@ public class PaymentService {
    * @throws ParseException
    */
   public PaymentVo pay(Integer tenantId, String contractNo, String cardCustNumber, String dueDate,
-      Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
-      GmoPaymentException, IOException, ParseException {
+      Integer premiumDueAmount, Date nowDate) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
     FactoringCompaniesVo companyInfo =
-        commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo, nowDate);
 
     if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "contractNo");
@@ -79,6 +80,7 @@ public class PaymentService {
    * @param accessId
    * @param accessPassword
    * @param suspenceDate
+   * @param nowDate (onlineDate, バッチの場合 batchDate)
    * @return
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -87,11 +89,11 @@ public class PaymentService {
    * @throws ParseException
    */
   public PaymentVo cancel(Integer tenantId, String contractNo, String accessId,
-      String accessPassword, Date suspenceDate) throws IllegalArgumentException,
+      String accessPassword, Date suspenceDate, Date nowDate) throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
     FactoringCompaniesVo companyInfo =
-        commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo, nowDate);
 
     if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0001);

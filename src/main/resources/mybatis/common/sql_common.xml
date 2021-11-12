@@ -48,15 +48,14 @@
 	</select>
 	<select id="selectFactoringCompanyCode" resultType="FactoringCompaniesVo" parameterType="hashmap">
 		SELECT factoring_company_code, site_id, site_pass, shop_id, shop_pass
-		FROM factoring_companies f JOIN tenants t
-        ON f.tenant_id=t.id
+		FROM factoring_companies f
 		WHERE f.deleted_at is null AND tenant_id=#{tenantId} AND 
-			factoring_company_start_date <![CDATA[<= t.online_date AND t.online_date <=]]> factoring_company_end_date AND
+			factoring_company_start_date <![CDATA[<= #{onlineDate} AND #{onlineDate} <=]]> factoring_company_end_date AND
 			factoring_company_code = (
 			SELECT 
 			factoring_company_code
 			FROM policy_holders_pay_method
-			WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND start_date <![CDATA[<= t.online_date AND t.online_date <= end_date]]> AND status = 'A')
+			WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND start_date <![CDATA[<= #{onlineDate} AND #{onlineDate} <= end_date]]> AND status = 'A')
 	</select>
 	<select id="selectOpenDate" resultType="Date" parameterType="hashmap">
 		SELECT

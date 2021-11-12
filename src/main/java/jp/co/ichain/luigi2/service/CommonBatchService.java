@@ -152,7 +152,7 @@ public class CommonBatchService {
       String accessPass = ""; // 取引パスワード
       try {
         paymentVo =
-            paymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount);
+            paymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount, batchDate);
         if (paymentVo != null) {
           accessId = paymentVo.getAccessId();
           accessPass = paymentVo.getAccessPass();
