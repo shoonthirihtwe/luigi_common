@@ -19,6 +19,7 @@ import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
@@ -122,9 +123,9 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo pay(Integer tenantId, String contractNo, String cardCustNumber, String dueDate,
-      Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
-      GmoPaymentException, IOException, ParseException {
+  PaymentVo pay(FactoringCompaniesVo companyInfo, String contractNo, String cardCustNumber,
+      String dueDate, Integer premiumDueAmount) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
@@ -139,7 +140,6 @@ class GmoPaymentService {
     // 保険料請求額billing_details.premium_due_amountを設定する
     gmoPaymentVo.setAmount((long) premiumDueAmount);
 
-    val companyInfo = mapper.selectFactoringCompanies(tenantId);
     // サイトID、PASSセット
     gmoPaymentVo.setSiteID(companyInfo.getSiteId());
     gmoPaymentVo.setSitePass(companyInfo.getSitePass());
@@ -182,15 +182,13 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo cancel(Integer tenantId, String accessId, String accessPassword, Date suspenceDate)
-      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
-      ParseException {
+  PaymentVo cancel(FactoringCompaniesVo companyInfo, String accessId, String accessPassword,
+      Date suspenceDate) throws IllegalArgumentException, IllegalAccessException,
+      GmoPaymentException, IOException, ParseException {
     // 取引IDセット
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     gmoPaymentVo.setAccessID(accessId);
     gmoPaymentVo.setAccessPass(accessPassword);
-
-    val companyInfo = mapper.selectFactoringCompanies(tenantId);
 
     // サイトID、PASSセット
     gmoPaymentVo.setSiteID(companyInfo.getSiteId());

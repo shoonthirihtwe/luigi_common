@@ -91,7 +91,7 @@ public interface CommonMapper {
   Date selectLastUpdatedAt(@Param("table") String table);
 
   /**
-   * 決済方法取得
+   * 決済情報取得
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-18
@@ -100,7 +100,7 @@ public interface CommonMapper {
    * @param contractNo
    * @return
    */
-  String selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
+  FactoringCompaniesVo selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
       @Param("contractNo") String contractNo);
 
   /**
@@ -205,14 +205,4 @@ public interface CommonMapper {
   String selectSenderEmailsByContractNo(@Param("recieverInfo") String recieverInfo,
       @Param("mailType") String mailType, @Param("param") Map<String, Object> param);
 
-  /**
-   * GMO決済情報取得
-   * 
-   * @author : [AOT] g.kim
-   * @createdAt : 2021-10-11
-   * @updatedAt : 2021-10-11
-   * @param paramMap
-   * @return
-   */
-  FactoringCompaniesVo selectFactoringCompanies(@Param("tenantId") Integer tenantId);
 }

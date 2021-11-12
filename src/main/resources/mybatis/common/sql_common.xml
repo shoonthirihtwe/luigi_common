@@ -46,8 +46,8 @@
 		</where>
 		ORDER BY updated_at DESC
 	</select>
-	<select id="selectFactoringCompanyCode" resultType="string" parameterType="hashmap">
-		SELECT factoring_company_code
+	<select id="selectFactoringCompanyCode" resultType="FactoringCompaniesVo" parameterType="hashmap">
+		SELECT factoring_company_code, site_id, site_pass, shop_id, shop_pass
 		FROM factoring_companies f JOIN tenants t
         ON f.tenant_id=t.id
 		WHERE f.deleted_at is null AND tenant_id=#{tenantId} AND 
@@ -169,13 +169,5 @@
 			</if>
 		ORDER BY c.contract_branch_no desc
         LIMIT 1
-	</select>
-	<select id="selectFactoringCompanies" resultType="FactoringCompaniesVo" parameterType="hashmap">
-		SELECT DISTINCT tenant_id, site_id, site_pass, shop_id, shop_pass 
-		FROM  
-			factoring_companies
-		WHERE tenant_id=#{tenantId}
-		ORDER BY updated_at
-		LIMIT 1
 	</select>
 </mapper>

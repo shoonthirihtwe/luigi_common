@@ -9,6 +9,7 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 
 /**
@@ -48,17 +49,18 @@ public class PaymentService {
       Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
       GmoPaymentException, IOException, ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+    FactoringCompaniesVo companyInfo =
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
 
-    if (factoringCompanyCode == null) {
+    if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "contractNo");
     }
 
     PaymentVo result = null;
-    switch (factoringCompanyCode) {
+    switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
-        result =
-            gmoPaymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount);
+        result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
+            premiumDueAmount);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
@@ -88,16 +90,17 @@ public class PaymentService {
       String accessPassword, Date suspenceDate) throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+    FactoringCompaniesVo companyInfo =
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
 
-    if (factoringCompanyCode == null) {
+    if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0001);
     }
 
     PaymentVo result = null;
-    switch (factoringCompanyCode) {
+    switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
-        result = gmoPaymentService.cancel(tenantId, accessId, accessPassword, suspenceDate);
+        result = gmoPaymentService.cancel(companyInfo, accessId, accessPassword, suspenceDate);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
