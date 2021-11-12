@@ -101,7 +101,7 @@ public interface CommonMapper {
    * @return
    */
   FactoringCompaniesVo selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
-      @Param("contractNo") String contractNo, @Param("onlineDate") Date nowDate);
+      @Param("contractNo") String contractNo, @Param("nowDate") Date nowDate);
 
   /**
    * 営業日取得
