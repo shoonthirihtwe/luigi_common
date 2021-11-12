@@ -10,12 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
-import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
@@ -34,9 +32,6 @@ import lombok.val;
  */
 @Service
 class GmoPaymentService {
-
-  @Autowired
-  CommonMapper mapper;
 
   @Value("${gmo.entry.tran}")
   private String entryTran;
