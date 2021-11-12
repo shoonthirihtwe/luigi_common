@@ -23,10 +23,47 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FactoringCompaniesVo extends ObjectVo {
+
+  /**
+   * テナントID
+   */
+  Integer tenantId;
   /**
    * 収納代行会社コード
    */
   String factoringCompanyCode;
+  /**
+   * 収納代行会社名
+   */
+  String factoringCompanyName;
+  /**
+   * 払込経路
+   */
+  String paymentMethod;
+  /**
+   * 開始日
+   */
+  Date factoringCompanyStartDate;
+  /**
+   * 終了日
+   */
+  Date factoringCompanyEndDate;
+  /**
+   * サイトID
+   */
+  String siteId;
+  /**
+   * サイトパスワード
+   */
+  String sitePass;
+  /**
+   * ショップID
+   */
+  String shopId;
+  /**
+   * ショップパスワード
+   */
+  String shopPass;
   /**
    * 請求月
    */

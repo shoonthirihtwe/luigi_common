@@ -9,6 +9,7 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 
 /**
@@ -37,6 +38,7 @@ public class PaymentService {
    * @param cardCustNumber
    * @param dueDate
    * @param premiumDueAmount
+   * @param nowDate(onlineDate, バッチの場合 batchDate)
    * @return
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -45,19 +47,21 @@ public class PaymentService {
    * @throws ParseException
    */
   public PaymentVo pay(Integer tenantId, String contractNo, String cardCustNumber, String dueDate,
-      Integer premiumDueAmount) throws IllegalArgumentException, IllegalAccessException,
-      GmoPaymentException, IOException, ParseException {
+      Integer premiumDueAmount, Date nowDate) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+    FactoringCompaniesVo companyInfo =
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo, nowDate);
 
-    if (factoringCompanyCode == null) {
+    if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "contractNo");
     }
 
     PaymentVo result = null;
-    switch (factoringCompanyCode) {
+    switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
-        result = gmoPaymentService.pay(contractNo, cardCustNumber, dueDate, premiumDueAmount);
+        result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
+            premiumDueAmount);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
@@ -76,6 +80,7 @@ public class PaymentService {
    * @param accessId
    * @param accessPassword
    * @param suspenceDate
+   * @param nowDate (onlineDate, バッチの場合 batchDate)
    * @return
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -83,20 +88,21 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo cancel(Integer tenantId, String contractNo, String accessId, String accessPassword, Date suspenceDate)
-      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
-      ParseException {
+  public PaymentVo cancel(Integer tenantId, String contractNo, String accessId,
+      String accessPassword, Date suspenceDate, Date nowDate) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
-    String factoringCompanyCode = commonMapper.selectFactoringCompanyCode(tenantId, contractNo);
+    FactoringCompaniesVo companyInfo =
+        commonMapper.selectFactoringCompanyCode(tenantId, contractNo, nowDate);
 
-    if (factoringCompanyCode == null) {
+    if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0001);
     }
 
     PaymentVo result = null;
-    switch (factoringCompanyCode) {
+    switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
-        result = gmoPaymentService.cancel(accessId, accessPassword, suspenceDate);
+        result = gmoPaymentService.cancel(companyInfo, accessId, accessPassword, suspenceDate);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");

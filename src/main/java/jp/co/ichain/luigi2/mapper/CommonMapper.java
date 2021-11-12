@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.SalesProductsVo;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
@@ -90,7 +91,7 @@ public interface CommonMapper {
   Date selectLastUpdatedAt(@Param("table") String table);
 
   /**
-   * 決済方法取得
+   * 決済情報取得
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-18
@@ -99,8 +100,8 @@ public interface CommonMapper {
    * @param contractNo
    * @return
    */
-  String selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
-      @Param("contractNo") String contractNo);
+  FactoringCompaniesVo selectFactoringCompanyCode(@Param("tenantId") Integer tenantId,
+      @Param("contractNo") String contractNo, @Param("nowDate") Date nowDate);
 
   /**
    * 営業日取得
@@ -203,4 +204,5 @@ public interface CommonMapper {
    */
   String selectSenderEmailsByContractNo(@Param("recieverInfo") String recieverInfo,
       @Param("mailType") String mailType, @Param("param") Map<String, Object> param);
+
 }

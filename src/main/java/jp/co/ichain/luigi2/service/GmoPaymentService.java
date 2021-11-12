@@ -17,6 +17,7 @@ import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
@@ -31,18 +32,6 @@ import lombok.val;
  */
 @Service
 class GmoPaymentService {
-
-  @Value("${gmo.site-id}")
-  private String siteId;
-
-  @Value("${gmo.site-pass}")
-  private String sitePass;
-
-  @Value("${gmo.shop-id}")
-  private String shopId;
-
-  @Value("${gmo.shop-pass}")
-  private String shopPass;
 
   @Value("${gmo.entry.tran}")
   private String entryTran;
@@ -129,9 +118,9 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo pay(String contractNo, String cardCustNumber, String dueDate, Integer premiumDueAmount)
-      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
-      ParseException {
+  PaymentVo pay(FactoringCompaniesVo companyInfo, String contractNo, String cardCustNumber,
+      String dueDate, Integer premiumDueAmount) throws IllegalArgumentException,
+      IllegalAccessException, GmoPaymentException, IOException, ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
@@ -145,6 +134,13 @@ class GmoPaymentService {
 
     // 保険料請求額billing_details.premium_due_amountを設定する
     gmoPaymentVo.setAmount((long) premiumDueAmount);
+
+    // サイトID、PASSセット
+    gmoPaymentVo.setSiteID(companyInfo.getSiteId());
+    gmoPaymentVo.setSitePass(companyInfo.getSitePass());
+    // ショップ情報セット
+    gmoPaymentVo.setShopID(companyInfo.getShopId());
+    gmoPaymentVo.setShopPass(companyInfo.getShopPass());
 
     List<GmoPaymentVo> list = searchCard(gmoPaymentVo);
     if (list == null || list.size() < 1) {
@@ -181,17 +177,17 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo cancel(String accessId, String accessPassword, Date suspenceDate)
-      throws IllegalArgumentException, IllegalAccessException, GmoPaymentException, IOException,
-      ParseException {
+  PaymentVo cancel(FactoringCompaniesVo companyInfo, String accessId, String accessPassword,
+      Date suspenceDate) throws IllegalArgumentException, IllegalAccessException,
+      GmoPaymentException, IOException, ParseException {
     // 取引IDセット
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     gmoPaymentVo.setAccessID(accessId);
     gmoPaymentVo.setAccessPass(accessPassword);
 
     // サイトID、PASSセット
-    gmoPaymentVo.setSiteID(siteId);
-    gmoPaymentVo.setSitePass(sitePass);
+    gmoPaymentVo.setSiteID(companyInfo.getSiteId());
+    gmoPaymentVo.setSitePass(companyInfo.getSitePass());
 
     // Job設定
     Calendar now = Calendar.getInstance();
@@ -259,9 +255,6 @@ class GmoPaymentService {
   private GmoPaymentVo entryTran(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
-    // ショップ情報セット
-    gmoPaymentVo.setShopID(shopId);
-    gmoPaymentVo.setShopPass(shopPass);
     gmoPaymentVo.setTdFlag(0);
 
     // パラメーターセット
@@ -301,10 +294,6 @@ class GmoPaymentService {
     gmoPaymentVo.setAccessID(entryTranVo.getAccessID());
     gmoPaymentVo.setAccessPass(entryTranVo.getAccessPass());
 
-    // サイトID、PASSセット
-    gmoPaymentVo.setSiteID(siteId);
-    gmoPaymentVo.setSitePass(sitePass);
-
     // GMO 決済実行API呼び出す
     Params params = new Params(gmoPaymentVo, true);
     GmoPaymentVo apiResult = GmoPaymentApiUtils.doHttpResult(API_URL_MAP.get("ExecTran"), "POST",
@@ -334,9 +323,6 @@ class GmoPaymentService {
    */
   private List<GmoPaymentVo> searchCard(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
-    // サイトID、PASSセット
-    gmoPaymentVo.setSiteID(siteId);
-    gmoPaymentVo.setSitePass(sitePass);
 
     // GMO カード情報取得API呼び出す
     Params params = new Params(gmoPaymentVo, true);
