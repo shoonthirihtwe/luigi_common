@@ -260,7 +260,11 @@ public class AwsMailDao {
    * @return
    */
   public String getTenantsEmail(TenantMailType mailType, Map<String, Object> param) {
-    return mapper.selectSenderEmailsByContractNo(ReceiverInfo.sender_emails_to_tenants.name(),
-        mailType.getName(), param);
+    String tenantsEmail = mapper.selectSenderEmailsByContractNo(
+        ReceiverInfo.sender_emails_to_tenants.name(), mailType.getName(), param);
+    if (tenantsEmail == null) {
+      return senderEmailTenants;
+    }
+    return tenantsEmail;
   }
 }
