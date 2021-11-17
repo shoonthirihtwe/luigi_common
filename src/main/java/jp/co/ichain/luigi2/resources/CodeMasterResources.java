@@ -194,8 +194,11 @@ public class CodeMasterResources {
     }
     val list = this.map.get(tenantId).get(key);
     if (list != null && codeValue != null) {
-      return list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
-          .collect(Collectors.reducing((a, b) -> null)).get().getCodeName();
+      val codeOptional = list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
+          .collect(Collectors.reducing((a, b) -> null));
+      if (codeOptional.isPresent()) {
+        return codeOptional.get().getCodeName();
+      }
     }
     return null;
   }
