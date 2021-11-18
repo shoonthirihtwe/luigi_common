@@ -12,7 +12,7 @@ public class Luigi2CodeCommon {
   /**
    * フラグ
    * 
-   * 0:FALSE
+   * 0:FALSE 
    * 1:TRUE
    * 
    * @author : [AOT] g.kim
@@ -37,9 +37,9 @@ public class Luigi2CodeCommon {
   /**
    * SexCode
    * 
-   * 1:男子
-   * 2:女子
-   * 3:法人
+   * 1:男子 
+   * 2:女子 
+   * 3:法人 
    * 4:その他
    * 
    * @author : [AOT] g.kim
@@ -60,13 +60,13 @@ public class Luigi2CodeCommon {
       return this.val;
     }
   }
-  
+
   /**
    * テーブルデータ取得タイプ
    * 
-   * @author 	: [AOT] g.kim
-   * @createdAt	: 2021-11-17
-   * @updatedAt	: 2021-11-17
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-11-17
+   * @updatedAt : 2021-11-17
    */
   public enum TableType {
     contracts("C");
@@ -81,6 +81,6 @@ public class Luigi2CodeCommon {
     public String toString() {
       return this.val;
     }
-    
+
   }
 }
