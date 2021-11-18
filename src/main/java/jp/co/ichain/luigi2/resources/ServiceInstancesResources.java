@@ -78,7 +78,9 @@ public class ServiceInstancesResources {
    * @throws JsonProcessingException
    */
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
-    this.map = new HashMap<Integer, Map<String, List<ServiceInstancesVo>>>();
+    if (this.map == null) {
+      this.map = new HashMap<Integer, Map<String, List<ServiceInstancesVo>>>();
+    }
     if (this.updatedAtMap == null) {
       this.updatedAtMap = new HashMap<Integer, Date>();
     }
