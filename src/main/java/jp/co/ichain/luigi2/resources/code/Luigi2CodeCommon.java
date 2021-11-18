@@ -60,4 +60,27 @@ public class Luigi2CodeCommon {
       return this.val;
     }
   }
+  
+  /**
+   * テーブルデータ取得タイプ
+   * 
+   * @author 	: [AOT] g.kim
+   * @createdAt	: 2021-11-17
+   * @updatedAt	: 2021-11-17
+   */
+  public enum TableType {
+    contracts("C");
+
+    String val;
+
+    TableType(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+    
+  }
 }
