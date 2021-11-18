@@ -196,6 +196,7 @@ public class ControllerUtils {
       throws Exception {
     return (request, endpoint, paramMap, supplier) -> {
       this.controllerFunction(request, endpoint, paramMap);
+      commonService.validate(paramMap, endpoint);
       val result = supplier.get();
 
       return result;
