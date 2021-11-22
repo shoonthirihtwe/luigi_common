@@ -58,7 +58,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum FormatType {
-    EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA, ZIPCODE, HYPHEN_SPACE, ZENALPHA
+    EMAIL, TEL, HIRA, NUM, ZENNUM, KANA, HANKANA, KANJI, ALPHA, ZIPCODE, HYPHEN_SPACE, ZENALPHA, KIGOU
   }
 
   private final Map<String, String> formatRegexMap;
@@ -78,6 +78,7 @@ public class Validity {
     formatRegexMap.put("ALPHA", "a-zA-Z");
     formatRegexMap.put("HYPHEN_SPACE", "ー－‐\\- 　");
     formatRegexMap.put("ZENALPHA", "ａ-ｚＡ-Ｚ");
+    formatRegexMap.put("KIGOU", "￥，（）／「」");
   }
 
 
