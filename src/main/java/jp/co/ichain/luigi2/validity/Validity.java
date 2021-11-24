@@ -78,7 +78,7 @@ public class Validity {
     formatRegexMap.put("ALPHA", "a-zA-Z");
     formatRegexMap.put("HYPHEN_SPACE", "ー－‐\\- 　");
     formatRegexMap.put("ZENALPHA", "ａ-ｚＡ-Ｚ");
-    formatRegexMap.put("KIGOU", "￥，（）／「」");
+    formatRegexMap.put("KIGOU", "￥，．（）／「」");
   }
 
 
