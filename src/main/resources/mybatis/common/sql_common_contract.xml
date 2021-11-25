@@ -57,7 +57,8 @@
 		    claim_headers.claimant_addr_zip_code,
 		    claim_headers.tel_no,
 		    claim_headers.contact_tel_no,
-		    claim_headers.email
+		    claim_headers.email,
+		    claim_headers.relationship
 		FROM
 		    claim_headers
 		WHERE
