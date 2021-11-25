@@ -263,4 +263,9 @@ public class ClaimDetailsVo extends ObjectVo {
    */
   @JsonIgnore
   String deletedBy;
+  
+  /**
+   * 基本給付額単位
+   */
+  String benefitBaseUnit;
 }
