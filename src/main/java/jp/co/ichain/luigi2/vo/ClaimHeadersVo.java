@@ -3,6 +3,7 @@ package jp.co.ichain.luigi2.vo;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -92,12 +93,12 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者区分
    */
   String claimantCategory;
-  
+
   /**
    * 漢字氏名
    */
   String claimantKnj;
-  
+
   /**
    * カナ氏名
    */
@@ -133,17 +134,17 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者住所1(漢字)
    */
   String claimantAddrKnj1;
-  
+
   /**
    * 請求者住所2(漢字)
    */
   String claimantAddrKnj2;
-  
+
   /**
    * 請求者郵便番号
    */
   String claimantAddrZipCode;
-  
+
   /**
    * 請求者住所―県(漢字)
    */
@@ -158,7 +159,7 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者反社チェック結果コード
    */
   String resultCode;
-  
+
   /**
    * フロント側で反社チェック結果判断するフラグ
    */
@@ -507,12 +508,12 @@ public class ClaimHeadersVo extends ObjectVo {
    * 保険金・給付金請求資料
    */
   ArrayList<ClaimDocumentsVo> claimDocuments;
-  
+
   /**
    * 保険金・給付金請求詳細
    */
-  List<ClaimDetailsVo> claimDetails;
-  
+  List<Map<String, Object>> claimDetails;
+
   /**
    * ロック用
    */
@@ -522,6 +523,6 @@ public class ClaimHeadersVo extends ObjectVo {
   public ClaimHeadersVo() {
     beneficialies = new ArrayList<BeneficialiesVo>();
     claimDocuments = new ArrayList<ClaimDocumentsVo>();
-    claimDetails = new ArrayList<ClaimDetailsVo>();
+    claimDetails = new ArrayList<Map<String, Object>>();
   }
 }
