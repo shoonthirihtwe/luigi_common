@@ -49,7 +49,7 @@
 		    claim_headers.claimant_sei_knj,
 		    claim_headers.claimant_mei_knj,
 		    claim_headers.claimant_sei_kana,
-		    claim_headers.claimant_sei_kana,
+		    claim_headers.claimant_mei_kana,
 		    claim_headers.claimant_date_of_birth,
 		    claim_headers.claimant_addr_knj_1,
 		    claim_headers.claimant_addr_knj_2,
