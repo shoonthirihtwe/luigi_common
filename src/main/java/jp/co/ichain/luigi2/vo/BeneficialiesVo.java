@@ -65,6 +65,11 @@ public class BeneficialiesVo extends ObjectVo {
 
   String addrKnj2;
 
+  /**
+   * 処理区分
+   */
+  Boolean processingDivision;
+
   @JsonIgnore
   Date createdAt;
 
