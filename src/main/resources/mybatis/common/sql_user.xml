@@ -54,7 +54,7 @@
 			updated_at as updatedAt
 		FROM
 			<choose>
-				<when test="corporateIndividualFlag == 2">
+				<when test="sex == 3">
 					customers_corporate
 					WHERE 
 					corp_name_kana=#{nameKanaSei}
