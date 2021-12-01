@@ -249,8 +249,8 @@ public class AwsS3Dao {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-    long fTime = fromDate.getTime();
-    long tTime = toDate.getTime();
+    long ftime = fromDate.getTime();
+    long ttime = toDate.getTime();
 
     return (ArrayList<S3ObjectSummary>) summaryList.stream().filter(summary -> {
       long time;
@@ -259,7 +259,7 @@ public class AwsS3Dao {
       } catch (ParseException e) {
         return false;
       }
-      if (fTime <= time && tTime >= time) {
+      if (ftime <= time && ttime >= time) {
         return true;
       }
       return false;
