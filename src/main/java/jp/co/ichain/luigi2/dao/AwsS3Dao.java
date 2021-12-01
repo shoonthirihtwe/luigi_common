@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -219,31 +220,50 @@ public class AwsS3Dao {
    */
   private List<S3ObjectSummary> getS3ObjectList(String preDir, Map<String, Object> paramMap)
       throws ParseException {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/M");
 
     val summaryList = new ArrayList<S3ObjectSummary>();
-    Date fromDate = new Date();
-    Date toDate = new Date();
+    Date fromDate = null;
+    Date toDate = null;
     Calendar cal = Calendar.getInstance();
-    if (paramMap.get("from") instanceof Long) {
+
+    if (paramMap.get("from") == null) {
+      cal.set(2011, 11, 1);
+      fromDate = cal.getTime();
+    } else {
       fromDate = new Date(Long.parseLong(paramMap.get("from").toString()));
-      cal.setTime(fromDate);
+      DateUtils.truncate(fromDate, Calendar.DATE);
     }
 
-    if (paramMap.get("to") instanceof Long) {
+    if (paramMap.get("to") == null) {
+      cal.set(2099, 11, 1);
+      toDate = cal.getTime();
+    } else {
       toDate = new Date(Long.parseLong(paramMap.get("to").toString()));
+      DateUtils.truncate(toDate, Calendar.DATE);
     }
 
-    do {
-      ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(this.bucketName)
-          .withPrefix(preDir + format.format(cal.getTime()));
-      ListObjectsV2Result result = s3Client.listObjectsV2(req);
-      summaryList.addAll(result.getObjectSummaries());
-      cal.add(Calendar.MONTH, 1);
+    ListObjectsV2Request req =
+        new ListObjectsV2Request().withBucketName(this.bucketName).withPrefix(preDir);
+    ListObjectsV2Result result = s3Client.listObjectsV2(req);
+    summaryList.addAll(result.getObjectSummaries());
 
-    } while (cal.getTimeInMillis() <= toDate.getTime());
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-    return summaryList;
+    long fTime = fromDate.getTime();
+    long tTime = toDate.getTime();
+
+    return (ArrayList<S3ObjectSummary>) summaryList.stream().filter(summary -> {
+      long time;
+      try {
+        time = sdf.parse(summary.getKey().split("_")[2].substring(0, 8)).getTime();
+      } catch (ParseException e) {
+        return false;
+      }
+      if (fTime <= time && tTime >= time) {
+        return true;
+      }
+      return false;
+    }).collect(Collectors.toList());
   }
 
   /**
