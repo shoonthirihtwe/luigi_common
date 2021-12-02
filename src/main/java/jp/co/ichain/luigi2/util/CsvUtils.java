@@ -95,6 +95,12 @@ public class CsvUtils {
     val result = new ByteArrayOutputStream();
     val keys = titleMap.keySet();
     val convert = new Convert();
+
+    // BOM
+    result.write(0xEF);
+    result.write(0xBB);
+    result.write(0xBF);
+
     try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(result))) {
       // title writer
       csvWriter.writeNext(titleMap.values().toArray(String[]::new));
