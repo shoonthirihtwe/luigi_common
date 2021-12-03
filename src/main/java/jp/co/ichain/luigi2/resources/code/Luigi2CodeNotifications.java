@@ -1,5 +1,9 @@
 package jp.co.ichain.luigi2.resources.code;
 
+import java.util.HashMap;
+import java.util.Map;
+import lombok.val;
+
 /**
  * 通知内容
  * 
@@ -23,6 +27,15 @@ public class Luigi2CodeNotifications {
 
     String val;
 
+    private static final Map<String, NotificationMethod> stringToEnum =
+        new HashMap<String, NotificationMethod>();
+
+    static {
+      for (val val : values()) {
+        stringToEnum.put(val.toString(), val);
+      }
+    }
+
     NotificationMethod(String val) {
       this.val = val;
     }
@@ -30,6 +43,10 @@ public class Luigi2CodeNotifications {
     @Override
     public String toString() {
       return this.val;
+    }
+
+    public static NotificationMethod findBy(String str) {
+      return stringToEnum.get(str);
     }
   }
 }
