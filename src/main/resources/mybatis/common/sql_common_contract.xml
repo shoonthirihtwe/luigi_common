@@ -123,19 +123,19 @@
 		    END AS email
 		FROM
 		    contracts
-		        LEFT OUTER JOIN
+		        INNER JOIN
 		    claim_headers ON contracts.tenant_id = claim_headers.tenant_id
 		        AND contracts.contract_no = claim_headers.contract_no
 		        AND contracts.contract_branch_no = claim_headers.contract_branch_no
 		        INNER JOIN
-		    customers ON contracts.contractor_customer_id = customers.customer_id
+		    customers ON contracts.insured_customer_id = customers.customer_id
 		        AND contracts.tenant_id = customers.tenant_id
 		        LEFT OUTER JOIN
-		    customers_individual ON contracts.contractor_customer_id = customers_individual.customer_id
+		    customers_individual ON contracts.insured_customer_id = customers_individual.customer_id
 		        AND contracts.tenant_id = customers_individual.tenant_id
 		        AND customers.corporate_individual_flag = '1'
 		        LEFT OUTER JOIN
-		    customers_corporate ON contracts.contractor_customer_id = customers_corporate.customer_id
+		    customers_corporate ON contracts.insured_customer_id = customers_corporate.customer_id
 		        AND contracts.tenant_id = customers_corporate.tenant_id
 		        AND customers.corporate_individual_flag = '2'
 		WHERE
