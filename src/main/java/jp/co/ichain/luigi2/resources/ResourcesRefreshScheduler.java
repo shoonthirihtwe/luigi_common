@@ -29,9 +29,6 @@ public class ResourcesRefreshScheduler {
   CommonMapper mapper;
 
   @Autowired
-  TenantResources tenantResources;
-
-  @Autowired
   ServiceInstancesResources serviceInstancesResources;
 
   @Autowired
