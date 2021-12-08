@@ -77,6 +77,11 @@ public class ContractReferenceVo extends ObjectVo {
    * 販売プラン種別コード
    */
   String salesPlanTypeCode;
+  
+  /**
+   * 画面表示名
+   */
+  String salesPlanNameDisplay;
 
   /**
    * 代理店コード1
