@@ -69,7 +69,7 @@ public class Luigi2CodeCommon {
    * @updatedAt : 2021-11-17
    */
   public enum TableType {
-    contracts("C");
+    contracts("C"), claim_payment("CH"), claim_detail_payment("CD"), refund_payment("RA");
 
     String val;
 
