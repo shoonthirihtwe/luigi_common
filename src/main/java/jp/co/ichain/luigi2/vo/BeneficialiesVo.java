@@ -49,7 +49,7 @@ public class BeneficialiesVo extends ObjectVo {
 
   String nameKnjMei;
 
-  String share;
+  Integer share;
 
   String relShipToInsured;
 
