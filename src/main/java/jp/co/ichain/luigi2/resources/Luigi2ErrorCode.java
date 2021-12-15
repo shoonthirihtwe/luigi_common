@@ -115,4 +115,8 @@ public class Luigi2ErrorCode {
    * 責任開始日前の契約
    */
   public static final String C0001 = "C0001";
+  /**
+   * 契約解除日設定間違い
+   */
+  public static final String C0002 = "C0002";
 }
