@@ -62,6 +62,12 @@ public class ContractReferenceVo extends ObjectVo {
    */
   @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date inceptionDate;
+  
+  /**
+   * 責任開始日
+   */
+  @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
+  Date effectiveDate;
 
   /**
    * 契約ステータス
