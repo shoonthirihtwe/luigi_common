@@ -36,7 +36,7 @@ public class Luigi2CodeClaimHeaders {
     public String toString() {
       return this.val;
     }
-    
+
     public static ClaimStatus get(String key) {
       for (ClaimStatus v : values()) {
         if (v.toString().equals(key)) {
@@ -49,20 +49,21 @@ public class Luigi2CodeClaimHeaders {
 
   /**
    * Claim 検索ステータス 
-   * 0:受付済 
-   * 1:１次査定中 
-   * 2:２次査定中 
-   * 3:2次査定済
-   * 4:支払承認済
-   * 5:支払処理済
+   * 1:受付済 
+   * 2:１次査定中 
+   * 3:２次査定中 
+   * 4:2次査定済 
+   * 5:支払承認済 
+   * 6:支払処理済
    * 
    * @author : [AOT] g.kim
    * @createdAt : 2021-12-01
    * @updatedAt : 2021-12-01
    */
   public enum SearchClaimStatus {
-    RECEPTION_COMPLETED("0"), FIRST_ASSESSMENT("1"), SECOND_ASSESSMENT(
-        "2"), SECOND_ASSESSMENT_COMPLETED("3"), PAYMENT_APPROVAL_COMPLETED("4"), PAYMENT_PROCESSED("5");
+    RECEPTION_COMPLETED("1"), FIRST_ASSESSMENT("2"), SECOND_ASSESSMENT(
+        "3"), SECOND_ASSESSMENT_COMPLETED("4"), PAYMENT_APPROVAL_COMPLETED(
+            "5"), PAYMENT_PROCESSED("6");
 
     String val;
 
