@@ -51,8 +51,8 @@ public class AuthService {
 
       if (isDebugMode) {
         userVo = new UsersVo();
-        userVo.setTenantId(11);
-        userVo.setId(5);
+        userVo.setTenantId(1);
+        userVo.setId(1);
         userVo.setEmail("test@aot.co.jp");
         userVo.setSub("a1234");
         userVo.setLastLoginAt(new Date());
