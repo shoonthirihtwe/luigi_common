@@ -25,7 +25,7 @@ public interface UserMapper {
 
   List<AuthoritiesVo> getLoginUserAuth(UsersVo param);
 
-  List<AuthoritiesVo> getAdminAuth(UsersVo param);
+  List<AuthoritiesVo> getApiAuth(@Param("tenantId") Integer tenantId, @Param("roleId") String roleId);
 
   List<NayoseResultVo> selectNayoseCustomerMatch(Map<String, Object> param);
 

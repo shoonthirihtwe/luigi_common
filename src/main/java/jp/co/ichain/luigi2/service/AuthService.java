@@ -51,8 +51,8 @@ public class AuthService {
 
       if (isDebugMode) {
         userVo = new UsersVo();
-        userVo.setTenantId(1);
-        userVo.setId(1);
+        userVo.setTenantId(11);
+        userVo.setId(5);
         userVo.setEmail("test@aot.co.jp");
         userVo.setSub("a1234");
         userVo.setLastLoginAt(new Date());
@@ -91,7 +91,22 @@ public class AuthService {
    */
   public List<AuthoritiesVo> getAdminAuth(UsersVo userVo) {
 
-    val authorities = userMapper.getAdminAuth(userVo);
+    val authorities = userMapper.getApiAuth(userVo.getTenantId(), "admin");
+
+    return authorities;
+  }
+
+  /**
+   * API権限取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-07-28
+   * @updatedAt : 2021-07-28
+   * @return
+   */
+  public List<AuthoritiesVo> getApiAuth(UsersVo userVo, String roleId) {
+
+    val authorities = userMapper.getApiAuth(userVo.getTenantId(), roleId);
 
     return authorities;
   }

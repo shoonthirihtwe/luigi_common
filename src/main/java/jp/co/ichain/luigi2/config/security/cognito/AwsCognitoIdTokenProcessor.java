@@ -53,6 +53,9 @@ public class AwsCognitoIdTokenProcessor {
 
   @Value("${external.api.flag}")
   Boolean isExternalApi;
+  
+  @Value("${external.api.roles}")
+  String externalApiRoles;
 
   public Authentication authenticate(HttpServletRequest request) throws Exception {
 
@@ -78,7 +81,7 @@ public class AwsCognitoIdTokenProcessor {
       userVo.setTenantId(tenantsVo.getId());
       userVo.setId(1);
       userVo.setLastLoginAt(tenantsVo.getOnlineDate());
-      authorities = authService.getAdminAuth(userVo);
+      authorities = authService.getApiAuth(userVo, externalApiRoles);
     } else {
       String domain = request.getHeader("x-frontend-domain");
 

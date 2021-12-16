@@ -16,7 +16,7 @@
 			AND r.unavaliable_date > #{lastLoginAt}
 			AND a.api_yn=1
 	</select>
-	<select id="getAdminAuth" parameterType="UsersVo"  resultType="AuthoritiesVo">
+	<select id="getApiAuth" parameterType="hashmap"  resultType="AuthoritiesVo">
 		SELECT 
 			a.function_id as functionId
 		FROM 
@@ -25,7 +25,7 @@
 			a.tenant_id=#{tenantId}
 			AND a.allow_deny=1
 			AND a.api_yn=1
-			AND a.role_id='admin'
+			AND a.role_id=#{roleId}
 	</select>
 
 	<update id="updateLoginUser" parameterType="UsersVo">
