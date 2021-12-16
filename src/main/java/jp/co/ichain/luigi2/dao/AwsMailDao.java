@@ -166,7 +166,9 @@ public class AwsMailDao {
           }
           bodyFg.currencyConvertFg = false;
         } else {
-          sbBody.append(value);
+          if (value != null) {
+            sbBody.append(value);
+          }
         }
         sbKey.setLength(0);
         bodyFg.keyOpen = false;
