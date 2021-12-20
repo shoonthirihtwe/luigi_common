@@ -49,28 +49,33 @@
 	</update>
 	<select id="selectNayoseCustomerMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">
 		SELECT
-			tenant_id as tenantId,
-			customer_id as customerId,
-			updated_at as updatedAt
+			c.tenant_id as tenantId,
+			c.customer_id as customerId,
+			c.updated_at as updatedAt,
+			c.authentication_key as authenticationKey
 		FROM
 			<choose>
 				<when test="sex == 3">
-					customers_corporate
+					customers_corporate cc
+						JOIN customers c ON c.customer_id= cc.customer_id
+						AND c.tenant_id=cc.tenant_id 
 					WHERE 
-					corp_name_kana=#{nameKanaSei}
-					AND corp_addr_zip_code=#{addrZipNo}
+					cc.corp_name_kana=#{nameKanaSei}
+					AND cc.corp_addr_zip_code=#{addrZipNo}
 				</when>
 				<otherwise>
-					customers_individual
+					customers_individual ci
+						JOIN customers c ON c.customer_id= ci.customer_id
+						AND c.tenant_id=ci.tenant_id 
 					WHERE 
-					name_kana_sei = #{nameKanaSei}
-					AND name_kana_mei = #{nameKanaMei}
-					AND date_of_birth=#{dateOfBirth}
-					AND sex=#{sex}
-					AND addr_zip_code=#{addrZipNo}
+					ci.name_kana_sei = #{nameKanaSei}
+					AND ci.name_kana_mei = #{nameKanaMei}
+					AND ci.date_of_birth=#{dateOfBirth}
+					AND ci.sex=#{sex}
+					AND ci.addr_zip_code=#{addrZipNo}
 				</otherwise>
 			</choose>
-				AND tenant_id=#{tenantId}
+				AND c.tenant_id=#{tenantId}
 		ORDER BY updatedAt DESC,customerId
 	</select>
 	<select id="selectNayoseCustomerIndividualPartialMatch"  resultType="NayoseResultVo" parameterType="NayoseRequestVo">

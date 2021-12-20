@@ -39,4 +39,7 @@ public class NayoseResultVo extends ObjectVo {
 
   @JsonIgnore
   String customerId;
+  
+  @JsonIgnore
+  String authenticationKey;
 }
