@@ -25,7 +25,8 @@
 			#{contractNo},
 			co.contract_branch_no,
 			#{templateNumber},
-			'0',
+			<if test ="notificationImplementation != null">#{notificationImplementation},</if>
+			<if test ="notificationImplementation == null">'0',</if>
 			#{comment},
 			'${data}',
 			<if test ="sendee != null">#{sendee},</if>

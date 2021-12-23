@@ -49,4 +49,29 @@ public class Luigi2CodeNotifications {
       return stringToEnum.get(str);
     }
   }
+  
+  /**
+   * 通知実施
+   * 
+   * 0:メール送信前
+   * 1:メール送信済み
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-12-23
+   * @updatedAt : 2021-12-23
+   */
+  public enum NotificationImplementation {
+    BEFORE_MAIL_SEND("0"), MAIL_SENDED("1");
+
+    String val;
+
+    NotificationImplementation(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }
