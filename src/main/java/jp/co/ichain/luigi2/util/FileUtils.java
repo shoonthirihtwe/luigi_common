@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class FileUtils {
 
 	/**
-	 * read File textFile
+	 * read textFile
 	 * 
 	 * @author : [AOT] g.kim
 	 * @createdAt : 2021-07-13
