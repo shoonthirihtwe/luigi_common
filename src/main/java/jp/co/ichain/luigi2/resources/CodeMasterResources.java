@@ -1,6 +1,5 @@
 package jp.co.ichain.luigi2.resources;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import lombok.val;
 
@@ -64,6 +62,7 @@ public class CodeMasterResources {
       self.initialize(tenantId);
     }
   }
+
   /**
    * テナントの初期化
    * 
@@ -147,7 +146,7 @@ public class CodeMasterResources {
    */
   public Date getLastUpdatedAt(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    
+
     val codeList = serviceInstancesResources.get(tenantId, "code_master");
     var updatedAt = codeList.get(0).getUpdatedAt();
     if (updatedAt == null) {

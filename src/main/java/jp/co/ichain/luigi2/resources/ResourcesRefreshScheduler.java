@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -86,7 +87,7 @@ public class ResourcesRefreshScheduler {
           if (updatedAt == null || updatedAt.getTime() < (long) item.get("updatedAt")) {
 
             // clear tenant redis data
-            val conn = redisTemplate.getConnectionFactory().getConnection();
+            RedisConnection conn = redisTemplate.getConnectionFactory().getConnection();
             Set<byte[]> keys = conn.keys(("*::" + tenantId).getBytes());
             for (val n : keys) {
               conn.del(n);
