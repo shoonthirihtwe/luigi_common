@@ -117,16 +117,7 @@ public class FrontDesignResources {
         : self.get(tenantId));
 
   }
-
-  @Cacheable(key = "{ #tenantId }", value = "FrontDesignResources::getByTenantId")
-  public Map<String, Map<String, Object>> getByTenantId(Integer tenantId)
-      throws JsonMappingException, JsonProcessingException {
-    return serviceInstancesResources.get(tenantId).entrySet().stream()
-        .filter(entry -> entry.getKey().contains("_front")).map(entry -> entry.getValue().get(0))
-        .collect(
-            Collectors.toMap(ServiceInstancesVo::getSourceKey, ServiceInstancesVo::getInherentMap));
-  }
-
+  
   /**
    * テナント別情報取得
    *
@@ -143,6 +134,28 @@ public class FrontDesignResources {
 
     return self.getByTenantId(tenantId);
   }
+  
+  /**
+   * テナント別情報取得
+   *
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-05-07
+   * @updatedAt : 2021-05-07
+   * @param vo
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  @Cacheable(key = "{ #tenantId }", value = "FrontDesignResources::getByTenantId")
+  public Map<String, Map<String, Object>> getByTenantId(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    return serviceInstancesResources.get(tenantId).entrySet().stream()
+        .filter(entry -> entry.getKey().contains("_front")).map(entry -> entry.getValue().get(0))
+        .collect(
+            Collectors.toMap(ServiceInstancesVo::getSourceKey, ServiceInstancesVo::getInherentMap));
+  }
+
+  
 
   /**
    * 全項目取得
