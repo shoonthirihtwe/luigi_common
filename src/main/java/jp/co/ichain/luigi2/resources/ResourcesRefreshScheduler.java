@@ -2,9 +2,12 @@ package jp.co.ichain.luigi2.resources;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,7 +46,14 @@ public class ResourcesRefreshScheduler {
   @Autowired
   NumberingService numberingService;
 
+  @Autowired
+  CacheManager cacheManager;
+
   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+  @SuppressWarnings("rawtypes")
+  @Autowired
+  RedisTemplate redisTemplate;
 
   /**
    * リソースを更新する
@@ -52,8 +62,9 @@ public class ResourcesRefreshScheduler {
    * @createdAt : 2021-08-13
    * @updatedAt : 2021-08-13
    */
-  @Scheduled(cron = "0 0 * * * *")
+  @Scheduled(cron = "${config.refresh-scheduler.cron}")
   public void cronJobSch() {
+
     val updatedAtResult = mapper.selectResourcesLastUpdatedAt();
     updatedAtResult.forEach(item -> {
       val tenantId = ((Long) item.get("tenantId")).intValue();
@@ -70,10 +81,17 @@ public class ResourcesRefreshScheduler {
           e.printStackTrace();
         }
       } else {
-        // serviceInstancesResources
         try {
-          val updatedAt = serviceInstancesResources.updatedAtMap.get(tenantId);
+          val updatedAt = serviceInstancesResources.getUpdatedAt(tenantId);
           if (updatedAt == null || updatedAt.getTime() < (long) item.get("updatedAt")) {
+
+            // clear tenant redis data
+            val conn = redisTemplate.getConnectionFactory().getConnection();
+            Set<byte[]> keys = conn.keys(("*::" + tenantId).getBytes());
+            for (val n : keys) {
+              conn.del(n);
+            }
+
             serviceInstancesResources.initialize(tenantId);
             codeMasterResources.initialize(tenantId);
             validityResources.initialize(tenantId);

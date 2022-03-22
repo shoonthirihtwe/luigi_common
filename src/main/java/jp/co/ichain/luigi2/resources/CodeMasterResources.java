@@ -1,22 +1,25 @@
 package jp.co.ichain.luigi2.resources;
 
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import lombok.val;
 
@@ -31,12 +34,17 @@ import lombok.val;
 @Service
 public class CodeMasterResources {
 
-  private Map<Integer, Map<String, List<CodeMasterVo>>> map = null;
-
-  private Map<Integer, Date> updatedAtMap = null;
-
   @Autowired
   ServiceInstancesResources serviceInstancesResources;
+
+  private CodeMasterResources self;
+  private final ApplicationContext applicationContext;
+
+  CodeMasterResources(ApplicationContext applicationContext,
+      ServiceInstancesResources serviceInstancesResources) {
+    this.applicationContext = applicationContext;
+    this.serviceInstancesResources = serviceInstancesResources;
+  }
 
   /**
    * 初期化する
@@ -48,20 +56,18 @@ public class CodeMasterResources {
    * @updatedAt : 2021-06-23
    */
   @Lock(LockType.WRITE)
-  @PostConstruct
+  @EventListener(ApplicationReadyEvent.class)
   public void initialize() throws JsonMappingException, JsonProcessingException {
-    this.map = new HashMap<Integer, Map<String, List<CodeMasterVo>>>();
-    this.updatedAtMap = new HashMap<Integer, Date>();
 
+    self = applicationContext.getBean(CodeMasterResources.class);
     for (val tenantId : serviceInstancesResources.getTenantList()) {
-      this.initialize(tenantId);
+      self.initialize(tenantId);
     }
   }
-
   /**
-   * 初期化する
+   * テナントの初期化
    * 
-   * @author : [AOT] s.paku
+   * @author : [AOT] g.kim
    * @createdAt : 2021-08-13
    * @updatedAt : 2021-08-13
    * @param tenantId
@@ -69,18 +75,7 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    */
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
-    ObjectMapper objMapper = new ObjectMapper();
-    val codeList = serviceInstancesResources.get(tenantId, "code_master");
-    Map<String, List<CodeMasterVo>> codeMap = objMapper.readValue(codeList.get(0).getInherentJson(),
-        new TypeReference<Map<String, List<CodeMasterVo>>>() {});
-    this.map.put(tenantId, codeMap);
-
-    // 日付登録
-    var updatedAt = codeList.get(0).getUpdatedAt();
-    if (updatedAt == null) {
-      updatedAt = codeList.get(0).getCreatedAt();
-    }
-    updatedAtMap.put(tenantId, updatedAt);
+    self.get(tenantId);
   }
 
   /**
@@ -96,11 +91,8 @@ public class CodeMasterResources {
    */
   public List<CodeMasterVo> get(Integer tenantId, String key)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
 
-    return this.map.get(tenantId).get(key);
+    return self.get(tenantId).get(key);
   }
 
   /**
@@ -114,13 +106,15 @@ public class CodeMasterResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
+  @Cacheable(key = "{ #tenantId }", value = "CodeMasterResources::getByTenant")
   public Map<String, List<CodeMasterVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
 
-    return this.map.get(tenantId);
+    ObjectMapper objMapper = new ObjectMapper();
+    val codeList = serviceInstancesResources.get(tenantId, "code_master");
+    Map<String, List<CodeMasterVo>> codeMap = objMapper.readValue(codeList.get(0).getInherentJson(),
+        new TypeReference<Map<String, List<CodeMasterVo>>>() {});
+    return codeMap;
   }
 
   /**
@@ -136,12 +130,30 @@ public class CodeMasterResources {
    */
   public Map<String, List<CodeMasterVo>> get(Integer tenantId, Long updatedAt)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
 
-    return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
-        : this.map.get(tenantId);
+    return (updatedAt != null && updatedAt > self.getLastUpdatedAt(tenantId).getTime() ? null
+        : self.get(tenantId));
+  }
+
+  /**
+   * 情報取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-03-17
+   * @updatedAt : 2022-03-17
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public Date getLastUpdatedAt(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    
+    val codeList = serviceInstancesResources.get(tenantId, "code_master");
+    var updatedAt = codeList.get(0).getUpdatedAt();
+    if (updatedAt == null) {
+      updatedAt = codeList.get(0).getCreatedAt();
+    }
+    return updatedAt;
   }
 
   /**
@@ -159,10 +171,8 @@ public class CodeMasterResources {
    */
   public String getValue(Integer tenantId, String key, String codeName)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
-    val list = this.map.get(tenantId).get(key);
+
+    val list = self.get(tenantId).get(key);
     if (list != null && codeName != null) {
       Optional<CodeMasterVo> resultOptional =
           list.stream().filter(vo -> codeName.equals(vo.getCodeName()))
@@ -189,10 +199,8 @@ public class CodeMasterResources {
    */
   public String getName(Integer tenantId, String key, String codeValue)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
-    val list = this.map.get(tenantId).get(key);
+
+    val list = self.get(tenantId).get(key);
     if (list != null && codeValue != null) {
       val codeOptional = list.stream().filter(vo -> codeValue.equals(vo.getCodeValue()))
           .collect(Collectors.reducing((a, b) -> null));
@@ -201,23 +209,5 @@ public class CodeMasterResources {
       }
     }
     return null;
-  }
-
-  /**
-   * 全項目取得
-   *
-   * @author : [AOT] g.kim
-   * @createdAt : 2021-05-07
-   * @updatedAt : 2021-05-07
-   * @return
-   * @throws JsonProcessingException
-   * @throws JsonMappingException
-   */
-  public Set<Integer> getTenantList() throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
-
-    return this.map.keySet();
   }
 }

@@ -6,12 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -31,11 +33,15 @@ import lombok.val;
 @Service
 public class ValidityResources {
 
-  private HashMap<Integer, Map<String, ValidityVo>> map = null;
-  private Map<Integer, Date> updatedAtMap = null;
+  private ValidityResources self;
+  private final ApplicationContext applicationContext;
+  private final ServiceInstancesResources serviceInstancesResources;
 
-  @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ValidityResources(ApplicationContext applicationContext,
+      ServiceInstancesResources serviceInstancesResources) {
+    this.applicationContext = applicationContext;
+    this.serviceInstancesResources = serviceInstancesResources;
+  }
 
   /**
    * 検証を初期化する
@@ -47,21 +53,20 @@ public class ValidityResources {
    * @updatedAt : 2021-05-07
    */
   @Lock(LockType.WRITE)
-  @PostConstruct
+  @EventListener(ApplicationReadyEvent.class)
   public void initialize() throws JsonMappingException, JsonProcessingException {
-    this.map = new HashMap<Integer, Map<String, ValidityVo>>();
-    this.updatedAtMap = new HashMap<Integer, Date>();
 
+    self = applicationContext.getBean(ValidityResources.class);
     val tenantIdList = serviceInstancesResources.getTenantList();
 
     for (val tenantId : tenantIdList) {
-      this.initialize(tenantId);
+      self.initialize(tenantId);
     }
 
   }
 
   /**
-   * 検証を初期化する
+   * テナントの初期化
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-13
@@ -70,30 +75,30 @@ public class ValidityResources {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
+
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
-    var mapByTenant = serviceInstancesResources.get(tenantId);
-    var list = mapByTenant.get("validity");
+    self.get(tenantId);
+  }
 
-    // last updatedAt
-    Date maxValue =
-        list.stream().map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
-            .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
-            .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
-    updatedAtMap.put(tenantId, maxValue);
-
-    Gson gson = new Gson();
-    val validityMap = new HashMap<String, ValidityVo>();
-    for (val vo : list) {
-      JSONObject jsonObject = new JSONObject(vo.getInherentJson());
-
-      for (val key : jsonObject.keySet()) {
-        val tableJsonObject = jsonObject.getJSONObject(key);
-        if (tableJsonObject != null) {
-          validityMap.put(key, gson.fromJson(tableJsonObject.toString(), ValidityVo.class));
-        }
-      }
-    }
-    map.put(tenantId, validityMap);
+  /**
+   * メッセージリソースを初期化する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-17
+   * @updatedAt : 2021-08-17
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  @Cacheable(key = "{ #tenantId }", value = "ValidityResources::getLastUpdatedAt")
+  public Date getLastUpdatedAt(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    return serviceInstancesResources.get(tenantId).entrySet().stream()
+        .filter(entry -> entry.getKey().equals("validity")).map(entry -> {
+          val vo = entry.getValue().get(0);
+          return vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt();
+        }).max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
+        .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
   }
 
   /**
@@ -110,12 +115,9 @@ public class ValidityResources {
    */
   public Map<String, ValidityVo> get(Integer tenantId, Long updatedAt)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
-    }
 
-    return (updatedAt != null && updatedAt <= this.updatedAtMap.get(tenantId).getTime()) ? null
-        : this.map.get(tenantId);
+    return (updatedAt != null && updatedAt <= self.getLastUpdatedAt(tenantId).getTime() ? null
+        : self.get(tenantId));
   }
 
   /**
@@ -129,13 +131,27 @@ public class ValidityResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
+  @Cacheable(key = "{ #tenantId }", value = "ValidityResources::getByTenantId")
   public Map<String, ValidityVo> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
+
+    var mapByTenant = serviceInstancesResources.get(tenantId);
+    var list = mapByTenant.get("validity");
+
+    Gson gson = new Gson();
+    val validityMap = new HashMap<String, ValidityVo>();
+    for (val vo : list) {
+      JSONObject jsonObject = new JSONObject(vo.getInherentJson());
+
+      for (val key : jsonObject.keySet()) {
+        val tableJsonObject = jsonObject.getJSONObject(key);
+        if (tableJsonObject != null) {
+          validityMap.put(key, gson.fromJson(tableJsonObject.toString(), ValidityVo.class));
+        }
+      }
     }
 
-    return this.map.get(tenantId);
+    return validityMap;
   }
 
   /**
@@ -150,11 +166,13 @@ public class ValidityResources {
    */
   public List<Map<String, ValidityVo>> getAll()
       throws JsonMappingException, JsonProcessingException {
-    if (this.map == null) {
-      this.initialize();
+    val tenantIdList = serviceInstancesResources.getTenantList();
+    val resultList = new ArrayList<Map<String, ValidityVo>>();
+    for (val tenantId : tenantIdList) {
+      resultList.add(self.get(tenantId));
     }
 
-    return new ArrayList<Map<String, ValidityVo>>(this.map.values());
+    return resultList;
   }
 
 }
