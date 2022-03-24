@@ -91,21 +91,21 @@ public class ServiceInstancesResources {
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
     self.get(tenantId);
   }
-
+  
   /**
    * 情報取得
    *
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-05-07
-   * @updatedAt : 2021-05-07
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-03-23
+   * @updatedAt : 2022-03-23
    * @param vo
    * @return
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
   @SuppressWarnings("unchecked")
-  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getByTenantId")
-  public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
+  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getListByTenantId")
+  public List<ServiceInstancesVo> getListByTenantId(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
 
     val list = commonMapper.selectServiceInstances(tenantId);
@@ -122,7 +122,24 @@ public class ServiceInstancesResources {
       }
     }
 
-    return list.stream().filter(
+    return list;
+  }
+
+  /**
+   * 情報取得
+   *
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-05-07
+   * @updatedAt : 2021-05-07
+   * @param vo
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+
+    return self.getListByTenantId(tenantId).stream().filter(
         x -> (x.getBusinessGroupType() == null) || (x.getBusinessGroupType() == businessGroupType))
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
@@ -139,9 +156,25 @@ public class ServiceInstancesResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  @Cacheable(key = "{ #sourceKey+'::'+#tenantId }",
-      value = "ServiceInstancesResources::getByTenantIdWithSourceKey")
   public List<ServiceInstancesVo> get(Integer tenantId, String sourceKey)
+      throws JsonMappingException, JsonProcessingException {
+
+    return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
+  }
+  
+  /**
+   * 情報取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-06-07
+   * @updatedAt : 2021-06-07
+   * @param tenantId
+   * @param sourceKey
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public List<ServiceInstancesVo> getByTenantIdWithSourceKey(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
 
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
@@ -194,11 +227,12 @@ public class ServiceInstancesResources {
    * @updatedAt : 2021-06-07
    * @param tenantId
    * @return
+   * @throws JsonProcessingException 
+   * @throws JsonMappingException 
    */
-  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getUpdatedAt")
-  public Date getUpdatedAt(Integer tenantId) {
+  public Date getUpdatedAt(Integer tenantId) throws JsonMappingException, JsonProcessingException {
 
-    val list = commonMapper.selectServiceInstances();
+    val list = self.getListByTenantId(tenantId);
 
     // last updatedAt
     return list.stream()
