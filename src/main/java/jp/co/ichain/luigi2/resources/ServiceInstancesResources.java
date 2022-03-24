@@ -91,7 +91,7 @@ public class ServiceInstancesResources {
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
     self.get(tenantId);
   }
-  
+
   /**
    * 情報取得
    *
@@ -139,8 +139,9 @@ public class ServiceInstancesResources {
   public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
 
-    return self.getListByTenantId(tenantId).stream().filter(
-        x -> (x.getBusinessGroupType() == null) || (x.getBusinessGroupType() == businessGroupType))
+    return self.getListByTenantId(tenantId).stream()
+        .filter(x -> (x.getBusinessGroupType() == null)
+            || (x.getBusinessGroupType().equals(businessGroupType)))
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
@@ -161,7 +162,7 @@ public class ServiceInstancesResources {
 
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
   }
-  
+
   /**
    * 情報取得
    * 
@@ -213,8 +214,9 @@ public class ServiceInstancesResources {
   @Cacheable(value = "ServiceInstancesResources::getTenantList")
   public Set<Integer> getTenantList() throws JsonMappingException, JsonProcessingException {
     val list = commonMapper.selectServiceInstances();
-    return list.stream().filter(
-        x -> (x.getBusinessGroupType() == null) || (x.getBusinessGroupType() == businessGroupType))
+    return list.stream()
+        .filter(x -> (x.getBusinessGroupType() == null)
+            || (x.getBusinessGroupType().equals(businessGroupType)))
         .map(vo -> vo.getTenantId()).collect(Collectors.toSet());
 
   }
@@ -227,8 +229,8 @@ public class ServiceInstancesResources {
    * @updatedAt : 2021-06-07
    * @param tenantId
    * @return
-   * @throws JsonProcessingException 
-   * @throws JsonMappingException 
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
    */
   public Date getUpdatedAt(Integer tenantId) throws JsonMappingException, JsonProcessingException {
 
@@ -237,7 +239,7 @@ public class ServiceInstancesResources {
     // last updatedAt
     return list.stream()
         .filter(x -> (x.getBusinessGroupType() == null)
-            || (x.getBusinessGroupType() == businessGroupType))
+            || (x.getBusinessGroupType().equals(businessGroupType)))
         .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
         .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
         .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
