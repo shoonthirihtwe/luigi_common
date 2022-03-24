@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * CodeMasterVo 
+ * CodeMasterVo
  *
  * @author : [AOT] g.kim
  * @createdAt : 2021-06-23
@@ -21,22 +23,25 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeMasterVo extends ObjectVo {
-  
+public class CodeMasterVo extends ObjectVo implements Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 1L;
+
   @JsonIgnore
   Integer id;
-  
+
   @JsonIgnore
   Integer tenantId;
-  
+
   @JsonIgnore
   String field;
-  
+
   @JsonIgnore
   String tbl;
-  
+
   String codeValue;
-  
+
   String codeName;
 
   Integer updateCount;

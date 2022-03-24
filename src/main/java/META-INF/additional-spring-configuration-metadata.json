@@ -1,219 +1,227 @@
-{
-	"properties": [
-		{
-			"name": "spring.luigi2.datasource.master.jdbc-url",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.master.jdbc-url'"
-		},
-		{
-			"name": "spring.luigi2.datasource.master.driver-class-name",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.master.driver-class-name'"
-		},
-		{
-			"name": "spring.luigi2.datasource.master.password",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.master.password'"
-		},
-		{
-			"name": "spring.luigi2.datasource.master.username",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.master.username'"
-		},
-		{
-			"name": "spring.luigi2.datasource.slave.jdbc-url",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.jdbc-url'"
-		},
-		{
-			"name": "spring.luigi2.datasource.slave.driver-class-name",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.driver-class-name'"
-		},
-		{
-			"name": "spring.luigi2.datasource.slave.password",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.password'"
-		},
-		{
-			"name": "spring.luigi2.datasource.slave.username",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.username'"
-		},
-		{
-			"name": "config.time-zone",
-			"type": "java.lang.String",
-			"description": "A description for 'config.time-zone'"
-		},
-		{
-			"name": "spring.luigi2.datasource.master.platform",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.master.platform'"
-		},
-		{
-			"name": "spring.luigi2.datasource.slave.platform",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.entry.tran",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.exec.tran",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.search.card",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.regist.member",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.regist.card",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "gmo.alter.tran",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.credential.access.key",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.credential.secret.key",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.s3.region",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.s3.bucket",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.s3.salt",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "aws.ses.region",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "mail.date.format",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "jwt.aws.region",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "jwt.aws.user_pool_id",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "env.debug.mode",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "antisocial.url",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "clamav.host.name",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "clamav.port",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "external.api.flag",
-			"type": "java.lang.String",
-			"description": "A description for 'spring.luigi2.datasource.slave.platform'"
-		},
-		{
-			"name": "project.domain",
-			"type": "java.lang.String",
-			"description": "A description for 'project.domain'"
-		},
-		{
-			"name": "project.url",
-			"type": "java.lang.String",
-			"description": "A description for 'project.url'"
-		},
-		{
-			"name": "dynamo.url",
-			"type": "java.lang.String",
-			"description": "A description for 'dynamo.url'"
-		},
-		{
-			"name": "dynamo.region",
-			"type": "java.lang.String",
-			"description": "A description for 'dynamo.region'"
-		},
-		{
-			"name": "dynamo.ba002.keys",
-			"type": "java.lang.String",
-			"description": "A description for 'dynamo.ba002.keys'"
-		},
-		{
-			"name": "dynamo.ba002.table",
-			"type": "java.lang.String",
-			"description": "A description for 'dynamo.ba002.table'"
-		},
-		{
-			"name": "newbusiness.sender.email.clients",
-			"type": "java.lang.String",
-			"description": "A description for 'newbusiness.sender.email.clients'"
-		},
-		{
-			"name": "policy.sender.email.clients",
-			"type": "java.lang.String",
-			"description": "A description for 'policy.sender.email.clients'"
-		},
-		{
-			"name": "claim.sender.email.clients",
-			"type": "java.lang.String",
-			"description": "A description for 'claim.sender.email.clients'"
-		},
-		{
-			"name": "billing.sender.email.clients",
-			"type": "java.lang.String",
-			"description": "A description for 'billing.sender.email.clients'"
-		},
-		{
-			"name": "renewal.sender.email.clients",
-			"type": "java.lang.String",
-			"description": "A description for 'renewal.sender.email.clients'"
-		},
-		{
-			"name": "sender.email.tenants",
-			"type": "java.lang.String",
-			"description": "A description for 'sender.email.tenants'"
-		}
-	]
-}
+{"properties": [
+  {
+    "name": "spring.luigi2.datasource.master.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.jdbc-url'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.driver-class-name'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.password'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.username'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.jdbc-url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.jdbc-url'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.driver-class-name'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.password'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.username'"
+  },
+  {
+    "name": "config.time-zone",
+    "type": "java.lang.String",
+    "description": "A description for 'config.time-zone'"
+  },
+  {
+    "name": "spring.luigi2.datasource.master.platform",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.master.platform'"
+  },
+  {
+    "name": "spring.luigi2.datasource.slave.platform",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.entry.tran",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.exec.tran",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.search.card",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.regist.member",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.regist.card",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "gmo.alter.tran",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.credential.access.key",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.credential.secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.s3.region",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.s3.bucket",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.s3.salt",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "aws.ses.region",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "mail.date.format",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "jwt.aws.region",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "jwt.aws.user_pool_id",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "env.debug.mode",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "antisocial.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "clamav.host.name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "clamav.port",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "external.api.flag",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.luigi2.datasource.slave.platform'"
+  },
+  {
+    "name": "project.domain",
+    "type": "java.lang.String",
+    "description": "A description for 'project.domain'"
+  },
+  {
+    "name": "project.url",
+    "type": "java.lang.String",
+    "description": "A description for 'project.url'"
+  },
+  {
+    "name": "dynamo.url",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.url'"
+  },
+  {
+    "name": "dynamo.region",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.region'"
+  },
+  {
+    "name": "dynamo.ba002.keys",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.ba002.keys'"
+  },
+  {
+    "name": "dynamo.ba002.table",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.ba002.table'"
+  },
+  {
+    "name": "newbusiness.sender.email.clients",
+    "type": "java.lang.String",
+    "description": "A description for 'newbusiness.sender.email.clients'"
+  },
+  {
+    "name": "policy.sender.email.clients",
+    "type": "java.lang.String",
+    "description": "A description for 'policy.sender.email.clients'"
+  },
+  {
+    "name": "claim.sender.email.clients",
+    "type": "java.lang.String",
+    "description": "A description for 'claim.sender.email.clients'"
+  },
+  {
+    "name": "billing.sender.email.clients",
+    "type": "java.lang.String",
+    "description": "A description for 'billing.sender.email.clients'"
+  },
+  {
+    "name": "renewal.sender.email.clients",
+    "type": "java.lang.String",
+    "description": "A description for 'renewal.sender.email.clients'"
+  },
+  {
+    "name": "sender.email.tenants",
+    "type": "java.lang.String",
+    "description": "A description for 'sender.email.tenants'"
+  },
+  {
+    "name": "config.refresh-scheduler.cron",
+    "type": "java.lang.String",
+    "description": "A description for 'config.refresh-scheduler.cron'"
+  },
+  {
+    "name": "business.group.type",
+    "type": "java.lang.String",
+    "description": "A description for 'business.group.type'"
+  }
+]}
