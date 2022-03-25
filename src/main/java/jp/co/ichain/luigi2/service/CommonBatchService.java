@@ -75,6 +75,11 @@ public class CommonBatchService {
    * @throws ParseException
    */
   public void runBatch(Map<String, BatchService> batchMap, String... args) throws ParseException {
+
+    if (args.length == 0) {
+      return;
+    }
+
     // テナントID & バッチ日付を取得
     List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
     for (val tmp : CollectionUtils.safe(args[0].split(","))) {
@@ -151,8 +156,8 @@ public class CommonBatchService {
       String accessId = ""; // 取引ID
       String accessPass = ""; // 取引パスワード
       try {
-        paymentVo =
-            paymentService.pay(tenantId, contractNo, cardCustNumber, dueDate, premiumDueAmount, batchDate);
+        paymentVo = paymentService.pay(tenantId, contractNo, cardCustNumber, dueDate,
+            premiumDueAmount, batchDate);
         if (paymentVo != null) {
           accessId = paymentVo.getAccessId();
           accessPass = paymentVo.getAccessPass();

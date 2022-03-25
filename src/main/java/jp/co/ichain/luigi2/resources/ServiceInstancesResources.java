@@ -46,7 +46,7 @@ public class ServiceInstancesResources {
   private final CommonMapper commonMapper;
 
   @Value("${business.group.type}")
-  private String businessGroupType;
+  private String businessGroupType = "";
 
   ServiceInstancesResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
     this.applicationContext = applicationContext;
@@ -140,7 +140,7 @@ public class ServiceInstancesResources {
       throws JsonMappingException, JsonProcessingException {
 
     return self.getListByTenantId(tenantId).stream()
-        .filter(x -> (x.getBusinessGroupType() == null)
+        .filter(x -> (x.getBusinessGroupType().equals("A"))
             || (x.getBusinessGroupType().equals(businessGroupType)))
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
@@ -215,7 +215,7 @@ public class ServiceInstancesResources {
   public Set<Integer> getTenantList() throws JsonMappingException, JsonProcessingException {
     val list = commonMapper.selectServiceInstances();
     return list.stream()
-        .filter(x -> (x.getBusinessGroupType() == null)
+        .filter(x -> (x.getBusinessGroupType().equals("A"))
             || (x.getBusinessGroupType().equals(businessGroupType)))
         .map(vo -> vo.getTenantId()).collect(Collectors.toSet());
 
@@ -238,7 +238,7 @@ public class ServiceInstancesResources {
 
     // last updatedAt
     return list.stream()
-        .filter(x -> (x.getBusinessGroupType() == null)
+        .filter(x -> (x.getBusinessGroupType().equals("A"))
             || (x.getBusinessGroupType().equals(businessGroupType)))
         .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
         .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
