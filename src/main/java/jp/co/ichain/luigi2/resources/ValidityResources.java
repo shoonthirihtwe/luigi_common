@@ -11,7 +11,6 @@ import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.json.JSONObject;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -90,7 +89,6 @@ public class ValidityResources {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  @Cacheable(key = "{ #tenantId }", value = "ValidityResources::getLastUpdatedAt")
   public Date getLastUpdatedAt(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
     return serviceInstancesResources.get(tenantId).entrySet().stream()
@@ -131,7 +129,6 @@ public class ValidityResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  @Cacheable(key = "{ #tenantId }", value = "ValidityResources::getByTenantId")
   public Map<String, ValidityVo> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
 
