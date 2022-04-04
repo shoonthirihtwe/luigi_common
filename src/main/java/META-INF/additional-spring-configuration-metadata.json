@@ -110,6 +110,11 @@
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"
   },
   {
+    "name": "aws.s3.transfer.bucket",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.s3.transfer.bucket'"
+  },
+  {
     "name": "aws.ses.region",
     "type": "java.lang.String",
     "description": "A description for 'spring.luigi2.datasource.slave.platform'"

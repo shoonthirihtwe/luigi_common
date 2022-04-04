@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebException;
+import jp.co.ichain.luigi2.util.CollectionUtils;
+import jp.co.ichain.luigi2.util.CsvUtils;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
@@ -78,6 +82,23 @@ class GmoPaymentService {
       put("42G970000", "G97");
       put("42G980000", "G98");
       put("42G990000", "G99");
+    }
+  };
+
+  @SuppressWarnings("serial")
+  private static Map<String, String> PASSBOOK_TITLE_MAP = new LinkedHashMap<String, String>() {
+    {
+      put("siteID", "サイトID");
+      put("memberID", "会員 ID");
+      put("shopID", "ショップID");
+      put("amount", "利用金額");
+      put("tax", "税送料");
+      put("passbookEntry", "通帳記載内容");
+      put("free", "自由項目");
+      put("status", "状態");
+      put("result", "振替結果");
+      put("errCode", "エラーコード");
+      put("errDetailCode", "エラー詳細コード");
     }
   };
 
@@ -214,6 +235,30 @@ class GmoPaymentService {
 
     return new PaymentVo(apiResult.getAccessID(), apiResult.getAccessPass(), now.getTime(),
         changePaymentErrorInfo(apiResult.getErrorMap()));
+  }
+
+  /**
+   * 口座振替Csv作成
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-01
+   * @updatedAt : 2022-04-01
+   * @param companyInfo
+   * @param dataList
+   * @return
+   * @throws IOException
+   */
+  public ByteArrayOutputStream makeAccountTransferCsv(FactoringCompaniesVo companyInfo,
+      List<Map<String, Object>> dataList) throws IOException {
+    for (val data : CollectionUtils.safe(dataList)) {
+      // サイトID
+      data.put("siteID", companyInfo.getSiteId());
+      // ショップID
+      data.put("shopID", companyInfo.getShopId());
+      // 通帳記載内容
+      data.put("passbookEntry", companyInfo.getPassbookEntry());
+    }
+    return CsvUtils.write(PASSBOOK_TITLE_MAP, dataList);
   }
 
   /**
