@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.vo.TenantsVo;
 
 public interface BatchService {
@@ -14,5 +15,5 @@ public interface BatchService {
   public void run(List<TenantsVo> tenantList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
       JsonMappingException, JsonProcessingException, ParseException,
-      UnsupportedEncodingException, IOException;
+      UnsupportedEncodingException, IOException, GmoPaymentException;
 }
