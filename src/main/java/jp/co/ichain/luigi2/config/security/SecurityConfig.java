@@ -95,7 +95,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     configuration.addAllowedHeader("*");
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
-    configuration.addExposedHeader("Content-Disposition");
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
