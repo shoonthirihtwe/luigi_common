@@ -221,7 +221,20 @@ public class CommonBatchService {
         depositDetailsVo.setCashDetailStatus(CashDetailStatus.SUSPENCE.toString());
         // 引き去り結果コード カード
         if (validGmo) {
-          depositDetailsVo.setPaymentResultCode(PaymentResultCode.SUCCESS.toString()); // 決済OK（エラーなし）
+          switch (paymentMethodCode) {
+            case BANK:
+              // ステータス ＝ T（口座振替待ち）を設定
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.TRANSFER_PENDING.toString());
+              break;
+            case CARD:
+              // 決済OK（エラーなし）
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.SUCCESS.toString()); //
+              break;
+            default:
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString()); // 決済OK（エラーなし）
+              break;
+          }
+
         } else {
           // GMOエラー詳細コードチェック
           switch (errInfo) {

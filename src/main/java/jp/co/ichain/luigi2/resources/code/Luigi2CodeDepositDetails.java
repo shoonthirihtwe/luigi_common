@@ -22,7 +22,10 @@ public class Luigi2CodeDepositDetails {
    * @updatedAt : 2021-08-12
    */
   public enum CashDetailStatus {
-    SUSPENCE("S"), MATCHED("M"), UNMATCHED("U"), DELETED("D");
+    SUSPENCE("S"),
+    MATCHED("M"),
+    UNMATCHED("U"),
+    DELETED("D");
 
     String val;
 
@@ -44,13 +47,21 @@ public class Luigi2CodeDepositDetails {
    * 2:限度額オーバー
    * 3:カード残高不足
    * 4:カード有効期限範囲外
+   * T:口座振替結果待ち
+   * N:不明
    * 
    * @author : [VJP] タン
    * @createdAt : 2021-08-27
    * @updatedAt : 2021-08-27
    */
   public enum PaymentResultCode {
-    SUCCESS("0"), INVALID("1"), OVER("2"), INSUFFICIENT("3"), OUT_OF_RANGE("4");
+    SUCCESS("0"),
+    INVALID("1"),
+    OVER("2"),
+    INSUFFICIENT("3"),
+    OUT_OF_RANGE("4"),
+    TRANSFER_PENDING("T"),
+    UNKNOWN("N");
 
     String val;
 
