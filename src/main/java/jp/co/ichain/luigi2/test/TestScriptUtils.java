@@ -1,7 +1,8 @@
-package jp.co.ichain.luigi2.util;
+package jp.co.ichain.luigi2.test;
 
 
 
+import static org.junit.Assert.assertEquals;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
@@ -248,5 +252,32 @@ public class TestScriptUtils {
       paramMap.put("tenantId", tenantId);
     }
     commonMapper.updateOnlineDate(paramMap);
+  }
+
+  /**
+   * テーブル値検証
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-08
+   * @updatedAt : 2022-04-08
+   * @param actualTable
+   * @param expectedTable
+   * @param actualIndex
+   * @param expectedIndex
+   * @throws DataSetException
+   */
+  public void compareTable(String tableName, IDataSet databaseDataSet, IDataSet expectedDataSet)
+      throws DataSetException {
+    ITable actualTable = databaseDataSet.getTable(tableName);
+    ITable expectedTable = expectedDataSet.getTable(tableName);
+
+    int length = expectedTable.getRowCount();
+    val columns = expectedTable.getTableMetaData().getColumns();
+    for (int idx = 0; idx < length; idx++) {
+      for (val column : columns) {
+        assertEquals(expectedTable.getValue(idx, column.getColumnName()),
+            actualTable.getValue(idx, column.getColumnName()).toString());
+      }
+    }
   }
 }

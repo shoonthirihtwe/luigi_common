@@ -27,6 +27,7 @@ import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.BatchStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRoute;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodePremium.PremiumStatus;
+import jp.co.ichain.luigi2.service.pay.PaymentService;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
@@ -118,6 +119,24 @@ public class CommonBatchService {
   /**
    * 請求決済処理を実施し入金データを作成
    * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-06
+   * @updatedAt : 2022-04-06
+   * @param billingDetails
+   * @param tenantId
+   * @param batchDate
+   * @param createdBy
+   * @throws ParseException
+   */
+  public void payAndCreateDepositData(List<BillingDetailsVo> billingDetails, int tenantId,
+      Date batchDate, String createdBy) throws ParseException {
+    payAndCreateDepositData(billingDetails, tenantId, batchDate,
+        Luigi2CodeDepositHeaders.PaymentMethodCode.CARD, createdBy);
+  }
+
+  /**
+   * 請求決済処理を実施し入金データを作成
+   * 
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
@@ -125,7 +144,8 @@ public class CommonBatchService {
    * @throws ParseException
    */
   public void payAndCreateDepositData(List<BillingDetailsVo> billingDetails, int tenantId,
-      Date batchDate, String createdBy) throws ParseException {
+      Date batchDate, Luigi2CodeDepositHeaders.PaymentMethodCode paymentMethodCode,
+      String createdBy) throws ParseException {
 
     // バッチナンバー
     int batchNo = mapper.selectBatchNo(batchDate);
@@ -266,15 +286,14 @@ public class CommonBatchService {
       depositHeadersVo.setTenantId(tenantId); // テナントID
       depositHeadersVo.setEntryDate(batchDate); // 入力日 ＝ バッチ日付を設定
       depositHeadersVo.setBatchNo(batchNo); // バッチナンバー ＝ 入金テーブルの入力日単位で1からの連番を設定
-      // 払込方法コード ＝ 3（カード）を設定
-      depositHeadersVo
-          .setPaymentMethodCode(Luigi2CodeDepositHeaders.PaymentMethodCode.CARD.toString());
+      // 払込方法コード
+      depositHeadersVo.setPaymentMethodCode(paymentMethodCode.toString());
       depositHeadersVo.setDepositDate(batchDate); // 入金日 ＝ バッチ日付を設定
       // 入金金額 ＝ 作成した入金詳細の「合計保険料金額」を合算して設定
       depositHeadersVo.setReceivedAmount(String.valueOf(receivedAmount));
       // バッチ合計金額 ＝ 作成した入金詳細の「入金金額」を合算して設定
       depositHeadersVo.setBatchTotalAmount(String.valueOf(batchTotalAmount));
-      depositHeadersVo.setBatchStatus(BatchStatus.WAITING.toString()); // ステータス ＝ A（入力完了：マッチング待ち）を設定
+
       depositHeadersVo.setComment(null); // 備考 ＝ 属性初期値
       depositHeadersVo.setUsereId(createdBy); // 処理ユーザーID ＝ この処理の機能IDを設定
       // 収集ルート ＝ R（レギュラー）を設定
@@ -282,6 +301,17 @@ public class CommonBatchService {
       depositHeadersVo.setGroupCode(null); // 団体コード ＝ 属性初期値
       depositHeadersVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
 
+      switch (paymentMethodCode) {
+        case BANK:
+          // ステータス ＝ T（口座振替待ち）を設定
+          depositHeadersVo.setBatchStatus(BatchStatus.TRANSFER.toString());
+          break;
+        case CARD:
+        default:
+          // ステータス ＝ A（入力完了：マッチング待ち）を設定
+          depositHeadersVo.setBatchStatus(BatchStatus.WAITING.toString());
+          break;
+      }
       // 保険料入金ヘッダの作成を実施
       mapper.insertDepositHeaders(depositHeadersVo);
     }

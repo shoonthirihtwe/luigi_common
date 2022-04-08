@@ -13,13 +13,16 @@ public class Luigi2CodeDepositHeaders {
    * 
    * 1:現金
    * 3:カード
+   * 4:口座振替
    * 
    * @author : [VJP] タン
    * @createdAt : 2021-08-27
    * @updatedAt : 2021-08-27
    */
   public enum PaymentMethodCode {
-    CASH("1"), CARD("3");
+    CASH("1"),
+    CARD("3"),
+    BANK("4");
 
     String val;
 
@@ -45,7 +48,10 @@ public class Luigi2CodeDepositHeaders {
    * @updatedAt : 2021-08-27
    */
   public enum BatchStatus {
-    WAITING("A"), DELETED("D"), PROCESSED("P");
+    WAITING("A"),
+    DELETED("D"),
+    PROCESSED("P"),
+    TRANSFER("T");
 
     String val;
 

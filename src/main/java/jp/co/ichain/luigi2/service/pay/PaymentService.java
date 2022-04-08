@@ -1,4 +1,4 @@
-package jp.co.ichain.luigi2.service;
+package jp.co.ichain.luigi2.service.pay;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -9,6 +9,8 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
+import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentBankAccountDelegate;
+import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentCardDelegate;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 
@@ -23,10 +25,13 @@ import jp.co.ichain.luigi2.vo.PaymentVo;
 public class PaymentService {
 
   @Autowired
-  GmoPaymentService gmoPaymentService;
+  CommonMapper commonMapper;
 
   @Autowired
-  CommonMapper commonMapper;
+  GmoPaymentCardDelegate gmoPaymentCardDelegate;
+
+  @Autowired
+  GmoPaymentBankAccountDelegate gmoPaymentBankAccountDelegate;
 
   /**
    * 決済実行
@@ -58,8 +63,15 @@ public class PaymentService {
     }
 
     PaymentVo result = null;
+    GmoPaymentService gmoPaymentService = null;
     switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
+        gmoPaymentService = new GmoPaymentService(gmoPaymentCardDelegate);
+        result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
+            premiumDueAmount);
+        break;
+      case "BANK01":
+        gmoPaymentService = new GmoPaymentService(gmoPaymentBankAccountDelegate);
         result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
             premiumDueAmount);
         break;
@@ -102,6 +114,7 @@ public class PaymentService {
     PaymentVo result = null;
     switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
+        GmoPaymentService gmoPaymentService = new GmoPaymentService(new GmoPaymentCardDelegate());
         result = gmoPaymentService.cancel(companyInfo, accessId, accessPassword, suspenceDate);
         break;
       default:

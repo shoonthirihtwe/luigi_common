@@ -20,7 +20,9 @@ public class Luigi2CodePremium {
    * @updatedAt : 2021-08-30
    */
   public enum PremiumStatus {
-    MATCHED("M"), PENDING("P");
+    MATCHED("M"),
+    PENDING("P"),
+    TRANSFER("T");
 
     String val;
 
