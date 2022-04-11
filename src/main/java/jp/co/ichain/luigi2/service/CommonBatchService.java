@@ -223,8 +223,8 @@ public class CommonBatchService {
         if (validGmo) {
           switch (paymentMethodCode) {
             case BANK:
-              // ステータス ＝ T（口座振替待ち）を設定
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.TRANSFER_PENDING.toString());
+              // ステータス ＝ N（原因不明）を設定
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString());
               break;
             case CARD:
               // 決済OK（エラーなし）
