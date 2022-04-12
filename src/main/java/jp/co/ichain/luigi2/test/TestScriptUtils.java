@@ -99,6 +99,10 @@ public class TestScriptUtils {
    */
   public void cleanUpDatabase() throws ScriptException, SQLException {
     executeSqlScript("test_sql/data_clear.sql");
+    if (connection != null) {
+      connection.close();
+      connection = null;
+    }
   }
 
   /**
