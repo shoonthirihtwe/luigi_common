@@ -68,6 +68,11 @@ public class FactoringCompaniesVo extends ObjectVo {
    * 請求月
    */
   String billingMonth;
+
+  /**
+   * 通帳記載内容
+   */
+  String passbookEntry;
   /**
    * 請求基準日
    */

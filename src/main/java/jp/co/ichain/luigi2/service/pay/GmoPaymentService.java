@@ -14,6 +14,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentDelegate;
 import jp.co.ichain.luigi2.util.CollectionUtils;
+import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 import jp.co.ichain.luigi2.vo.PaymentErrorVo;
@@ -70,22 +71,23 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo pay(FactoringCompaniesVo companyInfo, String contractNo, String memberID,
-      String dueDate, Integer premiumDueAmount) throws IllegalArgumentException,
+  PaymentVo pay(FactoringCompaniesVo companyInfo, BillingDetailsVo billingDetailsVo)
+      throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
     // contracts.card_cust_number
-    gmoPaymentVo.setMemberID(memberID);
+    gmoPaymentVo.setMemberID(billingDetailsVo.getCardCustNumber());
     /*
      * 証券番号billing_details.contract_no + 決済処理日(システム日付yymmdd) + システム時刻(hhmm) +
      * 充当月billing_details.due_date(yyyymm) を設定
      */
-    gmoPaymentVo.setOrderID(contractNo + systemDateForamt.format(now) + dueDate);
+    gmoPaymentVo.setOrderID(billingDetailsVo.getContractNo() + systemDateForamt.format(now)
+        + billingDetailsVo.getDueDate());
 
     // 保険料請求額billing_details.premium_due_amountを設定する
-    gmoPaymentVo.setAmount((long) premiumDueAmount);
+    gmoPaymentVo.setAmount((long) billingDetailsVo.getPremiumDueAmount());
 
     // サイトID、PASSセット
     gmoPaymentVo.setSiteID(companyInfo.getSiteId());
@@ -95,7 +97,7 @@ class GmoPaymentService {
     gmoPaymentVo.setShopPass(companyInfo.getShopPass());
 
     // 決済実行
-    GmoPaymentVo exeResult = delegate.execTran(gmoPaymentVo);
+    GmoPaymentVo exeResult = delegate.execTran(gmoPaymentVo, companyInfo);
     return new PaymentVo(exeResult.getAccessID(), exeResult.getAccessPass(), now,
         changePaymentErrorInfo(exeResult.getErrorMap()));
   }

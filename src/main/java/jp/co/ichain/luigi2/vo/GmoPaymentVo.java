@@ -77,6 +77,10 @@ public class GmoPaymentVo extends ObjectVo {
 
   Boolean gmoMemberRegist;
 
+  String targetDate;
+
+  String remarks;
+
   Map<String, PaymentErrorVo> errorMap = null;
 }
 // CHECKSTYLE:ON: checkstyle:AbbreviationAsWordInName

@@ -11,6 +11,7 @@ import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentBankAccountDelegate;
 import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentCardDelegate;
+import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 
@@ -37,13 +38,10 @@ public class PaymentService {
    * 決済実行
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-28
-   * @updatedAt : 2021-06-28
-   * @param contractNo
-   * @param cardCustNumber
-   * @param dueDate
-   * @param premiumDueAmount
-   * @param nowDate(onlineDate, バッチの場合 batchDate)
+   * @createdAt : 2022-04-13
+   * @updatedAt : 2022-04-13
+   * @param billingDetailsVo
+   * @param nowDate
    * @return
    * @throws IllegalArgumentException
    * @throws IllegalAccessException
@@ -51,12 +49,12 @@ public class PaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  public PaymentVo pay(Integer tenantId, String contractNo, String cardCustNumber, String dueDate,
-      Integer premiumDueAmount, Date nowDate) throws IllegalArgumentException,
+  public PaymentVo pay(BillingDetailsVo billingDetailsVo, Date nowDate)
+      throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
 
-    FactoringCompaniesVo companyInfo =
-        commonMapper.selectFactoringCompanyCode(tenantId, contractNo, nowDate);
+    FactoringCompaniesVo companyInfo = commonMapper.selectFactoringCompanyCode(
+        billingDetailsVo.getTenantId(), billingDetailsVo.getContractNo(), nowDate);
 
     if (companyInfo == null) {
       throw new WebDataException(Luigi2ErrorCode.D0002, "contractNo");
@@ -67,13 +65,11 @@ public class PaymentService {
     switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
         gmoPaymentService = new GmoPaymentService(gmoPaymentCardDelegate);
-        result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
-            premiumDueAmount);
+        result = gmoPaymentService.pay(companyInfo, billingDetailsVo);
         break;
       case "BANK01":
         gmoPaymentService = new GmoPaymentService(gmoPaymentBankAccountDelegate);
-        result = gmoPaymentService.pay(companyInfo, contractNo, cardCustNumber, dueDate,
-            premiumDueAmount);
+        result = gmoPaymentService.pay(companyInfo, billingDetailsVo);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");

@@ -13,6 +13,7 @@ import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
 
@@ -46,7 +47,8 @@ public class GmoPaymentCardDelegate implements GmoPaymentDelegate {
    * @throws ParseException
    */
   @Override
-  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
+  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+      throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     List<GmoPaymentVo> list = searchCard(gmoPaymentVo);

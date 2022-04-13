@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
 /**
@@ -19,9 +20,10 @@ public interface GmoPaymentDelegate {
    * 決済実行
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2022-04-06
-   * @updatedAt : 2022-04-06
+   * @createdAt : 2022-04-13
+   * @updatedAt : 2022-04-13
    * @param gmoPaymentVo
+   * @param companiesVo
    * @return
    * @throws GmoPaymentException
    * @throws IllegalArgumentException
@@ -29,8 +31,9 @@ public interface GmoPaymentDelegate {
    * @throws IOException
    * @throws ParseException
    */
-  GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
-      IllegalArgumentException, IllegalAccessException, IOException, ParseException;
+  GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+      throws GmoPaymentException, IllegalArgumentException, IllegalAccessException, IOException,
+      ParseException;
 
   /**
    * 決済取り消し実行

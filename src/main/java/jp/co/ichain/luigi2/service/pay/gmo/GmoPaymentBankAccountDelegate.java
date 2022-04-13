@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
+import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
 
@@ -26,9 +27,10 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    * 口座振替決済実行
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-22
-   * @updatedAt : 2021-06-22
+   * @createdAt : 2022-04-13
+   * @updatedAt : 2022-04-13
    * @param gmoPaymentVo
+   * @param companiesVo
    * @return
    * @throws GmoPaymentException
    * @throws IllegalArgumentException
@@ -37,11 +39,12 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    * @throws ParseException
    */
   @Override
-  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
+  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+      throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     // 取引ID取得
-    GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo);
+    GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo, companiesVo);
 
     // 取引IDセット
     gmoPaymentVo.setAccessID(entryTranVo.getAccessID());
@@ -98,9 +101,10 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    * 口座振替取引登録
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2022-04-06
-   * @updatedAt : 2022-04-06
+   * @createdAt : 2022-04-13
+   * @updatedAt : 2022-04-13
    * @param gmoPaymentVo
+   * @param companiesVo
    * @return
    * @throws GmoPaymentException
    * @throws IllegalArgumentException
@@ -108,11 +112,15 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    * @throws IOException
    * @throws ParseException
    */
-  private GmoPaymentVo entryTranBankAccount(GmoPaymentVo gmoPaymentVo) throws GmoPaymentException,
-      IllegalArgumentException, IllegalAccessException, IOException, ParseException {
+  private GmoPaymentVo entryTranBankAccount(GmoPaymentVo gmoPaymentVo,
+      FactoringCompaniesVo companiesVo) throws GmoPaymentException, IllegalArgumentException,
+      IllegalAccessException, IOException, ParseException {
 
-    gmoPaymentVo.setTdFlag(0);
+    // 振替指定日
+    gmoPaymentVo.setTargetDate("27");
 
+    // 請求内容
+    gmoPaymentVo.setRemarks(companiesVo.getPassbookEntry());
     // パラメーターセット
     Params params = new Params(gmoPaymentVo, true);
 
