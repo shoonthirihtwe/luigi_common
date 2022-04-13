@@ -45,7 +45,8 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
 
     // 取引ID取得
     GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo, companiesVo);
-
+    // 口座の有効性チードェック無効化
+    gmoPaymentVo.setCheckMode("NOCHECK_ACCOUNT");
     // 取引IDセット
     gmoPaymentVo.setAccessID(entryTranVo.getAccessID());
     gmoPaymentVo.setAccessPass(entryTranVo.getAccessPass());

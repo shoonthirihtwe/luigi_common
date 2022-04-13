@@ -81,6 +81,8 @@ public class GmoPaymentVo extends ObjectVo {
 
   String remarks;
 
+  String checkMode;
+
   Map<String, PaymentErrorVo> errorMap = null;
 }
 // CHECKSTYLE:ON: checkstyle:AbbreviationAsWordInName
