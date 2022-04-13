@@ -20,6 +20,20 @@ public class DateTimeUtils {
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
   /**
+   * 日付取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-13
+   * @updatedAt : 2022-04-13
+   * @param date
+   * @return
+   * @throws ParseException
+   */
+  public static Date getDate(String date) throws ParseException {
+    return date == null ? null : formatter.parse(date);
+  }
+
+  /**
    * yyyyMMdd形式で日付を返す
    * 
    * @author : [AOT] s.paku
