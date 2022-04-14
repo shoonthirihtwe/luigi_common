@@ -187,9 +187,11 @@ public class CommonBatchService {
         for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
           errInfo = pay.getValue().getErrInfo();
         }
+        log.error(e.getLocalizedMessage());
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
+        log.error(e.getLocalizedMessage());
       } finally {
         DepositDetailsVo depositDetailsVo = new DepositDetailsVo();
         depositDetailsVo.setTenantId(tenantId); // テナントID
@@ -264,6 +266,8 @@ public class CommonBatchService {
               depositDetailsVo.setPaymentResultCode(PaymentResultCode.OUT_OF_RANGE.toString()); // カードの有効期限範囲外
               break;
             default:
+              depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString());
+              break;
           }
         }
         depositDetailsVo.setAccessId(accessId); // 取引ID
