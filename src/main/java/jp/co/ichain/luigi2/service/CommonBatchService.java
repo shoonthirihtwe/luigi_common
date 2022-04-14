@@ -186,6 +186,7 @@ public class CommonBatchService {
         errorMap = e.getGmoPaymentVo().getErrorMap();
         for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
           errInfo = pay.getValue().getErrInfo();
+          log.error("GmoPaymentException:" + errInfo);
         }
         log.error(e.getLocalizedMessage());
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
