@@ -171,24 +171,21 @@ public class CommonBatchService {
       // GMO決済サービス
       PaymentVo paymentVo = new PaymentVo();
       String errInfo = ""; // エラー情報
-      String accessId = ""; // 取引ID
-      String accessPass = ""; // 取引パスワード
       try {
         paymentVo = paymentService.pay(billingDetail, batchDate);
         if (paymentVo != null) {
-          accessId = paymentVo.getAccessId();
-          accessPass = paymentVo.getAccessPass();
           validGmo = true;
         }
       } catch (GmoPaymentException e) {
         validGmo = false;
-        Map<String, PaymentErrorVo> errorMap = new HashMap<String, PaymentErrorVo>();
-        errorMap = e.getGmoPaymentVo().getErrorMap();
+        val gmoVo = e.getGmoPaymentVo();
+        paymentVo.setAccessId(gmoVo.getAccessID());
+        paymentVo.setAccessPass(gmoVo.getAccessPass());
+        Map<String, PaymentErrorVo> errorMap = e.getGmoPaymentVo().getErrorMap();
         for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
           errInfo = pay.getValue().getErrInfo();
           log.error("GmoPaymentException:" + errInfo);
         }
-        log.error(e.getLocalizedMessage());
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
@@ -271,8 +268,8 @@ public class CommonBatchService {
               break;
           }
         }
-        depositDetailsVo.setAccessId(accessId); // 取引ID
-        depositDetailsVo.setAccessPass(accessPass); // 取引パスワード
+        depositDetailsVo.setAccessId(paymentVo.getAccessId()); // 取引ID
+        depositDetailsVo.setAccessPass(paymentVo.getAccessPass()); // 取引パスワード
         depositDetailsVo.setComment(null); // 備考 ＝ 属性初期値
         depositDetailsVo.setPremiumDueDate(billingDetail.getPremiumDueDate()); // 保険料充当日 ＝ バッチ日付を設定
         // 保険料 連番 ＝ 請求詳細の保険料 連番
