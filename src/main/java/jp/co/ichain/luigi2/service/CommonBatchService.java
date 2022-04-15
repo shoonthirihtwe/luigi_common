@@ -28,6 +28,7 @@ import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.BatchStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRoute;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodePremium.PremiumStatus;
 import jp.co.ichain.luigi2.service.pay.PaymentService;
+import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentProperties;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
@@ -190,7 +191,6 @@ public class CommonBatchService {
           errInfo = pay.getValue().getErrInfo();
           log.error("GmoPaymentException:" + errInfo);
         }
-
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
@@ -240,38 +240,12 @@ public class CommonBatchService {
 
         } else {
           // GMOエラー詳細コードチェック
-          switch (errInfo) {
-            case "42G120000":
-            case "42G220000":
-            case "42G300000":
-            case "42G540000":
-            case "42G560000":
-            case "42G600000":
-            case "42G610000":
-            case "42G920000":
-            case "42G950000":
-            case "42G960000":
-            case "42G970000":
-            case "42G980000":
-            case "42G990000":
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.INVALID.toString()); // カード無効
-              break;
-            case "42G030000":
-            case "42G050000":
-            case "42G070000":
-            case "42G550000":
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.OVER.toString()); // カード限度額オーバー
-              break;
-            case "42G020000":
-            case "42G040000":
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.INSUFFICIENT.toString()); // カード残高不足
-              break;
-            case "42G830000":
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.OUT_OF_RANGE.toString()); // カードの有効期限範囲外
-              break;
-            default:
-              depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString());
-              break;
+          val paymentResultCode =
+              GmoPaymentProperties.getInstance().ERROR_PAYMENT_RESULT_MAP.get(errInfo);
+          if (paymentResultCode != null) {
+            depositDetailsVo.setPaymentResultCode(paymentResultCode);
+          } else {
+            depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString());
           }
         }
         depositDetailsVo.setAccessId(paymentVo.getAccessId()); // 取引ID

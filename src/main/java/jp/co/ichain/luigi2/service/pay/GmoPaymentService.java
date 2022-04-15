@@ -5,15 +5,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentDelegate;
-import jp.co.ichain.luigi2.util.CollectionUtils;
+import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentProperties;
 import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
@@ -37,22 +33,7 @@ class GmoPaymentService {
   }
 
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyMMddHHmm");
-
-  @SuppressWarnings("serial")
-  private static Map<String, String> ERROR_MAP = new HashMap<String, String>() {
-    {
-      try {
-        Properties properties = PropertiesLoaderUtils
-            .loadProperties(new ClassPathResource("pay/gmo/error-code.properties"));
-
-        for (val prop : CollectionUtils.safe(properties.entrySet())) {
-          put((String) prop.getKey(), (String) prop.getValue());
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  };
+  Map<String, String> ERROR_MAP = GmoPaymentProperties.getInstance().ERROR_MAP;
 
   /**
    * 決済実行
