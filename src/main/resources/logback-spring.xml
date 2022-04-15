@@ -5,6 +5,7 @@
 		<encoder>
 			<pattern>%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-3level %logger{5} - %msg %n</pattern>
 		</encoder>
+		<filter class="jp.co.ichain.luigi2.config.LogFilter" />
 	</appender>
 
 	<logger name="jdbc" level="OFF"/>
