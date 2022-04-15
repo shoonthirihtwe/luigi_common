@@ -97,7 +97,8 @@ class GmoPaymentService {
     gmoPaymentVo.setShopPass(companyInfo.getShopPass());
 
     // 決済実行
-    GmoPaymentVo exeResult = delegate.execTran(gmoPaymentVo, companyInfo, nowDate);
+    GmoPaymentVo exeResult =
+        delegate.execTran(gmoPaymentVo, companyInfo, billingDetailsVo, nowDate);
     return new PaymentVo(exeResult.getAccessID(), exeResult.getAccessPass(), now,
         changePaymentErrorInfo(exeResult.getErrorMap()));
   }

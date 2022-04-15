@@ -6,9 +6,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
-import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
+import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
@@ -42,14 +42,14 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    */
   @Override
   public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo,
-      Date nowDate)
+      BillingDetailsVo billingDetailsVo, Date nowDate)
       throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     // 取引ID取得
     GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo, companiesVo);
     // 振替指定日
-    gmoPaymentVo.setTargetDate(DateTimeUtils.convertSimpleFormat(nowDate));
+    gmoPaymentVo.setTargetDate(billingDetailsVo.getBillingPeriod() + "27");
     // 口座の有効性チードェック無効化
     gmoPaymentVo.setCheckMode("NOCHECK_ACCOUNT");
     // 取引IDセット

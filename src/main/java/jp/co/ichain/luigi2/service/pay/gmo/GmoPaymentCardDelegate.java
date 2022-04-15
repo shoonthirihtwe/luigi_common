@@ -12,6 +12,7 @@ import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
+import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 
@@ -35,9 +36,12 @@ public class GmoPaymentCardDelegate implements GmoPaymentDelegate {
    * 決済実行
    * 
    * @author : [AOT] s.paku
-   * @createdAt : 2021-06-22
-   * @updatedAt : 2021-06-22
+   * @createdAt : 2022-04-15
+   * @updatedAt : 2022-04-15
    * @param gmoPaymentVo
+   * @param companiesVo
+   * @param billingDetailsVo
+   * @param nowDate
    * @return
    * @throws GmoPaymentException
    * @throws IllegalArgumentException
@@ -47,7 +51,7 @@ public class GmoPaymentCardDelegate implements GmoPaymentDelegate {
    */
   @Override
   public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo,
-      Date nowDate)
+      BillingDetailsVo billingDetailsVo, Date nowDate)
       throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
