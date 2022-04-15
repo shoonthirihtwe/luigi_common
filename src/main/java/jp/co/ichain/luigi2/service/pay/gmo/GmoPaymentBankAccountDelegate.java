@@ -2,15 +2,18 @@ package jp.co.ichain.luigi2.service.pay.gmo;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
+import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
+import lombok.val;
 
 
 @Service
@@ -49,7 +52,21 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
     // 取引ID取得
     GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo, companiesVo);
     // 振替指定日
-    gmoPaymentVo.setTargetDate(billingDetailsVo.getBillingPeriod() + "27");
+    int targetDate = 27;
+    int batchDay = DateTimeUtils.getDay(nowDate);
+
+    if (batchDay < targetDate) {
+      gmoPaymentVo.setTargetDate(billingDetailsVo.getBillingPeriod() + targetDate);
+    } else {
+      val period = billingDetailsVo.getBillingPeriod();
+      Calendar c = Calendar.getInstance();
+      c.set(Calendar.YEAR, Integer.parseInt(period.substring(0, 4)));
+      c.set(Calendar.MONTH, Integer.parseInt(period.substring(4, 6)));
+      c.add(Calendar.MONTH, 1);
+      gmoPaymentVo
+          .setTargetDate(String.valueOf(c.get(Calendar.YEAR)) + c.get(Calendar.MONTH) + targetDate);
+    }
+
     // 口座の有効性チードェック無効化
     gmoPaymentVo.setCheckMode("NOCHECK_ACCOUNT");
     // 取引IDセット

@@ -47,6 +47,21 @@ public class DateTimeUtils {
   }
 
   /**
+   * 日取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-15
+   * @updatedAt : 2022-04-15
+   * @param date
+   * @return
+   */
+  public static int getDay(Date date) {
+    Calendar c = Calendar.getInstance();
+    c.setTime(date);
+    return c.get(Calendar.DAY_OF_MONTH);
+  }
+
+  /**
    * convert Date to String with format yyyyMM
    * 
    * @param date
