@@ -71,7 +71,7 @@ class GmoPaymentService {
    * @throws IOException
    * @throws ParseException
    */
-  PaymentVo pay(FactoringCompaniesVo companyInfo, BillingDetailsVo billingDetailsVo)
+  PaymentVo pay(FactoringCompaniesVo companyInfo, BillingDetailsVo billingDetailsVo, Date nowDate)
       throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
@@ -97,7 +97,7 @@ class GmoPaymentService {
     gmoPaymentVo.setShopPass(companyInfo.getShopPass());
 
     // 決済実行
-    GmoPaymentVo exeResult = delegate.execTran(gmoPaymentVo, companyInfo);
+    GmoPaymentVo exeResult = delegate.execTran(gmoPaymentVo, companyInfo, nowDate);
     return new PaymentVo(exeResult.getAccessID(), exeResult.getAccessPass(), now,
         changePaymentErrorInfo(exeResult.getErrorMap()));
   }

@@ -2,9 +2,11 @@ package jp.co.ichain.luigi2.service.pay.gmo;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
+import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
@@ -39,12 +41,15 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
    * @throws ParseException
    */
   @Override
-  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo,
+      Date nowDate)
       throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     // 取引ID取得
     GmoPaymentVo entryTranVo = this.entryTranBankAccount(gmoPaymentVo, companiesVo);
+    // 振替指定日
+    gmoPaymentVo.setTargetDate(DateTimeUtils.convertSimpleFormat(nowDate));
     // 口座の有効性チードェック無効化
     gmoPaymentVo.setCheckMode("NOCHECK_ACCOUNT");
     // 取引IDセット
@@ -116,9 +121,6 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
   private GmoPaymentVo entryTranBankAccount(GmoPaymentVo gmoPaymentVo,
       FactoringCompaniesVo companiesVo) throws GmoPaymentException, IllegalArgumentException,
       IllegalAccessException, IOException, ParseException {
-
-    // 振替指定日
-    gmoPaymentVo.setTargetDate("27");
 
     // 請求内容
     gmoPaymentVo.setRemarks(companiesVo.getPassbookEntry());

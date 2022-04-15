@@ -2,6 +2,7 @@ package jp.co.ichain.luigi2.service.pay.gmo;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
@@ -31,7 +32,7 @@ public interface GmoPaymentDelegate {
    * @throws IOException
    * @throws ParseException
    */
-  GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+  GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo, Date nowDate)
       throws GmoPaymentException, IllegalArgumentException, IllegalAccessException, IOException,
       ParseException;
 

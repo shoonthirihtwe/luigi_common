@@ -65,11 +65,11 @@ public class PaymentService {
     switch (companyInfo.getFactoringCompanyCode()) {
       case "CARD01":
         gmoPaymentService = new GmoPaymentService(gmoPaymentCardDelegate);
-        result = gmoPaymentService.pay(companyInfo, billingDetailsVo);
+        result = gmoPaymentService.pay(companyInfo, billingDetailsVo, nowDate);
         break;
       case "BANK01":
         gmoPaymentService = new GmoPaymentService(gmoPaymentBankAccountDelegate);
-        result = gmoPaymentService.pay(companyInfo, billingDetailsVo);
+        result = gmoPaymentService.pay(companyInfo, billingDetailsVo, nowDate);
         break;
       default:
         throw new WebDataException(Luigi2ErrorCode.D0001, "factoringCompanyCode");
