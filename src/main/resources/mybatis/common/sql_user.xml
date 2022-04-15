@@ -91,6 +91,7 @@
 		ORDER BY updated_at DESC
 	</select>
 	<select id="getExternalApiTenant"  resultType="TenantsVo" parameterType="String">
+		/* ==NOT_SQL_LOG== */
 		SELECT
 			*
 		FROM
