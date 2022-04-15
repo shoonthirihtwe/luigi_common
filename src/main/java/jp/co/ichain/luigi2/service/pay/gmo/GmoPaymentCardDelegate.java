@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.GmoPaymentException;
-import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.util.GmoPaymentApiUtils;
 import jp.co.ichain.luigi2.util.Params;
 import jp.co.ichain.luigi2.util.StringUtils;
@@ -47,13 +46,14 @@ public class GmoPaymentCardDelegate implements GmoPaymentDelegate {
    * @throws ParseException
    */
   @Override
-  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo)
+  public GmoPaymentVo execTran(GmoPaymentVo gmoPaymentVo, FactoringCompaniesVo companiesVo,
+      Date nowDate)
       throws GmoPaymentException,
       IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     List<GmoPaymentVo> list = searchCard(gmoPaymentVo);
     if (list == null || list.size() < 1) {
-      throw new WebException("");
+      throw new GmoPaymentException("Card not found");
     }
     GmoPaymentVo cardVo = list.get(0);
 

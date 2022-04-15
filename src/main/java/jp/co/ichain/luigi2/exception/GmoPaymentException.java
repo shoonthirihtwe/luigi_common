@@ -1,8 +1,8 @@
 package jp.co.ichain.luigi2.exception;
 
 import java.util.Map;
-import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
+import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 
 /**
  * Gmo Exception
@@ -15,23 +15,19 @@ public class GmoPaymentException extends Exception {
 
   private static final long serialVersionUID = -1418179781799545264L;
 
-  private Integer responseCode;
+  private String responseMessage;
   private GmoPaymentVo gmoPaymentVo;
 
   public GmoPaymentException(Integer responseCode) {
-    this.responseCode = responseCode;
+    this.responseMessage = String.valueOf(responseCode);
   }
 
   public GmoPaymentException(GmoPaymentVo gmoPaymentVo) {
     this.gmoPaymentVo = gmoPaymentVo;
   }
 
-  public Integer getResponseCode() {
-    return responseCode;
-  }
-
-  public void setResponseCode(Integer responseCode) {
-    this.responseCode = responseCode;
+  public GmoPaymentException(String message) {
+    this.responseMessage = message;
   }
 
   public GmoPaymentVo getGmoPaymentVo() {
@@ -48,7 +44,7 @@ public class GmoPaymentException extends Exception {
         result.append(errorVo.getErrCode()).append(":").append(errorVo.getErrInfo()).append(", ");
       }
     } else {
-      result.append("HTTP ERROR:").append(responseCode);
+      result.append("ERROR:").append(responseMessage);
     }
     return new String(result);
 
