@@ -2,8 +2,10 @@ package jp.co.ichain.luigi2.exception;
 
 import java.util.Arrays;
 import java.util.List;
+import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 
 /**
  * Webで発生するエラー
@@ -56,5 +58,16 @@ public class WebException extends RuntimeException {
   public WebException setArrayIndex(Integer arrayIndex) {
     this.arrayIndex = arrayIndex;
     return this;
+  }
+
+  @Override
+  public String getMessage() {
+    StringBuffer sb = new StringBuffer();
+    sb.append(code).append(":");
+
+    for (val err : CollectionUtils.safe(errArgs)) {
+      sb.append(err).append(",");
+    }
+    return new String(sb);
   }
 }

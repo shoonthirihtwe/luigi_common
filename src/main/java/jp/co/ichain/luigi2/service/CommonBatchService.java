@@ -189,7 +189,7 @@ public class CommonBatchService {
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
-        log.error(e.getLocalizedMessage());
+        log.error(e.getMessage());
       } finally {
         DepositDetailsVo depositDetailsVo = new DepositDetailsVo();
         depositDetailsVo.setTenantId(tenantId); // テナントID
