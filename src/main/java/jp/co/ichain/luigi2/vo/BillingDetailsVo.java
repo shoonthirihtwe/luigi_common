@@ -23,12 +23,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillingDetailsVo extends ObjectVo {
-  
+
   /**
    * Billing Header ID
    */
   int billingHeaderId;
-  
+
   /**
    * 証券番号
    */
@@ -118,10 +118,12 @@ public class BillingDetailsVo extends ObjectVo {
    * 保険料請求額
    */
   Integer premiumDueAmount;
-  
+
   /**
    * 保険料充当日
    */
   @JsonSerialize(using = JsonDateSerializer.class)
   Date premiumDueDate;
+
+  Boolean gmApiSuccess;
 }

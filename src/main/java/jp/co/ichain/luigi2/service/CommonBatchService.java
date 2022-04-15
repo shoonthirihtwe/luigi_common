@@ -150,6 +150,9 @@ public class CommonBatchService {
     // バッチナンバー
     int batchNo = mapper.selectBatchNo(batchDate);
 
+    // GMOのバリデーションフラグ (一回でも成功したら）
+    boolean validGmoOneSuccess = false;
+
     // GMOのバリデーションフラグ
     boolean validGmo = false;
 
@@ -175,6 +178,7 @@ public class CommonBatchService {
         paymentVo = paymentService.pay(billingDetail, batchDate);
         if (paymentVo != null) {
           validGmo = true;
+          validGmoOneSuccess = true;
         }
       } catch (GmoPaymentException e) {
         validGmo = false;
@@ -186,11 +190,13 @@ public class CommonBatchService {
           errInfo = pay.getValue().getErrInfo();
           log.error("GmoPaymentException:" + errInfo);
         }
+
       } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
           | WebException e) {
         validGmo = false;
         log.error(e.getMessage());
       } finally {
+        billingDetail.setGmApiSuccess(validGmo);
         DepositDetailsVo depositDetailsVo = new DepositDetailsVo();
         depositDetailsVo.setTenantId(tenantId); // テナントID
         depositDetailsVo.setEntryDate(batchDate); // 入力日 ＝ 入金の入金日
@@ -315,8 +321,13 @@ public class CommonBatchService {
 
       switch (paymentMethodCode) {
         case BANK:
-          // ステータス ＝ T（口座振替待ち）を設定
-          depositHeadersVo.setBatchStatus(BatchStatus.TRANSFER.toString());
+          if (validGmoOneSuccess) {
+            // ステータス ＝ T（口座振替待ち）を設定
+            depositHeadersVo.setBatchStatus(BatchStatus.TRANSFER.toString());
+          } else {
+            // ステータス ＝ A（入力完了：マッチング待ち）を設定
+            depositHeadersVo.setBatchStatus(BatchStatus.WAITING.toString());
+          }
           break;
         case CARD:
         default:
