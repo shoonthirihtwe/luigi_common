@@ -36,7 +36,7 @@ class GmoPaymentService {
     this.delegate = delegate;
   }
 
-  private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyyyMMddHHmm");
+  private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyMMddHHmm");
 
   @SuppressWarnings("serial")
   private static Map<String, String> ERROR_MAP = new HashMap<String, String>() {
@@ -81,14 +81,10 @@ class GmoPaymentService {
     gmoPaymentVo.setMemberID(billingDetailsVo.getCardCustNumber());
     /*
      * 証券番号billing_details.contract_no + 決済処理日(システム日付yymmdd) + システム時刻(hhmm) +
-     * 充当月billing_details.due_date(yymm) を設定
+     * 充当月billing_details.due_date(yyyymm) を設定
      */
-    String dueDate = billingDetailsVo.getDueDate();
-    if (dueDate != null && dueDate.length() == 6) {
-      dueDate = dueDate.substring(2, 6);
-    }
     gmoPaymentVo.setOrderID(billingDetailsVo.getContractNo() + systemDateForamt.format(now)
-        + dueDate);
+        + billingDetailsVo.getDueDate());
 
     // 保険料請求額billing_details.premium_due_amountを設定する
     gmoPaymentVo.setAmount((long) billingDetailsVo.getPremiumDueAmount());
