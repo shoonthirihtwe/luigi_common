@@ -29,14 +29,12 @@ public class ServiceInstancesVo extends ObjectVo implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
-  
+
   Integer id;
 
   Integer tenantId;
 
   Integer templateId;
-
-  String businessGroupType;
 
   String sourceKey;
 
@@ -55,7 +53,7 @@ public class ServiceInstancesVo extends ObjectVo implements Serializable {
   String status;
 
   Integer version;
-  
+
   Integer updateCount;
 
   @JsonIgnore

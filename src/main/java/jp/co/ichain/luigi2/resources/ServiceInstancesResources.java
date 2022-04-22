@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -44,9 +43,6 @@ public class ServiceInstancesResources {
   private ServiceInstancesResources self;
   private final ApplicationContext applicationContext;
   private final CommonMapper commonMapper;
-
-  @Value("${business.group.type}")
-  private String businessGroupType = "";
 
   ServiceInstancesResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
     this.applicationContext = applicationContext;
@@ -140,8 +136,6 @@ public class ServiceInstancesResources {
       throws JsonMappingException, JsonProcessingException {
 
     return self.getListByTenantId(tenantId).stream()
-        .filter(x -> (x.getBusinessGroupType().equals("A"))
-            || (x.getBusinessGroupType().equals(businessGroupType)))
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
@@ -214,10 +208,7 @@ public class ServiceInstancesResources {
   @Cacheable(value = "ServiceInstancesResources::getTenantList")
   public Set<Integer> getTenantList() throws JsonMappingException, JsonProcessingException {
     val list = commonMapper.selectServiceInstances();
-    return list.stream()
-        .filter(x -> (x.getBusinessGroupType().equals("A"))
-            || (x.getBusinessGroupType().equals(businessGroupType)))
-        .map(vo -> vo.getTenantId()).collect(Collectors.toSet());
+    return list.stream().map(vo -> vo.getTenantId()).collect(Collectors.toSet());
 
   }
 
@@ -238,8 +229,6 @@ public class ServiceInstancesResources {
 
     // last updatedAt
     return list.stream()
-        .filter(x -> (x.getBusinessGroupType().equals("A"))
-            || (x.getBusinessGroupType().equals(businessGroupType)))
         .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
         .max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
         .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
