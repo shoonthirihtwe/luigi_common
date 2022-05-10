@@ -1,6 +1,5 @@
 package jp.co.ichain.luigi2.service;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.ParseException;
@@ -11,13 +10,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.batch.BatchService;
-import jp.co.ichain.luigi2.exception.GmoPaymentException;
-import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders.BillingHeaderStatus;
@@ -38,7 +34,6 @@ import jp.co.ichain.luigi2.vo.ContractBillingVo;
 import jp.co.ichain.luigi2.vo.ContractPremiumHeader;
 import jp.co.ichain.luigi2.vo.DepositDetailsVo;
 import jp.co.ichain.luigi2.vo.DepositHeadersVo;
-import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 import jp.co.ichain.luigi2.vo.PremiumHeadersVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
@@ -173,26 +168,14 @@ public class CommonBatchService {
       Integer premiumDueAmount = billingDetail.getPremiumDueAmount(); // 合計保険料金額
 
       // GMO決済サービス
-      PaymentVo paymentVo = new PaymentVo();
-      String errInfo = ""; // エラー情報
+      PaymentVo paymentVo = null;
       try {
         paymentVo = paymentService.pay(billingDetail, batchDate);
         if (paymentVo != null) {
           validGmo = true;
           validGmoOneSuccess = true;
         }
-      } catch (GmoPaymentException e) {
-        validGmo = false;
-        val gmoVo = e.getGmoPaymentVo();
-        paymentVo.setAccessId(gmoVo.getAccessID());
-        paymentVo.setAccessPass(gmoVo.getAccessPass());
-        Map<String, PaymentErrorVo> errorMap = e.getGmoPaymentVo().getErrorMap();
-        for (Entry<String, PaymentErrorVo> pay : errorMap.entrySet()) {
-          errInfo = pay.getValue().getErrInfo();
-          log.error("GmoPaymentException:" + errInfo);
-        }
-      } catch (IllegalArgumentException | IllegalAccessException | IOException | ParseException
-          | WebException e) {
+      } catch (Exception e) {
         validGmo = false;
         log.error(e.getMessage());
       } finally {
@@ -240,14 +223,20 @@ public class CommonBatchService {
 
         } else {
           // GMOエラー詳細コードチェック
+          val errList = paymentVo.getErrorList();
+          String errorInfo = "";
+          if (errList != null && errList.size() > 0) {
+            errorInfo = errList.get(0).getErrInfo();
+          }
           val paymentResultCode =
-              GmoPaymentProperties.getInstance().ERROR_PAYMENT_RESULT_MAP.get(errInfo);
+              GmoPaymentProperties.getInstance().ERROR_PAYMENT_RESULT_MAP.get(errorInfo);
           if (paymentResultCode != null) {
             depositDetailsVo.setPaymentResultCode(paymentResultCode);
           } else {
             depositDetailsVo.setPaymentResultCode(PaymentResultCode.UNKNOWN.toString());
           }
         }
+        depositDetailsVo.setFactoringTransactionId(paymentVo.getFactoringTransactionId());
         depositDetailsVo.setAccessId(paymentVo.getAccessId()); // 取引ID
         depositDetailsVo.setAccessPass(paymentVo.getAccessPass()); // 取引パスワード
         depositDetailsVo.setComment(null); // 備考 ＝ 属性初期値
@@ -257,6 +246,9 @@ public class CommonBatchService {
         depositDetailsVo.setCreatedBy(createdBy); // 作成者 ＝ この処理の機能IDを設定
         // 保険料入金詳細データを作成する
         mapper.insertDepositDetails(depositDetailsVo);
+
+        // 請求テーブルに取引用IDセット
+        mapper.updateBillingDetail(depositDetailsVo);
 
         // 作成した入金詳細の「合計保険料金額」を合算して設定
         receivedAmount += premiumDueAmount;
@@ -272,7 +264,9 @@ public class CommonBatchService {
       mapper.updateBillingHeader(billingHeaderVo);
     }
 
-    if (billingDetails != null && billingDetails.size() > 0) {
+    if (billingDetails != null && billingDetails.size() > 0)
+
+    {
       // 保険料入金ヘッダを作成する。
       DepositHeadersVo depositHeadersVo = new DepositHeadersVo();
       depositHeadersVo.setTenantId(tenantId); // テナントID

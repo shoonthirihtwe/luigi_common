@@ -131,4 +131,13 @@ public interface CommonBatchMapper {
    */
   void updateBillingHeader(BillingHeaderVo billingHeaderVo);
 
+  /**
+   * 請求テーブルに取引用IDセット
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-04-19
+   * @updatedAt : 2022-04-19
+   * @param depositDetailsVo
+   */
+  void updateBillingDetail(DepositDetailsVo depositDetailsVo);
 }

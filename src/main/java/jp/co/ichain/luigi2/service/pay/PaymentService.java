@@ -50,8 +50,7 @@ public class PaymentService {
    * @throws ParseException
    */
   public PaymentVo pay(BillingDetailsVo billingDetailsVo, Date nowDate)
-      throws IllegalArgumentException,
-      IllegalAccessException, GmoPaymentException, IOException, ParseException {
+      throws IllegalArgumentException, IllegalAccessException, IOException, ParseException {
 
     FactoringCompaniesVo companyInfo = commonMapper.selectFactoringCompanyCode(
         billingDetailsVo.getTenantId(), billingDetailsVo.getContractNo(), nowDate);

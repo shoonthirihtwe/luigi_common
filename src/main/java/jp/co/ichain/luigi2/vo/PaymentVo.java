@@ -23,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentVo extends ObjectVo {
 
-
+  String factoringTransactionId;
 
   String accessId;
 

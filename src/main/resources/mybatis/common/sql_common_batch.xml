@@ -144,6 +144,7 @@
 		  	payment_result_code,
 		  	access_id,
 		  	access_pass,
+		  	factoring_transaction_id,
 		  	comment,
 		  	premium_due_date,
 		  	premium_sequence_no,
@@ -171,6 +172,7 @@
 			#{paymentResultCode},
 			#{accessId},
 			#{accessPass},
+			#{factoringTransactionId},
 			#{comment},
 			#{premiumDueDate},
 			#{premiumSequenceNo},
@@ -284,5 +286,16 @@
 			, update_count=update_count+1
 			, updated_by=#{updatedBy}
 		WHERE id =#{id} 
+	</update>
+	<update id="updateBillingDetail" parameterType="hashmap">
+		UPDATE billing_details
+		SET 
+			factoring_transaction_id = #{factoringTransactionId}
+			, update_count=update_count+1
+			, updated_by=#{updatedBy}
+		WHERE tenant_id=#{tenantId}
+		AND contract_no=#{contractNo}
+		AND contract_branch_no=#{contractBranchNo}
+		AND due_date=#{dueDate}
 	</update>
 </mapper>

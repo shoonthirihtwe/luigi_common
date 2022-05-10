@@ -16,6 +16,7 @@ import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 import jp.co.ichain.luigi2.vo.PaymentErrorVo;
 import jp.co.ichain.luigi2.vo.PaymentVo;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Gmo Service
@@ -24,6 +25,7 @@ import lombok.val;
  * @createdAt : 2021-06-22
  * @updatedAt : 2021-06-22
  */
+@Slf4j
 class GmoPaymentService {
 
   public GmoPaymentDelegate delegate;
@@ -53,8 +55,7 @@ class GmoPaymentService {
    * @throws ParseException
    */
   PaymentVo pay(FactoringCompaniesVo companyInfo, BillingDetailsVo billingDetailsVo, Date nowDate)
-      throws IllegalArgumentException,
-      IllegalAccessException, GmoPaymentException, IOException, ParseException {
+      throws IllegalArgumentException, IllegalAccessException, IOException, ParseException {
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     Date now = new Date();
 
@@ -78,10 +79,19 @@ class GmoPaymentService {
     gmoPaymentVo.setShopPass(companyInfo.getShopPass());
 
     // 決済実行
-    GmoPaymentVo exeResult =
-        delegate.execTran(gmoPaymentVo, companyInfo, billingDetailsVo, nowDate);
-    return new PaymentVo(exeResult.getAccessID(), exeResult.getAccessPass(), now,
-        changePaymentErrorInfo(exeResult.getErrorMap()));
+    GmoPaymentVo exeResult = null;
+    try {
+      exeResult = delegate.execTran(gmoPaymentVo, companyInfo, billingDetailsVo, nowDate);
+    } catch (GmoPaymentException e) {
+      exeResult = e.getGmoPaymentVo();
+      Map<String, PaymentErrorVo> errorMap = e.getGmoPaymentVo().getErrorMap();
+      for (PaymentErrorVo pay : errorMap.values()) {
+        log.error("GmoPaymentException:" + pay.getErrInfo());
+      }
+    }
+
+    return new PaymentVo(exeResult.getOrderID(), exeResult.getAccessID(), exeResult.getAccessPass(),
+        now, changePaymentErrorInfo(exeResult.getErrorMap()));
   }
 
   /**
@@ -116,8 +126,8 @@ class GmoPaymentService {
     gmoPaymentVo.setSitePass(companyInfo.getSitePass());
 
     val exeResult = delegate.cancel(gmoPaymentVo, suspenceDate);
-    return new PaymentVo(exeResult.getAccessID(), exeResult.getAccessPass(), now,
-        changePaymentErrorInfo(exeResult.getErrorMap()));
+    return new PaymentVo(exeResult.getOrderID(), exeResult.getAccessID(), exeResult.getAccessPass(),
+        now, changePaymentErrorInfo(exeResult.getErrorMap()));
   }
 
   /**
