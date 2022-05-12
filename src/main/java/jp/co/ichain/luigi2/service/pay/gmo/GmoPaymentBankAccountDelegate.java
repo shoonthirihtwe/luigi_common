@@ -79,6 +79,7 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
     GmoPaymentVo apiResult = GmoPaymentApiUtils.doHttpResult(execTranBankAccount, "POST",
         params.getParams(), "windows-31j", "windows-31j");
 
+    apiResult.setAccessPass(entryTranVo.getAccessPass());
     if (apiResult.getErrorMap() != null) {
       throw new GmoPaymentException(apiResult);
     }
