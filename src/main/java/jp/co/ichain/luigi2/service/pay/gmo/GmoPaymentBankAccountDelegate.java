@@ -75,7 +75,7 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
 
     // GMO 決済実行API呼び出す
     Params params = new Params(gmoPaymentVo, true);
-    log.debug("GMO API Params : " + params.getParams());
+    log.info("GMO API Params : " + params.getParams());
     GmoPaymentVo apiResult = GmoPaymentApiUtils.doHttpResult(execTranBankAccount, "POST",
         params.getParams(), "windows-31j", "windows-31j");
 
