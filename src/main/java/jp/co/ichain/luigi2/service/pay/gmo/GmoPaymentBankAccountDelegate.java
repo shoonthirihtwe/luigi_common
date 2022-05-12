@@ -14,8 +14,9 @@ import jp.co.ichain.luigi2.vo.BillingDetailsVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.GmoPaymentVo;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Service
 public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
 
@@ -62,7 +63,6 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
       Calendar c = Calendar.getInstance();
       c.set(Calendar.YEAR, Integer.parseInt(period.substring(0, 4)));
       c.set(Calendar.MONTH, Integer.parseInt(period.substring(4, 6)));
-      c.add(Calendar.MONTH, 1);
       gmoPaymentVo
           .setTargetDate(String.valueOf(c.get(Calendar.YEAR)) + c.get(Calendar.MONTH) + targetDate);
     }
@@ -75,6 +75,7 @@ public class GmoPaymentBankAccountDelegate implements GmoPaymentDelegate {
 
     // GMO 決済実行API呼び出す
     Params params = new Params(gmoPaymentVo, true);
+    log.debug("GMO API Params : " + params.getParams());
     GmoPaymentVo apiResult = GmoPaymentApiUtils.doHttpResult(execTranBankAccount, "POST",
         params.getParams(), "windows-31j", "windows-31j");
 
