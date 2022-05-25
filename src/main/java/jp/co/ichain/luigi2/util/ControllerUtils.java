@@ -42,6 +42,9 @@ public class ControllerUtils {
   @Value("${external.api.flag}")
   Boolean isExternalApi;
 
+  @Value("${business.group.type}")
+  String businessGroupType;
+
   /**
    * Controller Function
    * 
@@ -104,6 +107,17 @@ public class ControllerUtils {
     return (request, endpoint, paramMap, supplier) -> {
       this.controllerFunction(request, endpoint, paramMap);
       commonService.validate(paramMap, endpoint);
+      val result = supplier.get();
+
+      result.setCode("OK");
+      return result;
+    };
+  }
+
+  public ControllerFunction<HttpServletRequest, String, Map<String, Object>, ThrowingSupplier<ResultWebDto>, ? extends ResultWebDto> makeNotValidationControllerHandler()
+      throws Exception {
+    return (request, endpoint, paramMap, supplier) -> {
+      this.controllerFunction(request, endpoint, paramMap);
       val result = supplier.get();
 
       result.setCode("OK");
@@ -216,6 +230,7 @@ public class ControllerUtils {
   private void controllerFunction(HttpServletRequest request, String endpoint,
       Map<String, Object> paramMap) throws Exception {
 
+    // tenant setting
     val curUser = authService.getCurrentUser();
     TenantsVo tenantVo = null;
     if (curUser != null) {
@@ -243,6 +258,7 @@ public class ControllerUtils {
       }
     }
 
+    // page setting
     if (paramMap.get("page") != null) {
       var rowCount = paramMap.get("rowCount");
       var page = paramMap.get("page");
@@ -259,5 +275,8 @@ public class ControllerUtils {
       }
       paramMap.put("page", (((int) page) - 1) * (int) rowCount);
     }
+
+    // businessGroupType settting
+    paramMap.put("businessGroupType", businessGroupType);
   }
 }

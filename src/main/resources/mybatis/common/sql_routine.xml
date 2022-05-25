@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.RoutineMapper">
+	<select id="selectServiceInstances" parameterType="hashmap" resultType="hashmap">
+		SELECT si.* FROM service_instances si
+		INNER JOIN service_routine_interfaces ri
+	    ON ri.business_group_type = #{businessGroupType}
+	    AND ri.routine_label = #{routineLabel}
+		INNER JOIN service_instances_mt_routine_interfaces mt
+	    ON si.tenant_id = #{tenantId}
+	    AND ri.id = mt.routine_interface_id
+	    AND si.id = mt.instance_id;
+	</select>
+</mapper>
