@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.resources;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
 import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
@@ -155,6 +158,50 @@ public class ServiceInstancesResources {
       throws JsonMappingException, JsonProcessingException {
 
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
+  }
+
+  /**
+   * 情報取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-06-09
+   * @updatedAt : 2022-06-09
+   * @param tenantId
+   * @param sourceKey
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public List<ServiceInstancesVo> getLikeSorceKey(Integer tenantId, String sourceKey)
+      throws JsonMappingException, JsonProcessingException {
+
+    val map = self.get(tenantId);
+    val result = new ArrayList<ServiceInstancesVo>();
+    if (map != null) {
+      val items = Maps.filterKeys(map, new Predicate<String>() {
+        @Override
+        public boolean apply(String key) {
+          if (key.startsWith(sourceKey)) {
+            return true;
+          }
+          return false;
+        }
+      });
+
+      if (items != null && items.size() > 0) {
+        items.values().forEach((value) -> {
+          result.addAll(value);
+        });
+      } else {
+        return null;
+      }
+
+
+    } else {
+      return null;
+    }
+
+    return result;
   }
 
   /**
