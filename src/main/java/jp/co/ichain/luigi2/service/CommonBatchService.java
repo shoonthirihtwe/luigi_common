@@ -229,7 +229,7 @@ public class CommonBatchService {
             errorInfo = errList.get(0).getErrInfo();
           }
           val paymentResultCode =
-              GmoPaymentProperties.getInstance().ERROR_PAYMENT_RESULT_MAP.get(errorInfo);
+              GmoPaymentProperties.getInstance().errorPaymentResultMap.get(errorInfo);
           if (paymentResultCode != null) {
             depositDetailsVo.setPaymentResultCode(paymentResultCode);
           } else {
@@ -264,9 +264,7 @@ public class CommonBatchService {
       mapper.updateBillingHeader(billingHeaderVo);
     }
 
-    if (billingDetails != null && billingDetails.size() > 0)
-
-    {
+    if (billingDetails != null && billingDetails.size() > 0) {
       // 保険料入金ヘッダを作成する。
       DepositHeadersVo depositHeadersVo = new DepositHeadersVo();
       depositHeadersVo.setTenantId(tenantId); // テナントID

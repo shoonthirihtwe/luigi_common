@@ -23,7 +23,7 @@ public class GmoPaymentProperties {
   }
 
   @SuppressWarnings("serial")
-  public Map<String, String> ERROR_MAP = new HashMap<String, String>() {
+  public final Map<String, String> errorMap = new HashMap<String, String>() {
     {
       try {
         Properties properties = PropertiesLoaderUtils
@@ -39,7 +39,7 @@ public class GmoPaymentProperties {
   };
 
   @SuppressWarnings("serial")
-  public Map<String, String> ERROR_PAYMENT_RESULT_MAP = new HashMap<String, String>() {
+  public Map<String, String> errorPaymentResultMap = new HashMap<String, String>() {
     {
       try {
         Properties properties = PropertiesLoaderUtils

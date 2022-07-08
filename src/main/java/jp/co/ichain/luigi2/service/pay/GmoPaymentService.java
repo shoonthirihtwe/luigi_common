@@ -35,7 +35,7 @@ class GmoPaymentService {
   }
 
   private SimpleDateFormat systemDateForamt = new SimpleDateFormat("yyMMddHHmm");
-  Map<String, String> ERROR_MAP = GmoPaymentProperties.getInstance().ERROR_MAP;
+  final Map<String, String> errorMap = GmoPaymentProperties.getInstance().errorMap;
 
   /**
    * 決済実行
@@ -114,8 +114,6 @@ class GmoPaymentService {
   public PaymentVo cancel(FactoringCompaniesVo companyInfo, String accessId,
       String accessPassword, Object suspenceDate) throws IllegalArgumentException,
       IllegalAccessException, GmoPaymentException, IOException, ParseException {
-
-    Date now = new Date();
     // 取引IDセット
     GmoPaymentVo gmoPaymentVo = new GmoPaymentVo();
     gmoPaymentVo.setAccessID(accessId);
@@ -127,7 +125,7 @@ class GmoPaymentService {
 
     val exeResult = delegate.cancel(gmoPaymentVo, suspenceDate);
     return new PaymentVo(exeResult.getOrderID(), exeResult.getAccessID(), exeResult.getAccessPass(),
-        now, changePaymentErrorInfo(exeResult.getErrorMap()));
+        new Date(), changePaymentErrorInfo(exeResult.getErrorMap()));
   }
 
   /**
@@ -145,7 +143,7 @@ class GmoPaymentService {
     if (errMap != null && errMap.size() > 0) {
       result = new ArrayList<PaymentErrorVo>();
       for (val errorVo : errMap.values()) {
-        result.add(new PaymentErrorVo(ERROR_MAP.get(errorVo.getErrCode()), errorVo.getErrInfo()));
+        result.add(new PaymentErrorVo(errorMap.get(errorVo.getErrCode()), errorVo.getErrInfo()));
       }
     }
 
