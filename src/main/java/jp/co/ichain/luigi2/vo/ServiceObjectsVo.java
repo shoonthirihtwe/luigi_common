@@ -24,20 +24,22 @@ import lombok.Setter;
 public class ServiceObjectsVo extends ObjectVo {
 
   Integer id;
-  
+
   Integer tenantId;
-  
+
   String contractNo;
-  
+
   String contractBranchNo;
-  
+
   String data;
-  
+
   String description;
-  
+
   Integer level;
-  
+
   Integer version;
+
+  Integer sequenceNo;
 
   @JsonIgnore
   Date createdAt;
