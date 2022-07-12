@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.ichain.luigi2.mapper.ServiceObjectsMapper">
+	<select id="selectMaxVersion"  resultType="int" parameterType="hashmap">
+		SELECT max(version)
+		FROM service_objects
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+		 AND sequence_no=1
+	</select>
+	<insert id="insert" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO service_objects
+			(
+			tenant_id,
+			contract_no,
+			contract_branch_no,
+			sequence_no,
+			data,
+			version
+			)
+		VALUES
+			<foreach collection="inherentList" item="inherent" index="idx" separator=",">
+ 				(#{tenantId}, #{contractNo}, #{contractBranchNo}, #{idx}+1, #{data}, #{v})
+			</foreach>
+	</insert>
+	<update id="update" parameterType="hashmap">
+		UPDATE service_objects
+		SET
+			data=#{data}
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+		 AND sequence_no=#{sequenceNo} AND version=#{v}
+	</update>
+	<delete id="delete" parameterType="hashmap">
+		DELETE FROM service_objects
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+		 AND sequence_no=#{sequenceNo} AND version=#{v}
+	</delete>
+</mapper>
