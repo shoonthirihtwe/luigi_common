@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.Gson;
+import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.mapper.ServiceObjectsMapper;
 import jp.co.ichain.luigi2.resources.code.ServiceObjectsCudCode;
 import lombok.val;
@@ -16,6 +17,9 @@ public class ServiceObjectsService {
 
   @Autowired
   ServiceObjectsMapper mapper;
+
+  @Autowired
+  CommonContractMapper contractMapper;
 
   @SuppressWarnings("unchecked")
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
@@ -31,6 +35,9 @@ public class ServiceObjectsService {
       paramMap.put("v", mapper.selectMaxVersion(paramMap));
     }
 
+    if (paramMap.get("contractBranchNo") == null) {
+      paramMap.put("contractBranchNo", contractMapper.selectMaxContractBranchNo(paramMap));
+    }
 
     Gson gson = new Gson();
     // map to json

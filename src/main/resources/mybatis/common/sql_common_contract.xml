@@ -165,5 +165,13 @@
 			AND beneficiaries.contract_branch_no = #{contractBranchNo}
 			<![CDATA[AND FROM_UNIXTIME(#{baseDate}/1000) between beneficiaries.start_date and beneficiaries.end_date]]>
 	</select>
-	
+	<select id="selectMaxContractBranchNo" resultType="string" parameterType="hashmap">
+        SELECT 
+            IFNULL(MAX(contract_branch_no),'01')
+        FROM
+            contracts
+        WHERE
+            tenant_id = #{tenantId}
+            AND contract_no = #{contractNo}
+    </select>
 </mapper>

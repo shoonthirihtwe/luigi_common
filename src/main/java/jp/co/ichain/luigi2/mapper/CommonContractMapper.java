@@ -74,4 +74,15 @@ public interface CommonContractMapper {
    * @return
    */
   List<ClaimCustomerVo> selectBeneficiaries(Map<String, Object> param);
+
+  /**
+   * 最新証券番号枝番取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-07-13
+   * @updatedAt : 2022-07−13
+   * @param param
+   * @return
+   */
+  String selectMaxContractBranchNo(Map<String, Object> param);
 }
