@@ -56,4 +56,14 @@ public interface ServiceObjectsMapper {
    * @param param
    */
   void delete(Map<String, Object> param);
+
+  /**
+   * ServiceObjects削除
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-07-13
+   * @updatedAt : 2022-07-13
+   * @param param
+   */
+  void deleteAllSequenceNo(Map<String, Object> param);
 }

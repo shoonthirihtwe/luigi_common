@@ -43,6 +43,7 @@ public class ServiceObjectsService {
 
     switch (cudCode) {
       case REGISTER:
+        mapper.deleteAllSequenceNo(paramMap);
         mapper.insert(paramMap);
         break;
       default:

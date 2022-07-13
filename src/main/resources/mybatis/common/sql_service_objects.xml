@@ -36,4 +36,9 @@
 		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
 		 AND sequence_no=#{sequenceNo} AND version=#{v}
 	</delete>
+	<delete id="deleteAllSequenceNo" parameterType="hashmap">
+		DELETE FROM service_objects
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+		 AND version=#{v}
+	</delete>
 </mapper>
