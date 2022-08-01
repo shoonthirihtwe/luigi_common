@@ -31,12 +31,12 @@ public class ServiceObjectsService {
       return;
     }
 
-    if (paramMap.get("v") == null) {
-      paramMap.put("v", mapper.selectMaxVersion(paramMap));
-    }
-
     if (paramMap.get("contractBranchNo") == null) {
       paramMap.put("contractBranchNo", contractMapper.selectMaxContractBranchNo(paramMap));
+    }
+
+    if (paramMap.get("v") == null) {
+      paramMap.put("v", mapper.selectMaxVersion(paramMap));
     }
 
     Gson gson = new Gson();
