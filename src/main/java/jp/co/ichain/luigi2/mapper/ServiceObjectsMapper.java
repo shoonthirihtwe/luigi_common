@@ -45,7 +45,7 @@ public interface ServiceObjectsMapper {
    * @updatedAt : 2022-07-12
    * @param param
    */
-  void update(Map<String, Object> param);
+  int update(Map<String, Object> param);
 
   /**
    * ServiceObjects削除

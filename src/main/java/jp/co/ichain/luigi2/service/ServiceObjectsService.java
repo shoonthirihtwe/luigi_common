@@ -56,6 +56,7 @@ public class ServiceObjectsService {
       default:
         val modifyMap = new HashMap<String, Object>();
         modifyMap.put("tenantId", paramMap.get("tenantId"));
+        modifyMap.put("v", paramMap.get("v"));
         modifyMap.put("contractNo", paramMap.get("contractNo"));
         modifyMap.put("contractBranchNo", paramMap.get("contractBranchNo"));
         switch (cudCode) {
@@ -63,7 +64,9 @@ public class ServiceObjectsService {
             ((List<Map<String, Object>>) inherentList).forEach((map) -> {
               modifyMap.put("sequenceNo", map.get("sequenceNo"));
               modifyMap.put("data", map.get("data"));
-              mapper.update(modifyMap);
+              if (mapper.update(modifyMap) < 1) {
+                mapper.insert(paramMap);
+              }
             });
             break;
           case REMOVE:
