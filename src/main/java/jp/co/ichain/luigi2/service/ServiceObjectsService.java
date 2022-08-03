@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.gson.Gson;
 import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.mapper.ServiceObjectsMapper;
-import jp.co.ichain.luigi2.resources.code.ServiceObjectsCudCode;
 import lombok.val;
 
 @Service
@@ -21,9 +20,25 @@ public class ServiceObjectsService {
   @Autowired
   CommonContractMapper contractMapper;
 
+  /**
+   * 既存データ全件削除
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-08-03
+   * @updatedAt : 2022-08-03
+   * @param paramMap
+   */
+  public void removeAllSequenceNo(Map<String, Object> paramMap) {
+    if (paramMap.get("v") == null) {
+      paramMap.put("v", mapper.selectMaxVersion(paramMap));
+    }
+
+    mapper.deleteAllSequenceNo(paramMap);
+  }
+
   @SuppressWarnings("unchecked")
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
-  public void execute(Map<String, Object> paramMap, ServiceObjectsCudCode cudCode) {
+  public void execute(Map<String, Object> paramMap) {
     var inherentList = paramMap.get("inherentList");
 
     // inherentList null check
@@ -47,38 +62,25 @@ public class ServiceObjectsService {
       }
     });
 
+    val modifyMap = new HashMap<String, Object>();
+    modifyMap.put("tenantId", paramMap.get("tenantId"));
+    modifyMap.put("v", paramMap.get("v"));
+    modifyMap.put("contractNo", paramMap.get("contractNo"));
+    modifyMap.put("contractBranchNo", paramMap.get("contractBranchNo"));
+    ((List<Map<String, Object>>) inherentList).forEach((map) -> {
+      val status = map.get("status");
+      modifyMap.put("data", map.get("data"));
+      modifyMap.put("sequenceNo", map.get("sequenceNo"));
 
-    switch (cudCode) {
-      case REGISTER:
-        mapper.deleteAllSequenceNo(paramMap);
+      if ("C".equals(status)) {
         mapper.insert(paramMap);
-        break;
-      default:
-        val modifyMap = new HashMap<String, Object>();
-        modifyMap.put("tenantId", paramMap.get("tenantId"));
-        modifyMap.put("v", paramMap.get("v"));
-        modifyMap.put("contractNo", paramMap.get("contractNo"));
-        modifyMap.put("contractBranchNo", paramMap.get("contractBranchNo"));
-        switch (cudCode) {
-          case MODIFY:
-            ((List<Map<String, Object>>) inherentList).forEach((map) -> {
-              modifyMap.put("sequenceNo", map.get("sequenceNo"));
-              modifyMap.put("data", map.get("data"));
-              if (mapper.update(modifyMap) < 1) {
-                mapper.insert(paramMap);
-              }
-            });
-            break;
-          case REMOVE:
-            ((List<Map<String, Object>>) inherentList).forEach((map) -> {
-              modifyMap.put("sequenceNo", map.get("sequenceNo"));
-              mapper.delete(modifyMap);
-            });
-            break;
-          default:
-            return;
+      } else if ("D".equals(map.get("status"))) {
+        mapper.delete(modifyMap);
+      } else {
+        if (mapper.update(modifyMap) < 1) {
+          mapper.insert(paramMap);
         }
-        break;
-    }
+      }
+    });
   }
 }

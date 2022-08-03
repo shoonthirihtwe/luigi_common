@@ -19,10 +19,11 @@
 			data,
 			version
 			)
-		VALUES
-			<foreach collection="inherentList" item="inherent" index="idx" separator=",">
- 				(#{tenantId}, #{contractNo}, #{contractBranchNo}, #{idx}+1, #{data}, #{v})
-			</foreach>
+		SELECT
+			#{tenantId}, #{contractNo}, #{contractBranchNo}, Ifnull(max(sequence_no),0) + 1, #{data}, #{v}
+		FROM service_objects
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+	 	AND version=#{v}
 	</insert>
 	<update id="update" parameterType="hashmap">
 		UPDATE service_objects
