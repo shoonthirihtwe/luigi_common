@@ -73,12 +73,12 @@ public class ServiceObjectsService {
       modifyMap.put("sequenceNo", map.get("sequenceNo"));
 
       if ("C".equals(status)) {
-        mapper.insert(paramMap);
+        mapper.insert(modifyMap);
       } else if ("D".equals(map.get("status"))) {
         mapper.delete(modifyMap);
       } else {
         if (mapper.update(modifyMap) < 1) {
-          mapper.insert(paramMap);
+          mapper.insert(modifyMap);
         }
       }
     });
