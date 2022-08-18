@@ -79,7 +79,7 @@ public class ServiceInstancesResources {
 
   /**
    * テナントの初期化
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-13
    * @updatedAt : 2021-08-13
@@ -88,6 +88,9 @@ public class ServiceInstancesResources {
    * @throws JsonProcessingException
    */
   public void initialize(Integer tenantId) throws JsonMappingException, JsonProcessingException {
+    if (self == null) {
+      initialize();
+    }
     self.get(tenantId);
   }
 
@@ -137,14 +140,16 @@ public class ServiceInstancesResources {
    */
   public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-
+    if (self == null) {
+      initialize();
+    }
     return self.getListByTenantId(tenantId).stream()
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-07
    * @updatedAt : 2021-06-07
@@ -156,13 +161,15 @@ public class ServiceInstancesResources {
    */
   public List<ServiceInstancesVo> get(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
-
+    if (self == null) {
+      initialize();
+    }
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
   }
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2022-06-09
    * @updatedAt : 2022-06-09
@@ -174,7 +181,9 @@ public class ServiceInstancesResources {
    */
   public List<ServiceInstancesVo> getLikeSorceKey(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
-
+    if (self == null) {
+      initialize();
+    }
     val map = self.get(tenantId);
     val result = new ArrayList<ServiceInstancesVo>();
     if (map != null) {
@@ -206,7 +215,7 @@ public class ServiceInstancesResources {
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-07
    * @updatedAt : 2021-06-07
@@ -218,13 +227,15 @@ public class ServiceInstancesResources {
    */
   public List<ServiceInstancesVo> getByTenantIdWithSourceKey(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
-
+    if (self == null) {
+      initialize();
+    }
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
   }
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-07
    * @updatedAt : 2021-06-07
@@ -236,7 +247,9 @@ public class ServiceInstancesResources {
    */
   public Optional<ServiceInstancesVo> getFirst(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
-
+    if (self == null) {
+      initialize();
+    }
     val result = self.get(tenantId).get(sourceKey);
 
     return result != null ? result.stream().findFirst() : null;
@@ -261,7 +274,7 @@ public class ServiceInstancesResources {
 
   /**
    * 最新更新日取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-07
    * @updatedAt : 2021-06-07
@@ -271,6 +284,10 @@ public class ServiceInstancesResources {
    * @throws JsonMappingException
    */
   public Date getUpdatedAt(Integer tenantId) throws JsonMappingException, JsonProcessingException {
+
+    if (self == null) {
+      initialize();
+    }
 
     val list = self.getListByTenantId(tenantId);
 
@@ -294,6 +311,10 @@ public class ServiceInstancesResources {
    */
   public Map<String, List<ServiceInstancesVo>> getAllLastUpdatedDateAfter(Integer tenantId,
       Date updatedAt) throws JsonMappingException, JsonProcessingException {
+
+    if (self == null) {
+      initialize();
+    }
 
     Date lastUpdatedAt = self.getUpdatedAt(tenantId);
     val mapByTenant = self.get(tenantId);
