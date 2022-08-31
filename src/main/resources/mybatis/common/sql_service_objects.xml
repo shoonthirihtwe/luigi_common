@@ -7,7 +7,6 @@
 		SELECT Ifnull(max(version),1)
 		FROM service_objects
 		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
-		 AND sequence_no=1
 	</select>
 	<insert id="insert" parameterType="hashmap">
 		INSERT INTO service_objects

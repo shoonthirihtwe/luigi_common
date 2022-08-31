@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
+import org.json.JSONObject;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -168,6 +169,32 @@ public class ServiceInstancesResources {
   }
 
   /**
+   * スキマーキー取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/08/22
+   * @updatedAt : 2022/08/22
+   * @param tenantId
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getSchemaKeys")
+  public Set<String> getSchemaKeys(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    if (self == null) {
+      initialize();
+    }
+    val siList = self.get(tenantId) != null ? self.get(tenantId).get("ui_template") : null;
+    if (siList == null || siList.size() < 1) {
+      return null;
+    }
+    JSONObject jsonObject = new JSONObject(siList.get(0).getInherentJson());
+
+    return jsonObject.keySet();
+  }
+
+  /**
    * 情報取得
    *
    * @author : [AOT] s.paku
@@ -211,26 +238,6 @@ public class ServiceInstancesResources {
     }
 
     return result;
-  }
-
-  /**
-   * 情報取得
-   *
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-06-07
-   * @updatedAt : 2021-06-07
-   * @param tenantId
-   * @param sourceKey
-   * @return
-   * @throws JsonProcessingException
-   * @throws JsonMappingException
-   */
-  public List<ServiceInstancesVo> getByTenantIdWithSourceKey(Integer tenantId, String sourceKey)
-      throws JsonMappingException, JsonProcessingException {
-    if (self == null) {
-      initialize();
-    }
-    return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
   }
 
   /**
