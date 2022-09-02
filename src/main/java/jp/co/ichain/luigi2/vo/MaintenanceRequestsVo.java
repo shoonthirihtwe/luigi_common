@@ -245,6 +245,21 @@ public class MaintenanceRequestsVo extends ObjectVo {
   List<BeneficialiesVo> beneficiariesList;
 
   /**
+   * 決済情報
+   */
+  String billingInfo;
+  
+  /**
+   * SBS スマート請求ID
+   */
+  String smartClaimId;
+  
+  /**
+   * SBS CIF-ID
+   */
+  String cifId;
+
+  /**
    * ロック用
    */
   Integer updateCount;
