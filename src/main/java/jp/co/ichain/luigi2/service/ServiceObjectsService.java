@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.mapper.ServiceObjectsMapper;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
 
 @Service
@@ -66,7 +67,12 @@ public class ServiceObjectsService {
     // map to json
     ((List<Map<String, Object>>) inherentList).forEach((map) -> {
       if (map.get("inherent") != null) {
-        map.put("data", gson.toJson(map.get("inherent")));
+        val inherent = map.get("inherent");
+        if (inherent instanceof String) {
+          map.put("data", inherent);
+        } else {
+          map.put("data", gson.toJson(map.get("inherent")));
+        }
       }
     });
 
@@ -77,14 +83,14 @@ public class ServiceObjectsService {
     modifyMap.put("contractBranchNo", paramMap.get("contractBranchNo"));
 
     for (val map : ((List<Map<String, Object>>) inherentList)) {
-      val status = map.get("status");
+      val txType = map.get("txType");
       val data = mergeDatas((Integer) paramMap.get("tenantId"), (String) map.get("data"));
       modifyMap.put("data", data);
       modifyMap.put("sequenceNo", map.get("sequenceNo"));
 
-      if ("C".equals(status)) {
+      if ("C".equals(txType)) {
         mapper.insert(modifyMap);
-      } else if ("D".equals(map.get("status"))) {
+      } else if ("D".equals(txType)) {
         mapper.delete(modifyMap);
       } else {
         if (mapper.update(modifyMap) < 1) {
@@ -110,7 +116,8 @@ public class ServiceObjectsService {
       throws JsonMappingException, JsonProcessingException {
     JSONObject jsonObject = new JSONObject(jsonData);
 
-    for (val key : serviceInstancesResources.getSchemaKeys(tenantId)) {
+    val schemaKeys = serviceInstancesResources.getSchemaKeys(tenantId);
+    for (val key : CollectionUtils.safe(schemaKeys)) {
       if (jsonObject.isNull(key)) {
         jsonObject.put(key, "");
       }

@@ -2,6 +2,7 @@ package jp.co.ichain.luigi2.vo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -245,15 +246,20 @@ public class MaintenanceRequestsVo extends ObjectVo {
   List<BeneficialiesVo> beneficiariesList;
 
   /**
+   * 固有データ
+   */
+  List<Map<String, Object>> inherentList;
+
+  /**
    * 決済情報
    */
   String billingInfo;
-  
+
   /**
    * SBS スマート請求ID
    */
   String smartClaimId;
-  
+
   /**
    * SBS CIF-ID
    */

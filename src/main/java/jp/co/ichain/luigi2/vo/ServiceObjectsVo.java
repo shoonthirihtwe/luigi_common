@@ -40,6 +40,8 @@ public class ServiceObjectsVo extends ObjectVo {
   Integer version;
 
   Integer sequenceNo;
+  
+  String txType;
 
   @JsonIgnore
   Date createdAt;
