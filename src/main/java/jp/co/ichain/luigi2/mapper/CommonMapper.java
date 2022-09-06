@@ -69,6 +69,17 @@ public interface CommonMapper {
   List<ServiceInstancesVo> selectServiceInstances(@Param("tenantId") Integer tenantId);
 
   /**
+   * ServiceInstancesBaseData取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-05
+   * @updatedAt : 2022-09-05
+   * @return
+   */
+  List<ServiceInstancesVo> selectServiceInstancesBaseData(@Param("tenantId") Integer tenantId,
+      @Param("businessGroupType") String businessGroupType);
+
+  /**
    * コードマスター取得
    * 
    * @author : [AOT] s.paku

@@ -36,6 +36,8 @@ public class ServiceInstancesVo extends ObjectVo implements Serializable {
 
   Integer templateId;
 
+  String businessGroupType;
+
   String sourceKey;
 
   String sourceType;

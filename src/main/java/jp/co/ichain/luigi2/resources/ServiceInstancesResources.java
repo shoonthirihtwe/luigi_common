@@ -13,6 +13,7 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -48,6 +49,9 @@ public class ServiceInstancesResources {
   private final ApplicationContext applicationContext;
   private final CommonMapper commonMapper;
 
+  @Value("${business.group.type}")
+  private String businessGroupType = null;
+
   ServiceInstancesResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
     this.applicationContext = applicationContext;
     this.commonMapper = commonMapper;
@@ -69,11 +73,15 @@ public class ServiceInstancesResources {
 
     self = applicationContext.getBean(ServiceInstancesResources.class);
 
-    val list = commonMapper.selectServiceInstances();
+    val list = commonMapper.selectServiceInstancesBaseData(null, null);
     Map<Integer, List<ServiceInstancesVo>> tenantGroupMap =
         list.stream().collect(Collectors.groupingBy(vo -> vo.getTenantId()));
 
     for (val tenantId : tenantGroupMap.keySet()) {
+      if (tenantId == 0) {
+        continue;
+      }
+
       self.initialize(tenantId);
     }
   }
@@ -106,14 +114,58 @@ public class ServiceInstancesResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  @SuppressWarnings("unchecked")
-  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getListByTenantId")
-  public List<ServiceInstancesVo> getListByTenantId(Integer tenantId)
+
+  @Cacheable(key = "{ #tenantId:#businessGroupType }",
+      value = "ServiceInstancesResources::getListByTenantId")
+  public List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
       throws JsonMappingException, JsonProcessingException {
+    val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
+    val tenantlist = commonMapper.selectServiceInstancesBaseData(tenantId, businessGroupType);
 
-    val list = commonMapper.selectServiceInstances(tenantId);
+    setJsonMap(baseList);
+    setJsonMap(tenantlist);
+    val baseGroupMap =
+        baseList.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
+            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
+    val tenantGroupMap =
+        tenantlist.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
+            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
+    val resultList = new ArrayList<ServiceInstancesVo>();
 
-    // json map setting
+
+    for (val businessGroupTypeKey : baseGroupMap.keySet()) {
+      val baseSourceGroup = baseGroupMap.get(businessGroupTypeKey);
+      for (val baseSourceKey : baseSourceGroup.keySet()) {
+        val voList = baseSourceGroup.get(baseSourceKey);
+        val addMap = new HashMap<String, Object>();
+        for (val vo : voList) {
+          addMap.putAll(vo.getInherentMap());
+        }
+
+        val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
+        if (tenantSourceMap != null) {
+          val tenantVoList = tenantSourceMap.get(baseSourceKey);
+          if (tenantVoList != null && tenantVoList.size() != 0) {
+            for (val vo : tenantVoList) {
+              addMap.putAll(vo.getInherentMap());
+            }
+          }
+        }
+        voList.get(0).setInherentMap(addMap);
+        voList.get(0).setInherentJson(new JSONObject(addMap).toString());
+        resultList.add(voList.get(0));
+
+      }
+    }
+
+
+
+    return resultList;
+  }
+
+  @SuppressWarnings("unchecked")
+  private void setJsonMap(List<ServiceInstancesVo> list)
+      throws JsonMappingException, JsonProcessingException {
     for (val vo : list) {
       if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
         ObjectMapper mapper = new ObjectMapper();
@@ -124,8 +176,6 @@ public class ServiceInstancesResources {
         }
       }
     }
-
-    return list;
   }
 
   /**
@@ -144,7 +194,7 @@ public class ServiceInstancesResources {
     if (self == null) {
       initialize();
     }
-    return self.getListByTenantId(tenantId).stream()
+    return self.getListByTenantId(tenantId, this.businessGroupType).stream()
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
@@ -170,7 +220,7 @@ public class ServiceInstancesResources {
 
   /**
    * スキマーキー取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2022/08/22
    * @updatedAt : 2022/08/22
@@ -296,7 +346,7 @@ public class ServiceInstancesResources {
       initialize();
     }
 
-    val list = self.getListByTenantId(tenantId);
+    val list = self.getListByTenantId(tenantId, this.businessGroupType);
 
     // last updatedAt
     return list.stream()

@@ -8,6 +8,13 @@
 		tenant_id=#{tenantId} AND ${tableInfo.key}=#{data} LIMIT 1
 	</select>
 
+    <select id="selectServiceInstancesBaseData" parameterType="map"
+        resultType="ServiceInstancesVo">
+        SELECT * from service_instances_base_data WHERE status='1'
+        <if test="tenantId != null">AND tenant_id=#{tenantId}</if>
+        <if test="businessGroupType != null">AND (business_group_type='A' OR business_group_type=#{businessGroupType})</if>
+        ORDER BY updated_at DESC
+    </select>
 	<select id="selectServiceInstances" parameterType="map"
 		resultType="ServiceInstancesVo">
 		SELECT * from service_instances WHERE status='1'

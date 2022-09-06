@@ -35,8 +35,9 @@ public class StringUtils {
    * @return
    */
   public static String convertHiraToKata(String str) {
-    if (str == null)
+    if (str == null) {
       return null;
+    }
 
     StringBuffer buf = new StringBuffer();
     for (int i = 0; i < str.length(); i++) {
@@ -60,8 +61,9 @@ public class StringUtils {
    * @return
    */
   public static String makeHyphenZipcode(String str) {
-    if (str == null || str.length() != 7)
+    if (str == null || str.length() != 7) {
       return str;
+    }
 
     return str.substring(0, 3) + "-" + str.substring(3, 7);
   }

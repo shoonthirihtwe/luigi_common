@@ -67,7 +67,7 @@ public class DataSourceConfig {
         resourceDatabasePopulator.addScript(resource);
       }
 
-      resourceDatabasePopulator.addScript(new ClassPathResource("Service_instance/values.sql"));
+      resourceDatabasePopulator.addScript(new ClassPathResource("Service_instance_base_data/common.sql"));
     }
     DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
     dataSourceInitializer.setDataSource(datasource);
