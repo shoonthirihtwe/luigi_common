@@ -8,6 +8,20 @@
 		FROM service_objects
 		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
 	</select>
+	<select id="selectServiceObjects" resultType="ServiceObjectsVo" parameterType="hashmap">
+		SELECT * 
+		FROM service_objects
+		WHERE tenant_id=#{tenantId} AND contract_no=#{contractNo} AND contract_branch_no=#{contractBranchNo}
+		<if test="version != null">
+			AND version=#{version}
+		</if>
+	 	<if test="version == null">
+			AND version=1
+		</if>
+		<if test="idList != null">
+			AND id IN<foreach collection="idList" item="id" index="index" separator="," open="(" close=")">#{id}</foreach>
+		</if>
+	</select>
 	<insert id="insert" parameterType="hashmap">
 		INSERT INTO service_objects
 			(
