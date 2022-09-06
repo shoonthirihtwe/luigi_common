@@ -1,8 +1,10 @@
 package jp.co.ichain.luigi2.mapper;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
+import jp.co.ichain.luigi2.vo.ServiceObjectsVo;
 
 /**
  * ServiceObjects Mapper
@@ -25,6 +27,18 @@ public interface ServiceObjectsMapper {
    * @return
    */
   int selectMaxVersion(Map<String, Object> param);
+
+
+  /**
+   * サービスObject取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022-06-22
+   * @updatedAt : 2022-06-22
+   * @param param
+   * @return
+   */
+  List<ServiceObjectsVo> selectServiceObjects(Map<String, Object> param);
 
   /**
    * ServiceObjects挿入
