@@ -14,6 +14,7 @@ import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.mapper.ServiceObjectsMapper;
 import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
 import jp.co.ichain.luigi2.util.CollectionUtils;
+import jp.co.ichain.luigi2.vo.ServiceObjectsVo;
 import lombok.val;
 
 @Service
@@ -42,6 +43,19 @@ public class ServiceObjectsService {
     }
 
     mapper.deleteAllSequenceNo(paramMap);
+  }
+
+  /**
+   * 固有データ取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/06
+   * @updatedAt : 2022/09/06
+   * @param param
+   * @return
+   */
+  public List<ServiceObjectsVo> getServiceObjects(Map<String, Object> param) {
+    return mapper.selectServiceObjects(param);
   }
 
   @SuppressWarnings("unchecked")

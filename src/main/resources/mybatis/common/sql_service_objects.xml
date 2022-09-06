@@ -18,8 +18,8 @@
 	 	<if test="version == null">
 			AND version=1
 		</if>
-		<if test="idList != null">
-			AND id IN<foreach collection="idList" item="id" index="index" separator="," open="(" close=")">#{id}</foreach>
+		<if test="sequenceNoList != null">
+			AND sequence_no IN<foreach collection="sequenceNoList" item="id" index="index" separator="," open="(" close=")">#{id}</foreach>
 		</if>
 	</select>
 	<insert id="insert" parameterType="hashmap">
