@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.Gson;
 import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.mapper.ServiceObjectsMapper;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.vo.ServiceObjectsVo;
 import lombok.val;
@@ -27,7 +27,7 @@ public class ServiceObjectsService {
   CommonContractMapper contractMapper;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   /**
    * 既存データ全件削除
@@ -130,7 +130,7 @@ public class ServiceObjectsService {
       throws JsonMappingException, JsonProcessingException {
     JSONObject jsonObject = new JSONObject(jsonData);
 
-    val schemaKeys = serviceInstancesResources.getSchemaKeys(tenantId);
+    val schemaKeys = serviceInstancesBaseResources.getSchemaKeys(tenantId);
     for (val key : CollectionUtils.safe(schemaKeys)) {
       if (jsonObject.isNull(key)) {
         jsonObject.put(key, "");

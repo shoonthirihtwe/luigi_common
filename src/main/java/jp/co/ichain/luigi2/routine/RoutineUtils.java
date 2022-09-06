@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jp.co.ichain.luigi2.mapper.RoutineMapper;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.util.BeanUtils;
 import jp.co.ichain.luigi2.util.CollectionUtils;
 import lombok.val;
@@ -27,7 +27,7 @@ public class RoutineUtils {
   Map<String, Method> methodMap;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   @Autowired
   BeanUtils beanUtils;

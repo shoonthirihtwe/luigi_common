@@ -22,7 +22,7 @@ import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ClientMailType;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.MailType;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.ReceiverInfo;
 import jp.co.ichain.luigi2.resources.Luigi2ReceiverEmailInfo.TenantMailType;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
 
@@ -41,7 +41,7 @@ public class AwsMailDao {
   private final AmazonSimpleEmailService client;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   @Autowired
   CommonMapper mapper;
@@ -80,14 +80,14 @@ public class AwsMailDao {
   public void send(String templateNumber, String to, Map<String, Object> paramMap, String sender)
       throws JsonMappingException, JsonProcessingException {
 
-    val contentInfo = serviceInstancesResources
+    val contentInfo = serviceInstancesBaseResources
         .get((Integer) paramMap.get("tenantId"), templateNumber + "_notification").get(0);
 
     // Get body
     Destination destination = new Destination().withToAddresses(to);
 
     // Get signature
-    val appendNotification = serviceInstancesResources
+    val appendNotification = serviceInstancesBaseResources
         .get((Integer) paramMap.get("tenantId"), "append_notification").get(0).getInherentMap();
 
     Message message = new Message()

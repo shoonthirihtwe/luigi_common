@@ -15,7 +15,7 @@ import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.resources.ValidityResources;
 import jp.co.ichain.luigi2.validity.Validity;
 import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
@@ -38,7 +38,7 @@ public class CommonService {
   ValidityResources validityResources;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   /**
    * 検証を行う
@@ -64,7 +64,7 @@ public class CommonService {
     val tenantId = (Integer) paramMap.get("tenantId");
     val validityMap = validityResources.get(tenantId);
     Optional<ServiceInstancesVo> optional =
-        serviceInstancesResources.getFirst(tenantId, validity.getValiditySourceKey(endpoint));
+        serviceInstancesBaseResources.getFirst(tenantId, validity.getValiditySourceKey(endpoint));
 
     // sourceKeyが存在しない場合
     if (optional == null || optional.isEmpty()) {

@@ -36,7 +36,7 @@ public class FrontDesignResources {
   private final ApplicationContext applicationContext;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   FrontDesignResources(ApplicationContext applicationContext) {
     this.applicationContext = applicationContext;
@@ -57,7 +57,7 @@ public class FrontDesignResources {
 
     self = applicationContext.getBean(FrontDesignResources.class);
 
-    val tenantIdList = serviceInstancesResources.getTenantList();
+    val tenantIdList = serviceInstancesBaseResources.getTenantList();
 
     for (val tenantId : tenantIdList) {
       self.initialize(tenantId);
@@ -90,7 +90,7 @@ public class FrontDesignResources {
    */
   public Date getLastUpdatedAt(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    return serviceInstancesResources.get(tenantId).entrySet().stream()
+    return serviceInstancesBaseResources.get(tenantId).entrySet().stream()
         .filter(entry -> entry.getKey().contains("_front")).map(entry -> {
           val vo = entry.getValue().get(0);
           return vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt();
@@ -149,7 +149,7 @@ public class FrontDesignResources {
   @Cacheable(key = "{ #tenantId }", value = "FrontDesignResources::getByTenantId")
   public Map<String, Map<String, Object>> getByTenantId(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    return serviceInstancesResources.get(tenantId).entrySet().stream()
+    return serviceInstancesBaseResources.get(tenantId).entrySet().stream()
         .filter(entry -> entry.getKey().contains("_front")).map(entry -> entry.getValue().get(0))
         .collect(
             Collectors.toMap(ServiceInstancesVo::getSourceKey, ServiceInstancesVo::getInherentMap));
@@ -170,7 +170,7 @@ public class FrontDesignResources {
   public List<Map<String, Map<String, Object>>> getAll()
       throws JsonMappingException, JsonProcessingException {
 
-    val tenantIdList = serviceInstancesResources.getTenantList();
+    val tenantIdList = serviceInstancesBaseResources.getTenantList();
     val resultList = new ArrayList<Map<String, Map<String, Object>>>();
     for (val tenantId : tenantIdList) {
       resultList.add(self.getByTenantId(tenantId));

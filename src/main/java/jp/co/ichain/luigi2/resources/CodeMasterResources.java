@@ -33,15 +33,15 @@ import lombok.val;
 public class CodeMasterResources {
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   private CodeMasterResources self;
   private final ApplicationContext applicationContext;
 
   CodeMasterResources(ApplicationContext applicationContext,
-      ServiceInstancesResources serviceInstancesResources) {
+      ServiceInstancesBaseResources serviceInstancesBaseResources) {
     this.applicationContext = applicationContext;
-    this.serviceInstancesResources = serviceInstancesResources;
+    this.serviceInstancesBaseResources = serviceInstancesBaseResources;
   }
 
   /**
@@ -58,7 +58,7 @@ public class CodeMasterResources {
   public void initialize() throws JsonMappingException, JsonProcessingException {
 
     self = applicationContext.getBean(CodeMasterResources.class);
-    for (val tenantId : serviceInstancesResources.getTenantList()) {
+    for (val tenantId : serviceInstancesBaseResources.getTenantList()) {
       self.initialize(tenantId);
     }
   }
@@ -110,7 +110,7 @@ public class CodeMasterResources {
       throws JsonMappingException, JsonProcessingException {
 
     ObjectMapper objMapper = new ObjectMapper();
-    val codeList = serviceInstancesResources.get(tenantId, "code_master");
+    val codeList = serviceInstancesBaseResources.get(tenantId, "code_master");
     Map<String, List<CodeMasterVo>> codeMap = objMapper.readValue(codeList.get(0).getInherentJson(),
         new TypeReference<Map<String, List<CodeMasterVo>>>() {});
     return codeMap;
@@ -147,7 +147,7 @@ public class CodeMasterResources {
   public Date getLastUpdatedAt(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
 
-    val codeList = serviceInstancesResources.get(tenantId, "code_master");
+    val codeList = serviceInstancesBaseResources.get(tenantId, "code_master");
     var updatedAt = codeList.get(0).getUpdatedAt();
     if (updatedAt == null) {
       updatedAt = codeList.get(0).getCreatedAt();

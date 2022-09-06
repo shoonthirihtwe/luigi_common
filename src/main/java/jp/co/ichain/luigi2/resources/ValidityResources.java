@@ -34,12 +34,12 @@ public class ValidityResources {
 
   private ValidityResources self;
   private final ApplicationContext applicationContext;
-  private final ServiceInstancesResources serviceInstancesResources;
+  private final ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   ValidityResources(ApplicationContext applicationContext,
-      ServiceInstancesResources serviceInstancesResources) {
+      ServiceInstancesBaseResources serviceInstancesBaseResources) {
     this.applicationContext = applicationContext;
-    this.serviceInstancesResources = serviceInstancesResources;
+    this.serviceInstancesBaseResources = serviceInstancesBaseResources;
   }
 
   /**
@@ -56,7 +56,7 @@ public class ValidityResources {
   public void initialize() throws JsonMappingException, JsonProcessingException {
 
     self = applicationContext.getBean(ValidityResources.class);
-    val tenantIdList = serviceInstancesResources.getTenantList();
+    val tenantIdList = serviceInstancesBaseResources.getTenantList();
 
     for (val tenantId : tenantIdList) {
       self.initialize(tenantId);
@@ -91,7 +91,7 @@ public class ValidityResources {
    */
   public Date getLastUpdatedAt(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    return serviceInstancesResources.get(tenantId).entrySet().stream()
+    return serviceInstancesBaseResources.get(tenantId).entrySet().stream()
         .filter(entry -> entry.getKey().equals("validity")).map(entry -> {
           val vo = entry.getValue().get(0);
           return vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt();
@@ -132,7 +132,7 @@ public class ValidityResources {
   public Map<String, ValidityVo> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
 
-    var mapByTenant = serviceInstancesResources.get(tenantId);
+    var mapByTenant = serviceInstancesBaseResources.get(tenantId);
     var list = mapByTenant.get("validity");
 
     Gson gson = new Gson();
@@ -163,7 +163,7 @@ public class ValidityResources {
    */
   public List<Map<String, ValidityVo>> getAll()
       throws JsonMappingException, JsonProcessingException {
-    val tenantIdList = serviceInstancesResources.getTenantList();
+    val tenantIdList = serviceInstancesBaseResources.getTenantList();
     val resultList = new ArrayList<Map<String, ValidityVo>>();
     for (val tenantId : tenantIdList) {
       resultList.add(self.get(tenantId));

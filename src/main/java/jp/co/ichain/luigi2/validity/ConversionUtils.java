@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.util.BeanUtils;
 import lombok.val;
 
@@ -25,7 +25,7 @@ public class ConversionUtils {
   Map<String, Method> methodMap;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   @Autowired
   BeanUtils beanUtils;

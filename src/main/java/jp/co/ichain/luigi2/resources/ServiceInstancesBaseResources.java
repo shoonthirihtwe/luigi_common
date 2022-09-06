@@ -34,7 +34,7 @@ import jp.co.ichain.luigi2.vo.ServiceInstancesVo;
 import lombok.val;
 
 /**
- * Service Instancesリソース
+ * Service Instances Baseリソース
  *
  * @author : [AOT] s.paku
  * @createdAt : 2021-05-07
@@ -43,16 +43,16 @@ import lombok.val;
 @Singleton
 @Service
 @DependsOn(value = {"dataSourceInitializer"})
-public class ServiceInstancesResources {
+public class ServiceInstancesBaseResources {
 
-  private ServiceInstancesResources self;
+  private ServiceInstancesBaseResources self;
   private final ApplicationContext applicationContext;
   private final CommonMapper commonMapper;
 
   @Value("${business.group.type}")
   private String businessGroupType = null;
 
-  ServiceInstancesResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
+  ServiceInstancesBaseResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
     this.applicationContext = applicationContext;
     this.commonMapper = commonMapper;
   }
@@ -71,7 +71,7 @@ public class ServiceInstancesResources {
   @EventListener(ApplicationReadyEvent.class)
   public void initialize() throws JsonMappingException, JsonProcessingException {
 
-    self = applicationContext.getBean(ServiceInstancesResources.class);
+    self = applicationContext.getBean(ServiceInstancesBaseResources.class);
 
     val list = commonMapper.selectServiceInstancesBaseData(null, null);
     Map<Integer, List<ServiceInstancesVo>> tenantGroupMap =

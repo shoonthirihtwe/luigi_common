@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebConditionException;
 import jp.co.ichain.luigi2.exception.WebException;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.util.BeanUtils;
 import lombok.val;
 
@@ -31,7 +31,7 @@ public class ConditionUtils {
   Map<String, Method> methodMap;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   @Autowired
   BeanUtils beanUtils;
@@ -63,7 +63,7 @@ public class ConditionUtils {
   public List<WebException> validateCondition(String souceKey, Integer tenantId, Object data)
       throws JsonMappingException, JsonProcessingException {
     // ServiceInstance 取得
-    val serviceInstance = serviceInstancesResources.get(tenantId).get(souceKey).get(0);
+    val serviceInstance = serviceInstancesBaseResources.get(tenantId).get(souceKey).get(0);
     if (serviceInstance == null) {
       return null;
     }

@@ -37,7 +37,7 @@ import jp.co.ichain.luigi2.mapper.DocumentsMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo;
 import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
-import jp.co.ichain.luigi2.resources.ServiceInstancesResources;
+import jp.co.ichain.luigi2.resources.ServiceInstancesBaseResources;
 import jp.co.ichain.luigi2.vo.DownloadFileVo;
 import lombok.val;
 
@@ -117,10 +117,10 @@ public class AwsS3Service {
   DocumentsMapper documentsMapper;
 
   @Autowired
-  ServiceInstancesResources siResources;
+  ServiceInstancesBaseResources siResources;
 
   @Autowired
-  ServiceInstancesResources serviceInstancesResources;
+  ServiceInstancesBaseResources serviceInstancesBaseResources;
 
   /**
    * S3にファイルをアップロードする
@@ -198,7 +198,7 @@ public class AwsS3Service {
   public void upload(InputStream inputsteam, String fileName, int tenantId, int year, int month)
       throws IOException {
 
-    val serviceMap = serviceInstancesResources.get(tenantId, FREE_DOCUMENTS);
+    val serviceMap = serviceInstancesBaseResources.get(tenantId, FREE_DOCUMENTS);
     val folder = serviceMap.get(0).getInherentMap().get(FreeDocumentsType.Text.name);
 
     StringBuffer sb = new StringBuffer();
