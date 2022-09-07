@@ -48,13 +48,16 @@ public class ServiceInstancesBaseResources {
   private ServiceInstancesBaseResources self;
   private final ApplicationContext applicationContext;
   private final CommonMapper commonMapper;
+  private final TenantResources tenantResources;
 
   @Value("${business.group.type}")
   private String businessGroupType = null;
 
-  ServiceInstancesBaseResources(ApplicationContext applicationContext, CommonMapper commonMapper) {
+  ServiceInstancesBaseResources(ApplicationContext applicationContext, CommonMapper commonMapper,
+      TenantResources tenantResources) {
     this.applicationContext = applicationContext;
     this.commonMapper = commonMapper;
+    this.tenantResources = tenantResources;
   }
 
   /**
@@ -73,17 +76,12 @@ public class ServiceInstancesBaseResources {
 
     self = applicationContext.getBean(ServiceInstancesBaseResources.class);
 
-    val list = commonMapper.selectServiceInstancesBaseData(null, null);
-    Map<Integer, List<ServiceInstancesVo>> tenantGroupMap =
-        list.stream().collect(Collectors.groupingBy(vo -> vo.getTenantId()));
+    val tenantList = tenantResources.getAll();
 
-    for (val tenantId : tenantGroupMap.keySet()) {
-      if (tenantId == 0) {
-        continue;
-      }
-
-      self.initialize(tenantId);
+    for (val tenant : tenantList) {
+      self.initialize(tenant.getId());
     }
+
   }
 
   /**
@@ -106,76 +104,22 @@ public class ServiceInstancesBaseResources {
   /**
    * 情報取得
    *
-   * @author : [AOT] g.kim
-   * @createdAt : 2022-03-23
-   * @updatedAt : 2022-03-23
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-05-07
+   * @updatedAt : 2021-05-07
    * @param vo
    * @return
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-
-  @Cacheable(key = "{ #tenantId:#businessGroupType }",
-      value = "ServiceInstancesResources::getListByTenantId")
-  public List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
+  @Cacheable(key = "{ #tenantId:#businessGroupType }", value = "ServiceInstancesBaseResources::get")
+  public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
-    val tenantlist = commonMapper.selectServiceInstancesBaseData(tenantId, businessGroupType);
-
-    setJsonMap(baseList);
-    setJsonMap(tenantlist);
-    val baseGroupMap =
-        baseList.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
-            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
-    val tenantGroupMap =
-        tenantlist.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
-            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
-    val resultList = new ArrayList<ServiceInstancesVo>();
-
-
-    for (val businessGroupTypeKey : baseGroupMap.keySet()) {
-      val baseSourceGroup = baseGroupMap.get(businessGroupTypeKey);
-      for (val baseSourceKey : baseSourceGroup.keySet()) {
-        val voList = baseSourceGroup.get(baseSourceKey);
-        val addMap = new HashMap<String, Object>();
-        for (val vo : voList) {
-          addMap.putAll(vo.getInherentMap());
-        }
-
-        val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
-        if (tenantSourceMap != null) {
-          val tenantVoList = tenantSourceMap.get(baseSourceKey);
-          if (tenantVoList != null && tenantVoList.size() != 0) {
-            for (val vo : tenantVoList) {
-              addMap.putAll(vo.getInherentMap());
-            }
-          }
-        }
-        voList.get(0).setInherentMap(addMap);
-        voList.get(0).setInherentJson(new JSONObject(addMap).toString());
-        resultList.add(voList.get(0));
-
-      }
+    if (self == null) {
+      initialize();
     }
-
-
-
-    return resultList;
-  }
-
-  @SuppressWarnings("unchecked")
-  private void setJsonMap(List<ServiceInstancesVo> list)
-      throws JsonMappingException, JsonProcessingException {
-    for (val vo : list) {
-      if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
-        ObjectMapper mapper = new ObjectMapper();
-        if (vo.getInherentJson().charAt(0) == '[') {
-          vo.setInherentList(mapper.readValue(vo.getInherentJson(), List.class));
-        } else {
-          vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
-        }
-      }
-    }
+    return self.getListByTenantId(tenantId, this.businessGroupType).stream()
+        .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
   /**
@@ -189,12 +133,14 @@ public class ServiceInstancesBaseResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
-      throws JsonMappingException, JsonProcessingException {
+  @Cacheable(key = "{ #tenantId:#sourceKey }",
+      value = "ServiceInstancesBaseResources::getAllBusinessGroupTypeBySourceKey")
+  public Map<String, List<ServiceInstancesVo>> getAllBusinessGroupTypeBySourceKey(Integer tenantId,
+      String sourceKey) throws JsonMappingException, JsonProcessingException {
     if (self == null) {
       initialize();
     }
-    return self.getListByTenantId(tenantId, this.businessGroupType).stream()
+    return self.getListByTenantIdAndSourceKey(tenantId, sourceKey).stream()
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
@@ -313,23 +259,6 @@ public class ServiceInstancesBaseResources {
   }
 
   /**
-   * 全項目取得
-   *
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-05-07
-   * @updatedAt : 2021-05-07
-   * @return
-   * @throws JsonProcessingException
-   * @throws JsonMappingException
-   */
-  @Cacheable(value = "ServiceInstancesResources::getTenantList")
-  public Set<Integer> getTenantList() throws JsonMappingException, JsonProcessingException {
-    val list = commonMapper.selectServiceInstances();
-    return list.stream().map(vo -> vo.getTenantId()).collect(Collectors.toSet());
-
-  }
-
-  /**
    * 最新更新日取得
    *
    * @author : [AOT] s.paku
@@ -390,6 +319,112 @@ public class ServiceInstancesBaseResources {
       return result;
     } else {
       throw new WebException(Luigi2ErrorCode.S0000);
+    }
+  }
+
+  /**
+   * 情報取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/07
+   * @updatedAt : 2022/09/07
+   * @param tenantId
+   * @param businessGroupType
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  private List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
+      throws JsonMappingException, JsonProcessingException {
+    val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
+    val tenantlist = commonMapper.selectServiceInstancesBaseData(tenantId, businessGroupType);
+
+    return getListByTenantId(baseList, tenantlist);
+  }
+
+  /**
+   * 情報取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/07
+   * @updatedAt : 2022/09/07
+   * @param tenantId
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  private List<ServiceInstancesVo> getListByTenantIdAndSourceKey(Integer tenantId, String sourceKey)
+      throws JsonMappingException, JsonProcessingException {
+    val baseList = commonMapper.selectServiceInstancesBaseDataBySourceKey(0, sourceKey);
+    val tenantlist = commonMapper.selectServiceInstancesBaseDataBySourceKey(tenantId, sourceKey);
+
+    return getListByTenantId(baseList, tenantlist);
+  }
+
+  /**
+   * 情報取得 (原本から）
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022/09/06
+   * @updatedAt : 2022/09/06
+   * @param baseList
+   * @param tenantlist
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  private List<ServiceInstancesVo> getListByTenantId(List<ServiceInstancesVo> baseList,
+      List<ServiceInstancesVo> tenantlist) throws JsonMappingException, JsonProcessingException {
+    setJsonMap(baseList);
+    setJsonMap(tenantlist);
+    val baseGroupMap =
+        baseList.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
+            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
+    val tenantGroupMap =
+        tenantlist.stream().collect(Collectors.groupingBy(ServiceInstancesVo::getBusinessGroupType,
+            Collectors.groupingBy(ServiceInstancesVo::getSourceKey)));
+    val resultList = new ArrayList<ServiceInstancesVo>();
+
+
+    for (val businessGroupTypeKey : baseGroupMap.keySet()) {
+      val baseSourceGroup = baseGroupMap.get(businessGroupTypeKey);
+      for (val baseSourceKey : baseSourceGroup.keySet()) {
+        val voList = baseSourceGroup.get(baseSourceKey);
+        val addMap = new HashMap<String, Object>();
+        for (val vo : voList) {
+          addMap.putAll(vo.getInherentMap());
+        }
+
+        val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
+        if (tenantSourceMap != null) {
+          val tenantVoList = tenantSourceMap.get(baseSourceKey);
+          if (tenantVoList != null && tenantVoList.size() != 0) {
+            for (val vo : tenantVoList) {
+              addMap.putAll(vo.getInherentMap());
+            }
+          }
+        }
+        voList.get(0).setInherentMap(addMap);
+        voList.get(0).setInherentJson(new JSONObject(addMap).toString());
+        resultList.add(voList.get(0));
+      }
+    }
+
+    return resultList;
+  }
+
+  @SuppressWarnings("unchecked")
+  private void setJsonMap(List<ServiceInstancesVo> list)
+      throws JsonMappingException, JsonProcessingException {
+    for (val vo : list) {
+      if (StringUtils.isEmpty(vo.getInherentJson()) == false) {
+        ObjectMapper mapper = new ObjectMapper();
+        if (vo.getInherentJson().charAt(0) == '[') {
+          vo.setInherentList(mapper.readValue(vo.getInherentJson(), List.class));
+        } else {
+          vo.setInherentMap(mapper.readValue(vo.getInherentJson(), Map.class));
+        }
+      }
     }
   }
 }

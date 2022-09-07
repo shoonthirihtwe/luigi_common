@@ -80,6 +80,19 @@ public interface CommonMapper {
       @Param("businessGroupType") String businessGroupType);
 
   /**
+   * ServiceInstancesBaseData取得 (sourceKey)
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/07
+   * @updatedAt : 2022/09/07
+   * @param tenantId
+   * @param sourceKey
+   * @return
+   */
+  List<ServiceInstancesVo> selectServiceInstancesBaseDataBySourceKey(
+      @Param("tenantId") Integer tenantId, @Param("sourceKey") String sourceKey);
+
+  /**
    * コードマスター取得
    * 
    * @author : [AOT] s.paku

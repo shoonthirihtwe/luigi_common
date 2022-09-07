@@ -10,6 +10,7 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.inject.Singleton;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
@@ -36,6 +37,9 @@ public class ValidityResources {
   private final ApplicationContext applicationContext;
   private final ServiceInstancesBaseResources serviceInstancesBaseResources;
 
+  @Autowired
+  TenantResources tenantResources;
+
   ValidityResources(ApplicationContext applicationContext,
       ServiceInstancesBaseResources serviceInstancesBaseResources) {
     this.applicationContext = applicationContext;
@@ -56,10 +60,10 @@ public class ValidityResources {
   public void initialize() throws JsonMappingException, JsonProcessingException {
 
     self = applicationContext.getBean(ValidityResources.class);
-    val tenantIdList = serviceInstancesBaseResources.getTenantList();
+    val tenantList = tenantResources.getAll();
 
-    for (val tenantId : tenantIdList) {
-      self.initialize(tenantId);
+    for (val tenant : tenantList) {
+      self.initialize(tenant.getId());
     }
 
   }
@@ -163,10 +167,12 @@ public class ValidityResources {
    */
   public List<Map<String, ValidityVo>> getAll()
       throws JsonMappingException, JsonProcessingException {
-    val tenantIdList = serviceInstancesBaseResources.getTenantList();
+
+    val tenantList = tenantResources.getAll();
+
     val resultList = new ArrayList<Map<String, ValidityVo>>();
-    for (val tenantId : tenantIdList) {
-      resultList.add(self.get(tenantId));
+    for (val tenant : tenantList) {
+      resultList.add(self.get(tenant.getId()));
     }
 
     return resultList;
