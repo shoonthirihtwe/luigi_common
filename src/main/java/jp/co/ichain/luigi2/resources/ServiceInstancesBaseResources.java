@@ -112,7 +112,6 @@ public class ServiceInstancesBaseResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  @Cacheable(key = "{ #tenantId:#businessGroupType }", value = "ServiceInstancesBaseResources::get")
   public Map<String, List<ServiceInstancesVo>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
     if (self == null) {
@@ -334,6 +333,7 @@ public class ServiceInstancesBaseResources {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
+  @Cacheable(key = "{ #tenantId:#businessGroupType }", value = "ServiceInstancesBaseResources::getListByTenantId")
   public List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
       throws JsonMappingException, JsonProcessingException {
     val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
