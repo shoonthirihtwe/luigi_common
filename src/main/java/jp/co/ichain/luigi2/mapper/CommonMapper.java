@@ -48,27 +48,6 @@ public interface CommonMapper {
   List<TenantsVo> selectTenants(Map<String, Object> param);
 
   /**
-   * ServiceInstances取得
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-08-18
-   * @updatedAt : 2021-08-18
-   * @return
-   */
-  List<ServiceInstancesVo> selectServiceInstances();
-
-  /**
-   * ServiceInstances取得
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2021-08-18
-   * @updatedAt : 2021-08-18
-   * @param tenantId
-   * @return
-   */
-  List<ServiceInstancesVo> selectServiceInstances(@Param("tenantId") Integer tenantId);
-
-  /**
    * ServiceInstancesBaseData取得
    * 
    * @author : [AOT] g.kim
