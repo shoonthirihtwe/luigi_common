@@ -334,7 +334,7 @@ public class ServiceInstancesBaseResources {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  private List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
+  public List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
       throws JsonMappingException, JsonProcessingException {
     val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
     val tenantlist = commonMapper.selectServiceInstancesBaseData(tenantId, businessGroupType);
@@ -353,7 +353,7 @@ public class ServiceInstancesBaseResources {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  private List<ServiceInstancesVo> getListByTenantIdAndSourceKey(Integer tenantId, String sourceKey)
+  public List<ServiceInstancesVo> getListByTenantIdAndSourceKey(Integer tenantId, String sourceKey)
       throws JsonMappingException, JsonProcessingException {
     val baseList = commonMapper.selectServiceInstancesBaseDataBySourceKey(0, sourceKey);
     val tenantlist = commonMapper.selectServiceInstancesBaseDataBySourceKey(tenantId, sourceKey);
