@@ -18,6 +18,7 @@ import java.util.Date;
 public class DateTimeUtils {
 
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+  private static SimpleDateFormat formatterIncludeTime = new SimpleDateFormat("yyyyMMddHHmm");
 
   /**
    * 日付取得
@@ -44,6 +45,19 @@ public class DateTimeUtils {
    */
   public static String convertSimpleFormat(Date date) {
     return date == null ? null : formatter.format(date);
+  }
+  
+  /**
+   * yyyyMMddHHmm形式で日付を返す
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/08
+   * @updatedAt : 2022/09/08
+   * @param date
+   * @return
+   */
+  public static String convertSimpleFormatIncludeTime(Date date) {
+    return date == null ? null : formatterIncludeTime.format(date);
   }
 
   /**
