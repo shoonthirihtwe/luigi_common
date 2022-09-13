@@ -28,7 +28,7 @@ public class Luigi2CodeUnderwritings {
    * @updatedAt : 2021-08-12
    */
   public enum ContractStatus {
-    WAITING_FOR_FIRST_ASSESSMENT("01"), WAITING_FOR_FIRST_PAYMENT("03"), CHECK_FOR_PAYMENT_METHOD(
+    APPLYING_COMPLETE("00"), WAITING_FOR_FIRST_ASSESSMENT("01"), WAITING_FOR_FIRST_PAYMENT("03"), CHECK_FOR_PAYMENT_METHOD(
         "05"), ESTABLISHMENT("31");
 
     String val;
@@ -59,6 +59,31 @@ public class Luigi2CodeUnderwritings {
     String val;
 
     AntisocialForcesCheck(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
+
+  /**
+   * 2次査定結果
+   * 
+   * 00:承認
+   * 01:差戻
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-09-13
+   * @updatedAt : 2021-09-13
+   */
+  public enum SecondAssessmentResults {
+    APPROVAL("00"), DISAPPROVAL("01");
+
+    String val;
+
+    SecondAssessmentResults(String val) {
       this.val = val;
     }
 
