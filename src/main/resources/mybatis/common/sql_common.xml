@@ -133,7 +133,7 @@
 		SELECT
 			tenant_id
 		    ,UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
-		FROM service_instances
+		FROM service_instances_base_data
 		GROUP BY tenant_id
 	</select>
 		<select id="selectInherentData" resultType="String" parameterType="hashmap">
