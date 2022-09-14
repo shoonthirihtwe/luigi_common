@@ -137,4 +137,30 @@ public class Luigi2CodeContracts {
       return this.val;
     }
   }
+
+  /**
+   * billingInfoの中CustomerCategory
+   * 
+   * 1:個人
+   * 2:法人
+   * 3:屋号
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-14
+   * @updatedAt : 2022-09-14
+   */
+  public enum CustomerCategory {
+    INDIVIDUAL("1"), CORPORATION("2"), YAGOU("3");
+
+    String val;
+
+    CustomerCategory(String val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return this.val;
+    }
+  }
 }
