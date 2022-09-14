@@ -46,12 +46,10 @@ import lombok.val;
  * 
  * @author : [AOT] s.paku
  * @createdAt : 2021-06-30
- * @updatedAt : 2021-06-30
+ * @updatedAt : 2022-09-14
  */
 @Service
 public class AwsS3Service {
-
-  private static final String FREE_DOCUMENTS = "documents";
 
   public enum Documents {
     CLAIM("claim_documents/"), NEW_BUSINESS("new_business_documents/"), MAINTENANCE(
@@ -60,16 +58,6 @@ public class AwsS3Service {
     String name;
 
     Documents(String name) {
-      this.name = name;
-    }
-  }
-
-  public enum FreeDocumentsType {
-    Text("text");
-
-    String name;
-
-    FreeDocumentsType(String name) {
       this.name = name;
     }
   }
@@ -83,10 +71,7 @@ public class AwsS3Service {
   /**
    * 経理ダウンロードファイルEnumType
    * 
-   * FB_claims:支払用FBデータ
-   * account_journal:会計仕訳データ
-   * reserve_payment:支払備金データ
-   * commission_summary:代理店手数料集計
+   * FB_claims:支払用FBデータ account_journal:会計仕訳データ reserve_payment:支払備金データ commission_summary:代理店手数料集計
    * commission_detail:代理店手数料明細
    * 
    * @author : [AOT] g.kim
@@ -109,6 +94,9 @@ public class AwsS3Service {
 
   @Value("${aws.s3.salt}")
   String salt;
+
+  @Value("${luigi2.s3.text.path}")
+  String textPath;
 
   @Autowired
   AwsS3Dao awsS3Dao;
@@ -198,11 +186,8 @@ public class AwsS3Service {
   public void upload(InputStream inputsteam, String fileName, int tenantId, int year, int month)
       throws IOException {
 
-    val serviceMap = serviceInstancesBaseResources.get(tenantId, FREE_DOCUMENTS);
-    val folder = serviceMap.get(0).getInherentMap().get(FreeDocumentsType.Text.name);
-
     StringBuffer sb = new StringBuffer();
-    sb.append(folder).append(year).append("/").append(month).append("/").append(fileName);
+    sb.append(textPath).append(year).append("/").append(month).append("/").append(fileName);
 
     // file upload
     awsS3Dao.upload(tenantId, new String(sb), inputsteam);
@@ -260,11 +245,9 @@ public class AwsS3Service {
    * @throws SdkClientException
    * @throws AmazonServiceException
    */
-  public List<DownloadFileVo> searchDownloadDocument(FreeDocumentsType documentsType,
-      Map<String, Object> paramMap) throws JsonMappingException, JsonProcessingException,
-      AmazonServiceException, SdkClientException, ParseException {
-
-
+  public List<DownloadFileVo> searchDownloadDocument(Map<String, Object> paramMap)
+      throws JsonMappingException, JsonProcessingException, AmazonServiceException,
+      SdkClientException, ParseException {
 
     List<String> fileTags = new ArrayList<String>();
 
@@ -288,9 +271,6 @@ public class AwsS3Service {
       fileTags.add(FreeDocumentsFileType.COMMISSION_DETAIL.name);
     }
 
-    val serviceInstance = siResources.get((Integer) paramMap.get("tenantId"), FREE_DOCUMENTS);
-    String documentDir = serviceInstance.get(0).getInherentMap().get(documentsType.name).toString();
-
     if (fileTags.size() == 0) {
       for (val fileType : FreeDocumentsFileType.values()) {
         fileTags.add(fileType.name);
@@ -298,6 +278,6 @@ public class AwsS3Service {
 
     }
 
-    return awsS3Dao.searchFile(paramMap, documentDir, fileTags);
+    return awsS3Dao.searchFile(paramMap, textPath, fileTags);
   }
 }

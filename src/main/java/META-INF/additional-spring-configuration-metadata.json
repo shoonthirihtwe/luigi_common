@@ -248,5 +248,10 @@
     "name": "business.group.type",
     "type": "java.lang.String",
     "description": "A description for 'business.group.type'"
+  },
+  {
+    "name": "luigi2.s3.text.path",
+    "type": "java.lang.String",
+    "description": "A description for 'luigi2.s3.text.path'"
   }
 ]}
