@@ -55,7 +55,7 @@
 			c.authentication_key as authenticationKey
 		FROM
 			<choose>
-				<when test="sex == 3">
+				<when test="corporateIndividualFlag == 2">
 					customers_corporate cc
 						JOIN customers c ON c.customer_id= cc.customer_id
 						AND c.tenant_id=cc.tenant_id 
@@ -71,7 +71,6 @@
 					ci.name_kana_sei = #{nameKanaSei}
 					AND ci.name_kana_mei = #{nameKanaMei}
 					AND ci.date_of_birth=#{dateOfBirth}
-					AND ci.sex=#{sex}
 					AND ci.addr_zip_code=#{addrZipNo}
 				</otherwise>
 			</choose>

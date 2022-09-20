@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jp.co.ichain.luigi2.mapper.UserMapper;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeCommon;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeCustomers.CorporateIndividualFlag;
 import jp.co.ichain.luigi2.vo.NayoseResultVo;
 import lombok.val;
 
 /**
  * 名寄せサービス
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-08-04
  * @updatedAt : 2021-08-04
@@ -26,7 +27,7 @@ public class NayoseService {
 
   /**
    * 名寄せを行う
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-04
    * @updatedAt : 2021-08-04
@@ -52,7 +53,7 @@ public class NayoseService {
     }
 
     if (resultList != null && resultList.size() == 0
-        && !param.get("sex").equals(Luigi2CodeCommon.SexCode.CORPORATE.toString())) {
+        && param.get("corporateIndividualFlag").equals(CorporateIndividualFlag.INDIVIDUAL.toString())) {
       resultList = userMapper.selectNayoseCustomerIndividualPartialMatch(param);
     }
 
