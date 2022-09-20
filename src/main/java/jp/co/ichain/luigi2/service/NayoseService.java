@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jp.co.ichain.luigi2.mapper.UserMapper;
-import jp.co.ichain.luigi2.resources.code.Luigi2CodeCommon;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeCustomers.CorporateIndividualFlag;
 import jp.co.ichain.luigi2.vo.NayoseResultVo;
 import lombok.val;
@@ -52,8 +51,8 @@ public class NayoseService {
       return resultList.get(0);
     }
 
-    if (resultList != null && resultList.size() == 0
-        && param.get("corporateIndividualFlag").equals(CorporateIndividualFlag.INDIVIDUAL.toString())) {
+    if (resultList != null && resultList.size() == 0 && param.get("corporateIndividualFlag")
+        .equals(CorporateIndividualFlag.INDIVIDUAL.toString())) {
       resultList = userMapper.selectNayoseCustomerIndividualPartialMatch(param);
     }
 
