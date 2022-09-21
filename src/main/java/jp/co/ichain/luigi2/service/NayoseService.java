@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jp.co.ichain.luigi2.mapper.UserMapper;
+import jp.co.ichain.luigi2.resources.code.Luigi2CodeCommon.SexCode;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeCustomers.CorporateIndividualFlag;
 import jp.co.ichain.luigi2.vo.NayoseResultVo;
 import lombok.val;
@@ -41,6 +42,13 @@ public class NayoseService {
   @Transactional(transactionManager = "luigi2TransactionManager", readOnly = true)
   public NayoseResultVo nayose(Map<String, Object> param) {
 
+    if (param.get("corporateIndividualFlag") == null && param.get("sex") != null) {
+      if (param.get("sex").equals(SexCode.CORPORATE.toString())) {
+        param.put("corporateIndividualFlag", CorporateIndividualFlag.CORPORATION.toString());
+      } else {
+        param.put("corporateIndividualFlag", CorporateIndividualFlag.INDIVIDUAL.toString());
+      }
+    }
     var resultList = userMapper.selectNayoseCustomerMatch(param);
     if (resultList != null && resultList.size() != 0) {
       List<String> idList = new ArrayList<String>();
