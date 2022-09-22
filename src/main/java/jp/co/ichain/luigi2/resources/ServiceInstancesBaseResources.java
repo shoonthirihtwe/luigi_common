@@ -141,7 +141,7 @@ public class ServiceInstancesBaseResources {
     if (self == null) {
       initialize();
     }
-    return self.getListByTenantId(tenantId, this.businessGroupType).stream()
+    return self.getListByTenantId(tenantId, "*").stream()
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
@@ -276,7 +276,8 @@ public class ServiceInstancesBaseResources {
       initialize();
     }
 
-    val list = self.getListByTenantId(tenantId, this.businessGroupType);
+    // businessGroupType=*場合、全businessGroupType
+    val list = self.getListByTenantId(tenantId, "*");
 
     // last updatedAt
     return list.stream()
@@ -327,7 +328,7 @@ public class ServiceInstancesBaseResources {
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2022/09/07
    * @updatedAt : 2022/09/07
@@ -346,7 +347,7 @@ public class ServiceInstancesBaseResources {
 
   /**
    * 情報取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2022/09/07
    * @updatedAt : 2022/09/07
@@ -360,6 +361,9 @@ public class ServiceInstancesBaseResources {
       value = "ServiceInstancesBaseResources::getListByTenantId")
   public List<ServiceInstancesVo> getListByTenantId(Integer tenantId, String businessGroupType)
       throws JsonMappingException, JsonProcessingException {
+    if (businessGroupType.equals("*")) {
+      businessGroupType = null;
+    }
     val baseList = commonMapper.selectServiceInstancesBaseData(0, businessGroupType);
     val tenantlist = commonMapper.selectServiceInstancesBaseData(tenantId, businessGroupType);
 
@@ -368,7 +372,7 @@ public class ServiceInstancesBaseResources {
 
   /**
    * 情報取得 (原本から）
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2022/09/06
    * @updatedAt : 2022/09/06
@@ -401,14 +405,20 @@ public class ServiceInstancesBaseResources {
         }
 
         val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
+        long maxUpdatedAt = 0;
         if (tenantSourceMap != null) {
           val tenantVoList = tenantSourceMap.get(baseSourceKey);
           if (tenantVoList != null && tenantVoList.size() != 0) {
             for (val vo : tenantVoList) {
+              val updatedAt = vo.getUpdatedAt() == null ? vo.getCreatedAt() : vo.getUpdatedAt();
               addMap.putAll(vo.getInherentMap());
+              if (maxUpdatedAt < updatedAt.getTime()) {
+                maxUpdatedAt = updatedAt.getTime();
+              }
             }
           }
         }
+        voList.get(0).setUpdatedAt(new Date(maxUpdatedAt));
         voList.get(0).setInherentMap(addMap);
         voList.get(0).setInherentJson(new JSONObject(addMap).toString());
         resultList.add(voList.get(0));
