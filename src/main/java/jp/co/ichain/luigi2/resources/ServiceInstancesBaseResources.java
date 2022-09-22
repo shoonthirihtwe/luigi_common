@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -163,32 +162,6 @@ public class ServiceInstancesBaseResources {
       initialize();
     }
     return self.get(tenantId) != null ? self.get(tenantId).get(sourceKey) : null;
-  }
-
-  /**
-   * スキマーキー取得
-   *
-   * @author : [AOT] s.paku
-   * @createdAt : 2022/08/22
-   * @updatedAt : 2022/08/22
-   * @param tenantId
-   * @return
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
-   */
-  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getSchemaKeys")
-  public Set<String> getSchemaKeys(Integer tenantId)
-      throws JsonMappingException, JsonProcessingException {
-    if (self == null) {
-      initialize();
-    }
-    val siList = self.get(tenantId) != null ? self.get(tenantId).get("ui_template") : null;
-    if (siList == null || siList.size() < 1) {
-      return null;
-    }
-    JSONObject jsonObject = new JSONObject(siList.get(0).getInherentJson());
-
-    return jsonObject.keySet();
   }
 
   /**
