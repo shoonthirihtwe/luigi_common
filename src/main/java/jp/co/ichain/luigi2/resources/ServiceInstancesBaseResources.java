@@ -140,7 +140,7 @@ public class ServiceInstancesBaseResources {
     if (self == null) {
       initialize();
     }
-    return self.getListByTenantId(tenantId, "*").stream()
+    return self.getListByTenantId(tenantId, this.businessGroupType).stream()
         .collect(Collectors.groupingBy(vo -> vo.getSourceKey()));
   }
 
