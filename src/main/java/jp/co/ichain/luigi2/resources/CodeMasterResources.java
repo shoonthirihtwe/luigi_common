@@ -133,7 +133,7 @@ public class CodeMasterResources {
   public Map<String, List<CodeMasterVo>> get(Integer tenantId, Long updatedAt)
       throws JsonMappingException, JsonProcessingException {
 
-    return (updatedAt != null && updatedAt > self.getLastUpdatedAt(tenantId).getTime() ? null
+    return (updatedAt != null && updatedAt >= self.getLastUpdatedAt(tenantId).getTime() ? null
         : self.get(tenantId));
   }
 
