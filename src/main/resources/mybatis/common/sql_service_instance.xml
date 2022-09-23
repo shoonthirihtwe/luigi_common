@@ -10,4 +10,10 @@
         <if test="sourceKey != null">AND source_key=#{sourceKey}</if>
         ORDER BY updated_at DESC
     </select>
+    
+	<select id="selectServiceInstancesMaxUpdatedAt" parameterType="map"
+		resultType="java.util.Date">
+		SELECT max(updated_at) from service_instances WHERE status='1'
+		AND tenant_id=#{tenantId}
+	</select>
 </mapper>

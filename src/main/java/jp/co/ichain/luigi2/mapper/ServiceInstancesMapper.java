@@ -1,6 +1,6 @@
 package jp.co.ichain.luigi2.mapper;
 
-import java.util.List;
+import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
@@ -27,6 +27,19 @@ public interface ServiceInstancesMapper {
    * @param sourceKey
    * @return
    */
-  List<ServiceInstancesVo> selectServiceInstances(@Param("tenantId") Integer tenantId,
+  ServiceInstancesVo selectServiceInstances(@Param("tenantId") Integer tenantId,
       @Param("sourceKey") String sourceKey);
+
+
+
+  /**
+   * 更新日取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/23
+   * @updatedAt : 2022/09/23
+   * @param tenantId
+   * @return
+   */
+  Date selectServiceInstancesMaxUpdatedAt(@Param("tenantId") Integer tenantId);
 }
