@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.resources;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,6 +83,8 @@ public class ServiceInstancesResources {
     Set<String> result = null;
     if (schemaMap != null) {
       result = schemaMap.keySet();
+    } else {
+      result = new HashSet<String>();
     }
 
     return new ArrayList<String>(result);
