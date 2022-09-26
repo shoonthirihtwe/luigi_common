@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -277,9 +279,18 @@ public class ServiceObjectsService {
           break;
 
         case "date":
-          if ((data instanceof Date || data instanceof Long || data instanceof Double) == false) {
+          if (data instanceof String) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+              sdf.parse((String) data);
+            } catch (ParseException e) {
+              throw new WebParameterException(Luigi2ErrorCode.V0005, key);
+            }
+          } else if ((data instanceof Date || data instanceof Long
+              || data instanceof Double) == false) {
             throw new WebParameterException(Luigi2ErrorCode.V0005, key);
           }
+
           break;
         case "enum":
           val enumList = serviceInstancesResources.getEnumValues(tenantId, key);

@@ -100,7 +100,7 @@ public class ServiceInstancesResources {
    * @param field
    * @return
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   @Cacheable(key = "{ #tenantId:#field }", value = "ServiceInstancesResources::getEnumValues")
   public List<String> getEnumValues(Integer tenantId, String field) {
     val vo = serviceInstancesMapper.selectServiceInstances(tenantId, "enum_" + field);
@@ -118,6 +118,37 @@ public class ServiceInstancesResources {
           return String.valueOf(value);
         }).collect(Collectors.toList());
       }
+    }
+    return result;
+  }
+
+  /**
+   * title:value map取得
+   * 
+   * @author : [AOT] g.kim
+   * @createdAt : 2022/09/26
+   * @updatedAt : 2022/09/26
+   * @param tenantId
+   * @param field
+   * @return
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Cacheable(key = "{ #tenantId:#field }", value = "ServiceInstancesResources::getEnumTitleMap")
+  public Map<String, Long> getEnumTitleMap(Integer tenantId, String field) {
+    val vo = serviceInstancesMapper.selectServiceInstances(tenantId, "enum_" + field);
+    Gson gson = new Gson();
+    Map<String, Long> result = null;
+    try {
+      if (vo != null && vo.getInherentJson() != null) {
+        val itemMap = gson.fromJson(vo.getInherentJson(), Map.class);
+        if (itemMap.get("items") != null) {
+          val items = (List<Map<String, Object>>) itemMap.get("items");
+          result = items.stream().collect(Collectors.toMap((param) -> (String) param.get("title"),
+              (param) -> ((Double) param.get("value")).longValue()));
+        }
+      }
+    } catch (Exception e) {
+      return null;
     }
     return result;
   }
