@@ -387,13 +387,18 @@ public class CommonBatchService {
       // 請求（billing_headers）データを準備する
       BillingHeaderVo billingHeaderVo =
           createBillingHeader(contractBillingVo, billHeaderNo, createdBy);
-      mapper.insertBillingHeader(billingHeaderVo);
+      try {
+        mapper.insertBillingHeader(billingHeaderVo);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
     }
   }
 
   /**
    * 請求詳細（billing_detail）データ追加
-   * 
+   *
    * @author : [VJP] HOANGNH
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
@@ -417,7 +422,11 @@ public class CommonBatchService {
       }
       BillingDetailVo billingDetailVo =
           createBillingDetail(contractBillingVo, billHeaderNo, createdBy);
-      mapper.insertBillingDetails(billingDetailVo);
+      try {
+        mapper.insertBillingDetails(billingDetailVo);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
