@@ -137,7 +137,7 @@ public class CsvUtils {
     val mappingMap = new LinkedHashMap<String, String>();
     if (titleMap != null && titleKeyFg) {
       for (val entry : titleMap.entrySet()) {
-        mappingMap.put(entry.getValue(), entry.getKey());
+        mappingMap.put(entry.getValue(), entry.getKey().trim());
       }
     }
     return write(mappingMap, dataList);

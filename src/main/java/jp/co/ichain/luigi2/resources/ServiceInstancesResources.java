@@ -100,7 +100,7 @@ public class ServiceInstancesResources {
    * @param field
    * @return
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({"unchecked"})
   @Cacheable(key = "{ #tenantId:#field }", value = "ServiceInstancesResources::getEnumValues")
   public List<String> getEnumValues(Integer tenantId, String field) {
     val vo = serviceInstancesMapper.selectServiceInstances(tenantId, "enum_" + field);
@@ -132,7 +132,7 @@ public class ServiceInstancesResources {
    * @param field
    * @return
    */
-  @SuppressWarnings({"unchecked", "rawtypes"})
+  @SuppressWarnings({"unchecked"})
   @Cacheable(key = "{ #tenantId:#field }", value = "ServiceInstancesResources::getEnumTitleMap")
   public Map<String, Long> getEnumTitleMap(Integer tenantId, String field) {
     val vo = serviceInstancesMapper.selectServiceInstances(tenantId, "enum_" + field);
