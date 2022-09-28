@@ -152,6 +152,8 @@ public class ServiceObjectsService {
   public void validateInherentList(Integer tenantId, List<? extends Object> inherentList)
       throws JsonMappingException, JsonProcessingException, WebParameterException {
     if (inherentList != null) {
+      serviceInstancesResources.resetCacheableToUpdatedAt(tenantId);
+      
       val schemaMap = serviceInstancesResources.getSchema(tenantId);
       if (schemaMap == null) {
         return;
