@@ -166,6 +166,16 @@ public class RiskHeadersVo extends ObjectVo {
    * 基本給付額単位
    */
   String benefitBaseUnit;
+  
+  /**
+   * 保険金・給付金グループタイプ
+   */
+  String benefitGroupType;
+
+  /*
+   * 通算使用値
+   */
+  Integer sumUpValue;
 
   /**
    * 作成日時

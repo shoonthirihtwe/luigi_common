@@ -174,4 +174,56 @@
             tenant_id = #{tenantId}
             AND contract_no = #{contractNo}
     </select>
+    <select id="selectSumUpBenefits" resultType="BenefitsVo" parameterType="hashmap">
+        SELECT 
+            b.benefit_group_type,
+            IFNULL(SUM(IFNULL(b.sum_up_value, 0)), 0)
+        FROM
+            contracts c
+            JOIN benefits b ON c.sales_plan_code=b.sales_plan_code
+            AND c.sales_plan_type_code=b.sales_plan_type_code
+            AND c.tenant_id=b.tenant_id
+        WHERE
+            c.tenant_id = #{tenantId}
+            AND (c.contract_status='U' OR c.contract_status='40')
+            <if test="targetType =='PH'">
+            AND c.contractor_customer_id = #{customerId}
+            </if>
+            <if test="targetType =='IN'">
+            AND c.insured_customer_id = #{customerId}
+            </if>
+            group by b.benefit_group_type
+    </select>
+    <select id="selectSumUpRiskHeaders" resultType="Integer" parameterType="hashmap">
+        SELECT 
+            IFNULL(SUM(IFNULL(rh.sum_up_value, 0)), 0)
+        FROM
+            contracts c 
+            JOIN risk_headers rh ON 
+            c.contract_no=rh.contract_no
+            AND c.contract_branch_no=rh.contract_branch_no
+            AND c.tenant_id=rh.tenant_id
+        WHERE
+            c.tenant_id = #{tenantId}
+            AND (c.contract_status='U' OR c.contract_status='40')
+            AND rh.active_inactive="A"
+            AND rh.benefit_group_type=#{benefitGroupType}
+            <if test="targetType =='PH'">
+            AND c.contractor_customer_id = #{customerId}
+            </if>
+            <if test="targetType =='IN'">
+            AND c.insured_customer_id = #{customerId}
+            </if>
+    </select>
+    <select id="selectSumUpAmount" resultType="Integer" parameterType="hashmap">
+        SELECT 
+            SUM(IFNULL(sum_up_amount, 0))
+        FROM
+            sum_up_check_maps
+        WHERE
+            tenant_id = #{tenantId}
+            AND target_type=#{targetType}
+            AND benefit_group_type =#{benefitGroupType}
+            AND (start_date <![CDATA[<=]]> #{onlineDate} AND end_date >= #{onlineDate})
+    </select>
 </mapper>

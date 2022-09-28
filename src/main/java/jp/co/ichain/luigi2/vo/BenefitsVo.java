@@ -107,7 +107,14 @@ public class BenefitsVo extends ObjectVo {
    * 待機日数
    */
   Integer waitingDays;
-
+  /**
+   * 保険金・給付金グループタイプ
+   */
+  String benefitGroupType;
+  /*
+   * 通算使用値
+   */
+  Integer sumUpValue;
 
   @JsonIgnore
   Date createdAt;

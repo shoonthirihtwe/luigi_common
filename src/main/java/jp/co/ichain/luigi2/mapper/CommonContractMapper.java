@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
+import jp.co.ichain.luigi2.vo.BenefitsVo;
 import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
 import jp.co.ichain.luigi2.vo.ClaimHeadersVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
@@ -85,4 +86,37 @@ public interface CommonContractMapper {
    * @return
    */
   String selectMaxContractBranchNo(Map<String, Object> param);
+
+  /**
+   * Benefits合計値取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-28
+   * @updatedAt : 2022-09-28
+   * @param
+   * @return
+   */
+  List<BenefitsVo> selectSumUpBenefits(Map<String, Object> param);
+
+  /**
+   * RiskHeaders合計値取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-28
+   * @updatedAt : 2022-09-28
+   * @param
+   * @return
+   */
+  Integer selectSumUpRiskHeaders(Map<String, Object> param);
+
+  /**
+   * 上限額取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-28
+   * @updatedAt : 2022-09-28
+   * @param
+   * @return
+   */
+  Integer selectSumUpAmount(Map<String, Object> param);
 }
