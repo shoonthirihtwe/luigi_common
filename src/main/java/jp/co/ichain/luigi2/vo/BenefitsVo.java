@@ -110,7 +110,11 @@ public class BenefitsVo extends ObjectVo {
   /**
    * 保険金・給付金グループタイプ
    */
-  String benefitGroupType;
+  String benefitGroupTypeBl;
+  /**
+   * 保険金・給付金グループタイプ
+   */
+  String benefitGroupTypeBylaw;
   /*
    * 通算使用値
    */

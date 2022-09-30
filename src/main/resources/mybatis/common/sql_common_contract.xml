@@ -176,7 +176,8 @@
     </select>
     <select id="selectSumUpBenefits" resultType="BenefitsVo" parameterType="hashmap">
         SELECT 
-            b.benefit_group_type,
+            b.benefit_group_type_bl,
+            b.benefit_group_type_bylaw,
             IFNULL(SUM(IFNULL(b.sum_up_value, 0)), 0)
         FROM
             contracts c
@@ -192,7 +193,7 @@
             <if test="targetType =='IN'">
             AND c.insured_customer_id = #{customerId}
             </if>
-            group by b.benefit_group_type
+            group by b.benefit_group_type_bl, b.benefit_group_type_bylaw
     </select>
     <select id="selectSumUpRiskHeaders" resultType="Integer" parameterType="hashmap">
         SELECT 
@@ -207,7 +208,12 @@
             c.tenant_id = #{tenantId}
             AND (c.contract_status='U' OR c.contract_status='40')
             AND rh.active_inactive="A"
-            AND rh.benefit_group_type=#{benefitGroupType}
+            <if test="benefitGroupTypeBl != null">
+            AND rh.benefit_group_type_bl=#{benefitGroupTypeBl}
+            </if>
+            <if test="benefitGroupTypeBylaw != null">
+            AND rh.benefit_group_type_bylaw=#{benefitGroupType}
+            </if>
             <if test="targetType =='PH'">
             AND c.contractor_customer_id = #{customerId}
             </if>
@@ -226,4 +232,16 @@
             AND benefit_group_type =#{benefitGroupType}
             AND (start_date <![CDATA[<=]]> #{onlineDate} AND end_date >= #{onlineDate})
     </select>
+    <update id="updateSumupCheckResult" parameterType="hashmap">
+        UPDATE 
+            ${table}
+        <set>
+            inherent_underwritings_result=JSON_SET(COALESCE(`inherent_underwritings_result`,JSON_OBJECT('auto_underwriting','{}'))),'$.sum_up_check',#{json}),
+            update_count=update_count + 1,
+            updated_by=#{updatedBy}
+        </set>
+        WHERE
+            tenant_id=#{tenantId} 
+        AND contract_no =#{contractNo}
+    </update>
 </mapper>

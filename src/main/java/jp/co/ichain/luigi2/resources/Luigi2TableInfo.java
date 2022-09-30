@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Luigi2TableInfo {
   public enum TableInfo {
-    Contracts, Customers, MaintenanceRequests, NewBusinessDocuments, ClaimDocuments, MaintenanceDocuments, ClaimTrxsId, Agencies, AgencyBranches, SalesAgents
+    Contracts, Customers, MaintenanceRequests, NewBusinessDocuments, ClaimDocuments, MaintenanceDocuments, ClaimTrxsId, Agencies, AgencyBranches, SalesAgents, Underwritings
   }
 
   private static final Map<TableInfo, Map<String, Object>> TABLE_INFO_MAP;

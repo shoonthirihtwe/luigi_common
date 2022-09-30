@@ -2,6 +2,7 @@ package jp.co.ichain.luigi2.mapper;
 
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
 import jp.co.ichain.luigi2.vo.BenefitsVo;
@@ -119,4 +120,15 @@ public interface CommonContractMapper {
    * @return
    */
   Integer selectSumUpAmount(Map<String, Object> param);
+
+  /**
+   * 通算チェック結果更新
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-09-28
+   * @updatedAt : 2022-09-28
+   * @param
+   * @return
+   */
+  Integer updateSumupCheckResult(Map<String, Object> param, @Param("tableName") String tableName);
 }
