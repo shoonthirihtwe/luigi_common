@@ -2,7 +2,7 @@ package jp.co.ichain.luigi2.resources;
 
 /**
  * 各種コード
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-05-26
  * @updatedAt : 2021-05-26
@@ -87,6 +87,10 @@ public class Luigi2ErrorCode {
    * 他で更新ずみ
    */
   public static final String D0005 = "D0005";
+  /**
+   * 処理対象なし
+   */
+  public static final String D0006 = "D0006";
   /**
    * 認証中エラー
    */
