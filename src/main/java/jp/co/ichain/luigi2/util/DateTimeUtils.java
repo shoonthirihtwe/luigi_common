@@ -18,6 +18,7 @@ import java.util.Date;
 public class DateTimeUtils {
 
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+  private static SimpleDateFormat slashFormatter = new SimpleDateFormat("yyyy/MM/dd");
   private static SimpleDateFormat formatterIncludeTime = new SimpleDateFormat("yyyyMMddHHmm");
 
   /**
@@ -46,7 +47,7 @@ public class DateTimeUtils {
   public static String convertSimpleFormat(Date date) {
     return date == null ? null : formatter.format(date);
   }
-  
+
   /**
    * yyyyMMddHHmm形式で日付を返す
    * 
@@ -58,6 +59,21 @@ public class DateTimeUtils {
    */
   public static String convertSimpleFormatIncludeTime(Date date) {
     return date == null ? null : formatterIncludeTime.format(date);
+  }
+
+  /**
+   * yyyyMMdd形式をyyyy-MM-dd形式に変換
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/10/04
+   * @updatedAt : 2022/10/04
+   * @param date
+   * @return
+   * @throws ParseException
+   */
+  public static String convertSlashFormat(String date) throws ParseException {
+
+    return date == null ? null : slashFormatter.format(formatter.parse(date));
   }
 
   /**
