@@ -41,7 +41,7 @@ public interface CommonBatchMapper {
    * @param param
    * @return
    */
-  int selectBillingHeaderNo(Map<String, Object> param);
+  Integer selectBillingHeaderNo(Map<String, Object> param);
 
   /**
    * 請求billing_headerを作成

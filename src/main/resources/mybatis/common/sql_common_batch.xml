@@ -21,10 +21,13 @@
 				when count(*) = 0 then 1
 		        else max(billng_header_no)
 			end as billingHeaderNo
+
 		FROM billing_headers
 		WHERE 
 			payment_method_code = #{paymentMethodCode} 
 			and billing_period = #{billingPeriod}
+			<if test="factoringCompanyCode != null">and factoring_company_code = #{factoringCompanyCode}</if>
+			<if test="factoringCompanyCode == null">and factoring_company_code is null</if>
 			and tenant_id = #{tenantId}
 	</select>
 	<insert id="insertBillingHeader" parameterType="hashmap" keyProperty="id" useGeneratedKeys="true">

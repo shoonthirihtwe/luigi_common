@@ -406,7 +406,7 @@ public class CommonBatchService {
    */
   public void createBillingDetails(List<ContractBillingVo> contractBillingVos, String createdBy) {
     for (ContractBillingVo contractBillingVo : contractBillingVos) {
-      int billHeaderNo = 1;
+      Integer billHeaderNo = 1;
       // 連番計算：請求テーブルの請求月、払込方法コード単位で1からの連番を設定
       if (contractBillingVo.getPaymentMethodCode() != null
           && contractBillingVo.getBatchDate() != null) {
@@ -417,6 +417,7 @@ public class CommonBatchService {
         String billingPeriod = dateFormat.format(contractBillingVo.getBatchDate());
         paramBillingHeaded.put("billingPeriod", billingPeriod);
         paramBillingHeaded.put("tenantId", contractBillingVo.getTenantId());
+        paramBillingHeaded.put("factoringCompanyCode", contractBillingVo.getFactoringCompanyCode());
         // 請求テーブルの請求月
         billHeaderNo = mapper.selectBillingHeaderNo(paramBillingHeaded);
       }
