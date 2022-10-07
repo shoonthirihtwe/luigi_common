@@ -78,17 +78,19 @@ public class Luigi2CodeContractLog {
 
   /**
    * 異動コード
-   * 
+   *
    * 01:経理:保険金（給付金）支払
    * 06:成立確定
-   * 11:保険料収納 
-   * 21:保険料未納
+   * 11:保険料収納
+   * 13:引受不可
+   * 21:減額
+   * 23:特約の減額
    * 24:契約満了 更新
    * 25:契約満了 保険料変更
    * 28:契約満了 満了
    * 29:契約満了受付
    * 90:失効
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-12
    * @updatedAt : 2021-08-12
@@ -96,10 +98,11 @@ public class Luigi2CodeContractLog {
   public enum ContactTransactionCode {
     ACCOUNTING("01"), CONTRACT_ESTABLISHMENT("06"), MAINTENANCE_REQUESTS("01"), MAINTENANCE_FIRST(
         "02"), MAINTENANCE_SECOND("03"), MAINTENANCE_RETURN("04"), MAINTENANCE_INADEQUACY(
-            "05"), MAINTENANCE_CANCEL("06"), INSURANCE_PREMIUM_STORAGE(
-                "11"), NON_INSURANCE_PREMIUM_STORAGE("21"), CONTRACT_RENEWAL(
-                    "24"), INSURANCE_PREMIUM_CHANGE("25"), CONTRACT_EXPIRATION(
-                        "28"), CONTRACT_EXPIRATION_RECEPTION("29"), EXPRIED("90");
+            "05"), MAINTENANCE_CANCEL("06"), INSURANCE_PREMIUM_STORAGE("11"), UNACCEPTABLE(
+                "13"), NON_INSURANCE_PREMIUM_STORAGE("21"), REDUCTION_OF_SPECIAL_PROVISION(
+                    "23"), CONTRACT_RENEWAL("24"), INSURANCE_PREMIUM_CHANGE(
+                        "25"), CONTRACT_EXPIRATION(
+                            "28"), CONTRACT_EXPIRATION_RECEPTION("29"), EXPRIED("90");
 
     String val;
 
