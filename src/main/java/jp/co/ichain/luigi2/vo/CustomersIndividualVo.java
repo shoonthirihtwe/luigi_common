@@ -57,6 +57,8 @@ public class CustomersIndividualVo extends ObjectVo {
   String addrKnj1;
 
   String addrKnj2;
+  
+  String addrKnj3;
 
   String addrTel1;
 

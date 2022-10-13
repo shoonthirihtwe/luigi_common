@@ -63,6 +63,8 @@ public class CustomersVo extends ObjectVo {
   
   String addrKnj2;
   
+  String addrKnj3;
+  
   String addrTel1;
   
   String addrTel2;
@@ -116,6 +118,8 @@ public class CustomersVo extends ObjectVo {
   String insAddrKnj1;
   
   String insAddrKnj2;
+  
+  String insAddrKnj3;
   
   String insAddrTel1;
   

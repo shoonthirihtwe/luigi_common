@@ -95,6 +95,11 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
    * 「個人」住所2
    */
   String addrKnj2;
+  
+  /**
+   * 「個人」住所3
+   */
+  String addrKnj3;
 
   /**
    * 「個人」電話番号1
@@ -150,6 +155,11 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
    * 「法人」法人の住所2
    */
   String corpAddrKnj2;
+  
+  /**
+   * 「法人」法人の住所3
+   */
+  String corpAddrKnj3;
 
   /**
    * 「法人」代表者の氏名(漢字) 姓
@@ -201,6 +211,11 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
    * 「法人」代表者の住所2
    */
   String rep10eAddrKnj2;
+  
+  /**
+   * 「法人」代表者の住所3
+   */
+  String rep10eAddrKnj3;
 
   /**
    * 「法人」代表者の電話番号1
@@ -251,6 +266,11 @@ public class MaintenanceRequestsCustomersVo extends ObjectVo {
    * 「法人」通信先の住所2
    */
   String contactAddrKnj2;
+  
+  /**
+   * 「法人」通信先の住所3
+   */
+  String contactAddrKnj3;
 
   /**
    * 「法人」通信先の電話番号1

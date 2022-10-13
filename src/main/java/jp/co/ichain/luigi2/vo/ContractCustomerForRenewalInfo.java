@@ -151,6 +151,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 住所漢字 2
    */
   String addrKnj2;
+  
+  /**
+   * 住所漢字 3
+   */
+  String addrKnj3;
 
   /**
    * 住所漢字:
@@ -202,6 +207,11 @@ public class ContractCustomerForRenewalInfo extends ObjectVo {
    * 被保険者住所漢字 2
    */
   String insAddrKnj2;
+  
+  /**
+   * 被保険者住所漢字 3
+   */
+  String insAddrKnj3;
 
   @JsonSerialize(using = JsonDateSerializer.class)
   Date insDateOfBirth;

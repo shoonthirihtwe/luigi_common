@@ -49,6 +49,8 @@ public class CustomersCorporateVo extends ObjectVo {
   
   String corpAddrKnj2;
   
+  String corpAddrKnj3;
+  
   String rep10eSex;
   
   @JsonSerialize(using = JsonDateSerializer.class)
@@ -76,6 +78,8 @@ public class CustomersCorporateVo extends ObjectVo {
   
   String rep10eAddrKnj2;
   
+  String rep10eAddrKnj3;
+  
   String rep10eAddrTel1;
   
   String rep10eAddrTel2;
@@ -101,6 +105,8 @@ public class CustomersCorporateVo extends ObjectVo {
   String contactAddrKnj1;
   
   String contactAddrKnj2;
+  
+  String contactAddrKnj3;
   
   String contactAddrTel1;
   

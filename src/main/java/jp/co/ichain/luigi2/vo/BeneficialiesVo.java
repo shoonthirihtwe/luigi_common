@@ -64,6 +64,8 @@ public class BeneficialiesVo extends ObjectVo {
   String addrKnj1;
 
   String addrKnj2;
+  
+  String addrKnj3;
 
   @JsonIgnore
   Date createdAt;
