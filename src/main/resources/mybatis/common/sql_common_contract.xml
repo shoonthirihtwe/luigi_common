@@ -51,6 +51,7 @@
 		    claim_headers.claimant_date_of_birth,
 		    claim_headers.claimant_addr_knj_1,
 		    claim_headers.claimant_addr_knj_2,
+		    claim_headers.claimant_addr_knj_3,
 		    claim_headers.claimant_addr_knj_pref,
 		    claim_headers.claimant_addr_zip_code,
 		    claim_headers.tel_no,
@@ -99,13 +100,15 @@
 		        THEN
 		            CONCAT(customers_individual.addr_knj_pref,
 		                    customers_individual.addr_knj_1,
-		                    customers_individual.addr_knj_2)
+		                    customers_individual.addr_knj_2,
+		                    customers_individual.addr_knj_3)
 		        WHEN
 		            customers.corporate_individual_flag = '2'
 		        THEN
 		            CONCAT(customers_corporate.rep10e_addr_knj_pref,
 		                    customers_corporate.rep10e_addr_knj_1,
-		                    customers_corporate.rep10e_addr_knj_2)
+		                    customers_corporate.rep10e_addr_knj_2,
+		                    customers_corporate.rep10e_addr_knj_3)
 		        ELSE NULL
 		    END AS address,
 		    CASE
@@ -152,7 +155,8 @@
 		    beneficiaries.date_of_birth,
 		    CONCAT(beneficiaries.addr_knj_pref,
 		            beneficiaries.addr_knj_1,
-		            beneficiaries.addr_knj_2) AS address
+		            beneficiaries.addr_knj_2,
+		            beneficiaries.addr_knj_3) AS address
 		FROM
 		    beneficiaries
 		        INNER JOIN

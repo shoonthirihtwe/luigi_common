@@ -138,6 +138,11 @@ public class ClaimHeadersVo extends ObjectVo {
    * 請求者住所2(漢字)
    */
   String claimantAddrKnj2;
+  
+  /**
+   * 請求者住所3(漢字)
+   */
+  String claimantAddrKnj3;
 
   /**
    * 請求者郵便番号
