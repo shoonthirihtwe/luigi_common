@@ -373,24 +373,33 @@ public class ServiceInstancesBaseResources {
       for (val baseSourceKey : baseSourceGroup.keySet()) {
         val voList = baseSourceGroup.get(baseSourceKey);
         val addMap = new HashMap<String, Object>();
-        for (val vo : voList) {
-          addMap.putAll(vo.getInherentMap());
-        }
 
-        val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
         long maxUpdatedAt = 0;
+        val tenantSourceMap = tenantGroupMap.get(businessGroupTypeKey);
+        List<ServiceInstancesVo> tenantServiceInstancesList = null;
+
         if (tenantSourceMap != null) {
-          val tenantVoList = tenantSourceMap.get(baseSourceKey);
-          if (tenantVoList != null && tenantVoList.size() != 0) {
-            for (val vo : tenantVoList) {
-              val updatedAt = vo.getUpdatedAt() == null ? vo.getCreatedAt() : vo.getUpdatedAt();
-              addMap.putAll(vo.getInherentMap());
-              if (maxUpdatedAt < updatedAt.getTime()) {
-                maxUpdatedAt = updatedAt.getTime();
-              }
+          tenantServiceInstancesList = tenantSourceMap.get(baseSourceKey);
+        }
+        if (tenantServiceInstancesList != null && tenantServiceInstancesList.size() != 0) {
+          // 個別テナント
+          for (val vo : tenantServiceInstancesList) {
+            addMap.putAll(vo.getInherentMap());
+            val updatedAt = vo.getUpdatedAt() == null ? vo.getCreatedAt() : vo.getUpdatedAt();
+            if (maxUpdatedAt < updatedAt.getTime()) {
+              maxUpdatedAt = updatedAt.getTime();
+            }
+          }
+        } else {
+          for (val vo : voList) {
+            addMap.putAll(vo.getInherentMap());
+            val updatedAt = vo.getUpdatedAt() == null ? vo.getCreatedAt() : vo.getUpdatedAt();
+            if (maxUpdatedAt < updatedAt.getTime()) {
+              maxUpdatedAt = updatedAt.getTime();
             }
           }
         }
+
         voList.get(0).setUpdatedAt(new Date(maxUpdatedAt));
         voList.get(0).setInherentMap(addMap);
         voList.get(0).setInherentJson(new JSONObject(addMap).toString());
