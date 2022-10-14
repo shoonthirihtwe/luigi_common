@@ -96,6 +96,11 @@ public class PolicyHolderReferenceVo extends ObjectVo {
   String addrKanji2;
 
   /**
+   * 契約者・住所漢字 3
+   */
+  String addrKanji3;
+
+  /**
    * 契約者・生年月日
    */
   @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
@@ -197,6 +202,11 @@ public class PolicyHolderReferenceVo extends ObjectVo {
   String repAddrKanji2;
 
   /**
+   * 契約者法人・代表者住所漢字 3
+   */
+  String repAddrKanji3;
+
+  /**
    * 契約者法人・代表者電話番号 1
    */
   String repAddrTel1;
@@ -245,6 +255,11 @@ public class PolicyHolderReferenceVo extends ObjectVo {
    * 契約者法人・担当者住所漢字 2
    */
   String staffAddrKanji2;
+
+  /**
+   * 契約者法人・担当者住所漢字 3
+   */
+  String staffAddrKanji3;
 
   /**
    * 契約者法人・担当者電話番号 1

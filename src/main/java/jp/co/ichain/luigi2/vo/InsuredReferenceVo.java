@@ -107,6 +107,11 @@ public class InsuredReferenceVo extends ObjectVo {
   String inAddrKanji2;
 
   /**
+   * 被保険者・住所漢字3
+   */
+  String inAddrKanji3;
+
+  /**
    * 被保険者・電話番号1
    */
   String inAddrTel1;
@@ -192,6 +197,11 @@ public class InsuredReferenceVo extends ObjectVo {
   String inRepAddrKanji2;
 
   /**
+   * 被保険者法人・代表者住所漢字 3
+   */
+  String inRepAddrKanji3;
+
+  /**
    * 被保険者法人・代表者電話番号 1
    */
   String inRepAddrTel1;
@@ -240,6 +250,11 @@ public class InsuredReferenceVo extends ObjectVo {
    * 被保険者法人・担当者住所漢字 2
    */
   String inStaffAddrKanji2;
+
+  /**
+   * 被保険者法人・担当者住所漢字 3
+   */
+  String inStaffAddrKanji3;
 
   /**
    * 被保険者法人・担当者電話番号 1
