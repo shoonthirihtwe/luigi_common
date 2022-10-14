@@ -1,6 +1,7 @@
 package jp.co.ichain.luigi2.resources;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,6 @@ public class ServiceInstancesResources {
     this.serviceInstancesMapper = serviceInstancesMapper;
   }
 
-
-
   /**
    * スキーマ情報取得
    * 
@@ -59,6 +58,51 @@ public class ServiceInstancesResources {
     if (item != null) {
       ObjectMapper mapper = new ObjectMapper();
       result = mapper.readValue(item.getInherentJson(), Map.class);
+    }
+
+    return result;
+  }
+
+  /**
+   * UIテンプレート情報取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/10/14
+   * @updatedAt : 2022/10/14
+   * @param tenantId
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  @SuppressWarnings("unchecked")
+  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getUiTemplates")
+  public Map<String, Object> getUiTemplates(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    val item = serviceInstancesMapper.selectServiceInstances(tenantId, "ui_template");
+
+    Map<String, Object> result = null;
+    if (item != null) {
+      ObjectMapper mapper = new ObjectMapper();
+      result = mapper.readValue(item.getInherentJson(), Map.class);
+    }
+
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getEnums")
+  public List<Map<String, Object>> getEnums(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    val items = serviceInstancesMapper.selectServiceInstancesForLike(tenantId, "enum_%");
+
+    List<Map<String, Object>> result = null;
+    if (items != null) {
+      result = new ArrayList<Map<String, Object>>();
+
+      for (val item : items) {
+        ObjectMapper mapper = new ObjectMapper();
+        result.add(mapper.readValue(item.getInherentJson(), Map.class));
+      }
     }
 
     return result;
@@ -158,13 +202,31 @@ public class ServiceInstancesResources {
    * 
    * @author : [AOT] s.paku
    * @createdAt : 2022/09/23
-   * @updatedAt : 2022/09/23
+   * @updatedAt : 2022/10/14
    * @param tenantId
    */
   public void resetCacheableToUpdatedAt(Integer tenantId) {
-    val result = serviceInstancesMapper.selectServiceInstancesMaxUpdatedAt(tenantId);
+    Date result = serviceInstancesMapper.selectServiceInstancesMaxUpdatedAt(tenantId);
     if (result != null && result.getTime() > getUpdatedAt(tenantId)) {
       removeCacheable(tenantId);
+    }
+  }
+
+  /**
+   * 更新可能か判断する
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/10/14
+   * @updatedAt : 2022/10/14
+   * @param tenantId
+   * @param updatedAtTime
+   * @return
+   */
+  public boolean isReset(Integer tenantId, long updatedAtTime) {
+    if (updatedAtTime < getUpdatedAt(tenantId)) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -178,7 +240,7 @@ public class ServiceInstancesResources {
    * @return
    */
   @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getUpdatedAt")
-  private Long getUpdatedAt(Integer tenantId) {
+  public Long getUpdatedAt(Integer tenantId) {
     val result = serviceInstancesMapper.selectServiceInstancesMaxUpdatedAt(tenantId);
     if (result == null) {
       return null;

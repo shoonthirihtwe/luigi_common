@@ -11,6 +11,14 @@
         ORDER BY updated_at DESC
     </select>
     
+    <select id="selectServiceInstancesForLike" parameterType="map"
+        resultType="ServiceInstancesVo">
+        SELECT * from service_instances WHERE status='1'
+        <if test="tenantId != null">AND tenant_id=#{tenantId}</if>
+        <if test="sourceKey != null">AND source_key like #{sourceKey}</if>
+        ORDER BY updated_at DESC
+    </select>
+    
 	<select id="selectServiceInstancesMaxUpdatedAt" parameterType="map"
 		resultType="java.util.Date">
 		SELECT max(updated_at) from service_instances WHERE status='1'
