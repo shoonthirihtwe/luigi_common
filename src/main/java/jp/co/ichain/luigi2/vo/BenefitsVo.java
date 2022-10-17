@@ -119,6 +119,10 @@ public class BenefitsVo extends ObjectVo {
    * 通算使用値
    */
   Integer sumUpValue;
+  /*
+   * 連番
+   */
+  String riskSequenceNo;
 
   @JsonIgnore
   Date createdAt;
