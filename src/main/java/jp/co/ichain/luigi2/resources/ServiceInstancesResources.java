@@ -62,6 +62,32 @@ public class ServiceInstancesResources {
 
     return result;
   }
+  
+  /**
+   * スキーマキー取得
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/09/23
+   * @updatedAt : 2022/09/23
+   * @param tenantId
+   * @return
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getSchemaKeys")
+  public List<String> getSchemaKeys(Integer tenantId)
+      throws JsonMappingException, JsonProcessingException {
+    val schemaMap = getSchema(tenantId);
+
+    Set<String> result = null;
+    if (schemaMap != null) {
+      result = schemaMap.keySet();
+    } else {
+      result = new HashSet<String>();
+    }
+
+    return new ArrayList<String>(result);
+  }
 
   /**
    * UIテンプレート情報取得
@@ -108,30 +134,14 @@ public class ServiceInstancesResources {
     return result;
   }
 
-  /**
-   * スキーマキー取得
-   * 
-   * @author : [AOT] s.paku
-   * @createdAt : 2022/09/23
-   * @updatedAt : 2022/09/23
-   * @param tenantId
-   * @return
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
-   */
-  @Cacheable(key = "{ #tenantId }", value = "ServiceInstancesResources::getSchemaKeys")
-  public List<String> getSchemaKeys(Integer tenantId)
+  @SuppressWarnings("unchecked")
+  @Cacheable(key = "{ #tenantId:#field }", value = "ServiceInstancesResources::getEnum")
+  public Map<String, Object> getEnum(Integer tenantId, String field)
       throws JsonMappingException, JsonProcessingException {
-    val schemaMap = getSchema(tenantId);
+    val vo = serviceInstancesMapper.selectServiceInstances(tenantId, "enum_" + field);
 
-    Set<String> result = null;
-    if (schemaMap != null) {
-      result = schemaMap.keySet();
-    } else {
-      result = new HashSet<String>();
-    }
-
-    return new ArrayList<String>(result);
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(vo.getInherentJson(), Map.class);
   }
 
   /**

@@ -92,6 +92,10 @@ public class Luigi2ErrorCode {
    */
   public static final String D0006 = "D0006";
   /**
+   * 告知トリガー不正
+   */
+  public static final String D0007 = "D0007";
+  /**
    * 認証中エラー
    */
   public static final String A0001 = "A0001";
