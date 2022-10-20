@@ -197,8 +197,14 @@ public class ServiceInstancesResources {
         val itemMap = gson.fromJson(vo.getInherentJson(), Map.class);
         if (itemMap.get("items") != null) {
           val items = (List<Map<String, Object>>) itemMap.get("items");
-          result = items.stream().collect(Collectors.toMap((param) -> (String) param.get("title"),
-              (param) -> ((Double) param.get("value")).longValue()));
+          result = items.stream()
+              .collect(Collectors.toMap((param) -> (String) param.get("title"), (param) -> {
+                var value = param.get("value");
+                if (value instanceof Double) {
+                  return ((Double) value).longValue();
+                }
+                return Long.parseLong(String.valueOf(param.get("value")));
+              }));
         }
       }
     } catch (Exception e) {
