@@ -21,9 +21,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SumUpCheckResultVo extends ObjectVo {
 
-  Boolean benefitGroupTypeBlResult;
+  Boolean result;
 
-  Boolean benefitGroupTypeBylawResult;
+  String benefitGroupTypeName;
+
+  String benefitGroupTypeCode;
 
   String targetType;
 }

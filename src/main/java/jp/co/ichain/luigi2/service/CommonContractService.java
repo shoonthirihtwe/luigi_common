@@ -1,9 +1,11 @@
 package jp.co.ichain.luigi2.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import lombok.val;
 
 /**
  * 共通契約関連サービス
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-10-27
  * @updatedAt : 2021-10-27
@@ -97,51 +99,40 @@ public class CommonContractService {
    * @author : [AOT] g.kim
    * @createdAt : 2022-09-27
    * @updatedAt : 2022-09-27
-   * @param param= {tenantId, customerId, onlineDate, updatedBy}
+   * @param param= {tenantId, customerIdList, onlineDate, updatedBy}
    * @param role ("PH", "IN")
    * @return SumUpCheckResultVo
    * @throws JSONException
    */
-  public SumUpCheckResultVo checkSumUp(Map<String, Object> param, String role, TableInfo table)
-      throws JSONException {
+  public List<SumUpCheckResultVo> checkSumUp(Map<String, Object> param, String role,
+      TableInfo table) throws JSONException {
 
-    val result = new SumUpCheckResultVo();
     if (role.equals(Role.PH.toString()) || role.equals(Role.IN.toString())) {
       param.put("targetType", role);
-      result.setTargetType(role);
     } else {
       return null;
     }
 
-    val benefitSumUp = mapper.selectSumUpBenefits(param);
+    val resultList = new ArrayList<SumUpCheckResultVo>();
+    val sumUpBenefits = mapper.selectSumUpBenefits(param);
 
-    int sum = 0;
-    int maxSum = 0;
-    for (val benefit : benefitSumUp) {
-      if (benefit.getBenefitGroupTypeBl() != null) {
-        sum += benefit.getSumUpValue();
-        param.put("benefitGroupTypeBl", benefit.getBenefitGroupTypeBl());
-        param.put("benefitGroupType", benefit.getBenefitGroupTypeBl());
-        sum += mapper.selectSumUpRiskHeaders(param);
-        maxSum += mapper.selectSumUpAmount(param);
+
+    for (val benefit : sumUpBenefits) {
+      param.put("benefitGroupType", benefit.get("benefitGroupType"));
+      val sumUpMaps = mapper.selectSumUpCheckMaps(param);
+      if (sumUpMaps != null) {
+        val result = new SumUpCheckResultVo();
+        result.setBenefitGroupTypeCode(sumUpMaps.getBenefitGroupType());
+        result.setBenefitGroupTypeName(sumUpMaps.getBenefitGroupTypeName());
+        result.setResult(sumUpMaps.getSumUpAmount() >= (benefit.get("sumUpValue") == null ? 0
+            : Integer.parseInt(String.valueOf(benefit.get("sumUpValue")))));
+        result.setTargetType(role);
+        resultList.add(result);
       }
     }
-    result.setBenefitGroupTypeBlResult(sum <= maxSum);
-    param.put("benefitGroupTypeBl", null);
-    sum = 0;
-    maxSum = 0;
-    for (val benefit : benefitSumUp) {
-      if (benefit.getBenefitGroupTypeBylaw() != null) {
-        sum += benefit.getSumUpValue();
-        param.put("benefitGroupTypeBylaw", benefit.getBenefitGroupTypeBylaw());
-        param.put("benefitGroupType", benefit.getBenefitGroupTypeBylaw());
-        sum += mapper.selectSumUpRiskHeaders(param);
-        maxSum += mapper.selectSumUpAmount(param);
-      }
-    }
-    result.setBenefitGroupTypeBylawResult(sum <= maxSum);
-    insertSumUpCheckResult(param, result, table);
-    return result;
+
+    insertSumUpCheckResult(param, resultList, table, role);
+    return resultList;
   }
 
   /**
@@ -151,28 +142,32 @@ public class CommonContractService {
    * @createdAt : 2022-09-27
    * @updatedAt : 2022-09-27
    */
-  private void insertSumUpCheckResult(Map<String, Object> param, SumUpCheckResultVo result,
-      TableInfo table) throws JSONException {
+  private void insertSumUpCheckResult(Map<String, Object> param,
+      List<SumUpCheckResultVo> resultList, TableInfo table, String role) throws JSONException {
 
-    JSONObject policyHolderBl = new JSONObject();
-    policyHolderBl.put("target",
-        result.getTargetType().equals(Role.PH.toString()) ? "契約者" : "被保険者");
-    policyHolderBl.put("result", result.getBenefitGroupTypeBlResult());
-    JSONObject businessLaw = new JSONObject();
-    businessLaw.put("check_name", "通算チェック　業法");
-    businessLaw.put("policy_holder", policyHolderBl);
+    boolean isPolicy = false;
+    if (role.equals(Role.PH.toString())) {
+      isPolicy = true;
+    }
+    JSONArray policyHolderCheckList = new JSONArray();
+    JSONArray insuredCheckList = new JSONArray();
+    for (val result : resultList) {
 
-    JSONObject policyHolderBylaw = new JSONObject();
-    policyHolderBylaw.put("target",
-        result.getTargetType().equals(Role.PH.toString()) ? "契約者" : "被保険者");
-    policyHolderBylaw.put("result", result.getBenefitGroupTypeBlResult());
-    JSONObject businessBylaw = new JSONObject();
-    businessBylaw.put("check_name", "通算チェック　業法");
-    businessBylaw.put("policy_holder", policyHolderBylaw);
-    JSONObject sumUpCheck = new JSONObject();
-    sumUpCheck.put("business_law", businessLaw);
-    sumUpCheck.put("bylaw", businessBylaw);
-    param.put("json", sumUpCheck);
+      JSONObject check = new JSONObject();
+      check.put("benefit_group_type_code", result.getBenefitGroupTypeCode());
+      check.put("benefit_group_type_name", result.getBenefitGroupTypeName());
+      check.put("result", result.getResult());
+      if (isPolicy) {
+        policyHolderCheckList.put(check);
+      } else {
+        insuredCheckList.put(check);
+      }
+    }
+    if (isPolicy) {
+      param.put("policyHolderJson", policyHolderCheckList.toString());
+    } else {
+      param.put("insuredJson", insuredCheckList.toString());
+    }
     mapper.updateSumupCheckResult(param, table.name().toString());
   }
 }

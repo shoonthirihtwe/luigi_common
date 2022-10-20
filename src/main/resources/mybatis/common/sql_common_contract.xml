@@ -178,74 +178,73 @@
             tenant_id = #{tenantId}
             AND contract_no = #{contractNo}
     </select>
-    <select id="selectSumUpBenefits" resultType="BenefitsVo" parameterType="hashmap">
+    <select id="selectSumUpBenefits" resultType="map" parameterType="hashmap">
         SELECT 
-            b.benefit_group_type_bl,
-            b.benefit_group_type_bylaw,
-            IFNULL(SUM(IFNULL(b.sum_up_value, 0)), 0)
+            bg.benefit_group_type AS benefitGroupType,
+            IFNULL(SUM(IFNULL(b.sum_up_value, 0)), 0) AS sumUpValue
         FROM
             contracts c
             JOIN benefits b ON c.sales_plan_code=b.sales_plan_code
             AND c.sales_plan_type_code=b.sales_plan_type_code
             AND c.tenant_id=b.tenant_id
+            JOIN benefits_mt_benefit_group_types bg ON bg.tenant_id=c.tenant_id
+            AND bg.sales_plan_code=c.sales_plan_code
+            AND bg.sales_plan_type_code=c.sales_plan_type_code
         WHERE
             c.tenant_id = #{tenantId}
             AND (c.contract_status='U' OR c.contract_status='40')
             <if test="targetType =='PH'">
-            AND c.contractor_customer_id = #{customerId}
+            AND c.contractor_customer_id IN
+            <foreach collection="customerIdList" item="customerId" index="index" separator="," open="(" close=")">
+             #{customerId}
+             </foreach>
             </if>
             <if test="targetType =='IN'">
-            AND c.insured_customer_id = #{customerId}
+            AND c.insured_customer_id IN 
+            <foreach collection="customerIdList" item="customerId" index="index" separator="," open="(" close=")">
+             #{customerId}
+             </foreach>
             </if>
-            group by b.benefit_group_type_bl, b.benefit_group_type_bylaw
+            group by bg.benefit_group_type
     </select>
-    <select id="selectSumUpRiskHeaders" resultType="Integer" parameterType="hashmap">
+    <select id="selectSumUpCheckMaps" resultType="SumUpCheckMapsVo" parameterType="hashmap">
         SELECT 
-            IFNULL(SUM(IFNULL(rh.sum_up_value, 0)), 0)
+            bgt.type_code AS benefitGroupType,
+            bgt.type_name AS benefitGroupTypeName,
+            sm.sum_up_amount,
+            sm.target_type
         FROM
-            contracts c 
-            JOIN risk_headers rh ON 
-            c.contract_no=rh.contract_no
-            AND c.contract_branch_no=rh.contract_branch_no
-            AND c.tenant_id=rh.tenant_id
+            benefits_mt_benefit_group_types bg 
+            JOIN sum_up_check_maps sm ON bg.tenant_id=sm.tenant_id
+            AND bg.benefit_group_type=sm.benefit_group_type
+            JOIN benefit_group_types bgt ON sm.tenant_id=bgt.tenant_id
+            AND sm.benefit_group_type=bgt.type_code
         WHERE
-            c.tenant_id = #{tenantId}
-            AND (c.contract_status='U' OR c.contract_status='40')
-            AND rh.active_inactive="A"
-            <if test="benefitGroupTypeBl != null">
-            AND rh.benefit_group_type_bl=#{benefitGroupTypeBl}
-            </if>
-            <if test="benefitGroupTypeBylaw != null">
-            AND rh.benefit_group_type_bylaw=#{benefitGroupType}
-            </if>
-            <if test="targetType =='PH'">
-            AND c.contractor_customer_id = #{customerId}
-            </if>
-            <if test="targetType =='IN'">
-            AND c.insured_customer_id = #{customerId}
-            </if>
-    </select>
-    <select id="selectSumUpAmount" resultType="Integer" parameterType="hashmap">
-        SELECT 
-            SUM(IFNULL(sum_up_amount, 0))
-        FROM
-            sum_up_check_maps
-        WHERE
-            tenant_id = #{tenantId}
-            AND target_type=#{targetType}
-            AND benefit_group_type =#{benefitGroupType}
+            bg.tenant_id = #{tenantId}
+            AND sm.target_type=#{targetType}
+            AND sm.benefit_group_type=#{benefitGroupType}
             AND (start_date <![CDATA[<=]]> #{onlineDate} AND end_date >= #{onlineDate})
+            group by sm.benefit_group_type
     </select>
     <update id="updateSumupCheckResult" parameterType="hashmap">
         UPDATE 
             ${table}
         <set>
-            inherent_underwritings_result=JSON_SET(COALESCE(`inherent_underwritings_result`,JSON_OBJECT('auto_underwriting','{}'))),'$.sum_up_check',#{json}),
+            inherent_underwritings_result=JSON_SET(IFNULL(inherent_underwritings_result,'{}'), '$.auto_underwriting', IFNULL(inherent_underwritings_result->'$.auto_underwriting', JSON_OBJECT())),
+            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check', JSON_OBJECT())),
+            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.policy_holder', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check.policy_holder', CAST('{"target":"契約者","check_list":[]}' AS JSON))),
+            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.insured', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check.insured', CAST('{"target":"被保険者","check_list":[]}' AS JSON))),
+            <if test="paramMap.policyHolderJson != null">
+            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.policy_holder.check_list', CAST(#{paramMap.policyHolderJson} AS JSON)),
+            </if>
+            <if test="paramMap.insuredJson != null">
+            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.insured.check_list', CAST(#{paramMap.insuredJson} AS JSON)),
+            </if>
             update_count=update_count + 1,
-            updated_by=#{updatedBy}
+            updated_by=#{paramMap.updatedBy}
         </set>
         WHERE
-            tenant_id=#{tenantId} 
-        AND contract_no =#{contractNo}
+            tenant_id=#{paramMap.tenantId} 
+        AND contract_no =#{paramMap.contractNo}
     </update>
 </mapper>

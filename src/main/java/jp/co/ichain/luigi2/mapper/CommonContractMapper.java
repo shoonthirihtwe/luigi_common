@@ -10,10 +10,11 @@ import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
 import jp.co.ichain.luigi2.vo.ClaimHeadersVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
 import jp.co.ichain.luigi2.vo.RiskHeadersVo;
+import jp.co.ichain.luigi2.vo.SumUpCheckMapsVo;
 
 /**
  * ContractMapper
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-10-27
  * @updatedAt : 2021-10-27
@@ -24,7 +25,7 @@ public interface CommonContractMapper {
 
   /**
    * 保障内容照会
-   * 
+   *
    * @author : [VJP] タン
    * @createdAt : 2021-06-22
    * @updatedAt : 2021-06-22
@@ -35,7 +36,7 @@ public interface CommonContractMapper {
 
   /**
    * 保障内容を取得
-   * 
+   *
    * @author : [VJP] タン
    * @createdAt : 2021-06-22
    * @updatedAt : 2021-06-22
@@ -46,7 +47,7 @@ public interface CommonContractMapper {
 
   /**
    * 請求者情報
-   * 
+   *
    * @author : [VJP] ホアン
    * @createdAt : 2021-10-30
    * @updatedAt : 2021-10−30
@@ -57,7 +58,7 @@ public interface CommonContractMapper {
 
   /**
    * 被保険者取得
-   * 
+   *
    * @author : [VJP] ホアン
    * @createdAt : 2021-10-28
    * @updatedAt : 2021-10−28
@@ -68,7 +69,7 @@ public interface CommonContractMapper {
 
   /**
    * 死亡保険金受取人取得
-   * 
+   *
    * @author : [VJP] ホアン
    * @createdAt : 2021-10-28
    * @updatedAt : 2021-10−28
@@ -79,7 +80,7 @@ public interface CommonContractMapper {
 
   /**
    * 最新証券番号枝番取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2022-07-13
    * @updatedAt : 2022-07−13
@@ -97,7 +98,7 @@ public interface CommonContractMapper {
    * @param
    * @return
    */
-  List<BenefitsVo> selectSumUpBenefits(Map<String, Object> param);
+  List<Map<String, Object>> selectSumUpBenefits(Map<String, Object> param);
 
   /**
    * RiskHeaders合計値取得
@@ -108,7 +109,7 @@ public interface CommonContractMapper {
    * @param
    * @return
    */
-  Integer selectSumUpRiskHeaders(Map<String, Object> param);
+  List<RiskHeadersVo> selectSumUpRiskHeaders(Map<String, Object> param);
 
   /**
    * 上限額取得
@@ -119,7 +120,7 @@ public interface CommonContractMapper {
    * @param
    * @return
    */
-  Integer selectSumUpAmount(Map<String, Object> param);
+  SumUpCheckMapsVo selectSumUpCheckMaps(Map<String, Object> param);
 
   /**
    * 通算チェック結果更新
@@ -130,5 +131,5 @@ public interface CommonContractMapper {
    * @param
    * @return
    */
-  Integer updateSumupCheckResult(Map<String, Object> param, @Param("tableName") String tableName);
+  Integer updateSumupCheckResult(@Param("paramMap") Map<String, Object> param, @Param("table") String tableName);
 }

@@ -107,14 +107,6 @@ public class BenefitsVo extends ObjectVo {
    * 待機日数
    */
   Integer waitingDays;
-  /**
-   * 保険金・給付金グループタイプ
-   */
-  String benefitGroupTypeBl;
-  /**
-   * 保険金・給付金グループタイプ
-   */
-  String benefitGroupTypeBylaw;
   /*
    * 通算使用値
    */
