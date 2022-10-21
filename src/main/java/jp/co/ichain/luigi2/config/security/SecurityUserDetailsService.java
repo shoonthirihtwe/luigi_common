@@ -16,7 +16,7 @@ import lombok.val;
 
 /**
  * ユーザー情報サービス
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-07-02
  * @updatedAt : 2021-07-02
@@ -40,11 +40,11 @@ public class SecurityUserDetailsService implements UserDetailsService {
     userVo.setLastLoginAt(new Date(Long.parseLong(tmp[2])));
     if (userVo != null) {
       SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
-      val authorities = authService.loginUser(userVo);
-      if (authorities != null) {
+      val roles = authService.getUserRole(userVo);
+      if (roles != null) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        for (val authority : authorities) {
-          grantedAuthorities.add(new SimpleGrantedAuthority(authority.getFunctionId()));
+        for (val role : roles) {
+          grantedAuthorities.add(new SimpleGrantedAuthority(role));
         }
         userDetails.setUser(userVo);
       } else {

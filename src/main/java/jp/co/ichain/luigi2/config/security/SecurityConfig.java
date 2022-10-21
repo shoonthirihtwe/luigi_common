@@ -26,7 +26,7 @@ import lombok.val;
 
 /**
  * Security設定
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-07-02
  * @updatedAt : 2021-07-02
@@ -64,13 +64,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().and()
         .cors();
     http.authorizeRequests()
-        .antMatchers("/login", "/logout", "/err/**", "/s/**", "/p/**", "/actuator/**")
-        .permitAll();
+        .antMatchers("/login", "/logout", "/err/**", "/s/**", "/p/**", "/actuator/**").permitAll();
     http.authorizeRequests().antMatchers("/u/**").authenticated();
 
-    for (val functionId : commonMapper.selectFunctionId()) {
-      http.authorizeRequests().antMatchers("/" + functionId).hasAnyAuthority(functionId);
-    }
+    /*
+     * for (val functionId : commonMapper.selectFunctionId()) {
+     * http.authorizeRequests().antMatchers("/" + functionId).hasAnyAuthority(functionId); }
+     */
+    http.authorizeRequests().antMatchers("/**")
+        .access("@authorizationChecker.check(request, authentication)");
 
     http.authorizeRequests().anyRequest().denyAll();
   }

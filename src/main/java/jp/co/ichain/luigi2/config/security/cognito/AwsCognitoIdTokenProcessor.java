@@ -18,14 +18,13 @@ import jp.co.ichain.luigi2.config.security.SecurityUserDetails;
 import jp.co.ichain.luigi2.config.security.SecurityUserDetailsImpl;
 import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.service.AuthService;
-import jp.co.ichain.luigi2.vo.AuthoritiesVo;
 import jp.co.ichain.luigi2.vo.TenantsVo;
 import jp.co.ichain.luigi2.vo.UsersVo;
 import lombok.val;
 
 /**
  * AwsCognitoIdTokenProcessor
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-07-02
  * @updatedAt : 2021-07-02
@@ -53,20 +52,21 @@ public class AwsCognitoIdTokenProcessor {
 
   @Value("${external.api.flag}")
   Boolean isExternalApi;
-  
+
   @Value("${external.api.roles}")
   String externalApiRoles;
 
   public Authentication authenticate(HttpServletRequest request) throws Exception {
 
-    List<AuthoritiesVo> authorities = null;
+    List<String> roles = null;
     UsersVo userVo = null;
 
     // テストのためのログイン認証
     // idTokenがあればその認証情報に上書きされる
     if (isDebugMode) {
       userVo = authService.getCurrentUser();
-      authorities = authService.getAdminAuth(userVo);
+      roles = new ArrayList<String>();
+      roles.add("admin");
     }
 
     TenantsVo tenantsVo = null;
@@ -81,7 +81,8 @@ public class AwsCognitoIdTokenProcessor {
       userVo.setTenantId(tenantsVo.getId());
       userVo.setId(1);
       userVo.setLastLoginAt(tenantsVo.getOnlineDate());
-      authorities = authService.getApiAuth(userVo, externalApiRoles);
+      roles = new ArrayList<String>();
+      roles.add(externalApiRoles);
     } else {
       String domain = request.getHeader("x-frontend-domain");
 
@@ -113,15 +114,15 @@ public class AwsCognitoIdTokenProcessor {
           userVo.setSub(username);
           userVo.setTenantId(tenantsVo.getId());
           userVo.setLastLoginAt(tenantsVo.getOnlineDate());
-          authorities = authService.loginUser(userVo);
+          roles = authService.getUserRole(userVo);
         }
       }
     }
 
-    if (authorities != null) {
+    if (roles != null) {
       List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-      for (val authority : authorities) {
-        grantedAuthorities.add(new SimpleGrantedAuthority(authority.getFunctionId()));
+      for (val role : roles) {
+        grantedAuthorities.add(new SimpleGrantedAuthority(role));
       }
 
       UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
