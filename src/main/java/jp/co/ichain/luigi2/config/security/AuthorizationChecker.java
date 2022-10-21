@@ -9,6 +9,13 @@ import org.springframework.util.AntPathMatcher;
 import jp.co.ichain.luigi2.resources.AuthoritiesResources;
 import lombok.val;
 
+/**
+ * リクエスト権限チェック
+ *
+ * @author : [AOT] g.kim
+ * @createdAt : 2022-10-21
+ * @updatedAt : 2022-10-21
+ */
 @Component
 public class AuthorizationChecker {
 
