@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -96,14 +97,14 @@ public class AuthoritiesResources {
    * @throws JsonMappingException
    */
   @Cacheable(key = "{ #tenantId }", value = "AuthorityResources::get")
-  public Map<String, Map<Integer, List<String>>> get(Integer tenantId)
+  public Map<String, Map<Integer, Map<String, AuthoritiesVo>>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
     val authorities = commonMapper.selectAuthorities(tenantId);
     if (authorities != null && authorities.size() != 0) {
       val resultOptional = authorities.stream()
           .collect(Collectors.groupingBy(AuthoritiesVo::getRoleId,
               Collectors.groupingBy(AuthoritiesVo::getApiYn,
-                  Collectors.mapping(AuthoritiesVo::getFunctionId, Collectors.toList()))));
+                  Collectors.toMap(AuthoritiesVo::getFunctionId, Function.identity()))));
       return resultOptional;
     }
     return null;
@@ -124,12 +125,35 @@ public class AuthoritiesResources {
       throws JsonMappingException, JsonProcessingException {
     val ids = new ArrayList<String>();
     for (val role : roleIds) {
-      val list = self.get(tenantId).get(role).get(apiYn ? 1 : 0);
-      if (list != null) {
-        ids.addAll(list);
+      val functionIdSet = self.get(tenantId).get(role).get(apiYn ? 1 : 0).keySet();
+      if (functionIdSet != null) {
+        ids.addAll(functionIdSet);
       }
     }
     return ids;
   }
 
+  /**
+   * 機能ID確認
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-10-21
+   * @updatedAt : 2022-10-21
+   * @param vo
+   * @return
+   * @throws JsonProcessingException
+   * @throws JsonMappingException
+   */
+  public boolean isAuthorityFunctionIds(Integer tenantId, List<String> roleIds, boolean apiYn,
+      String functionId) throws JsonMappingException, JsonProcessingException {
+    for (val role : roleIds) {
+      val functionIdSet = self.get(tenantId).get(role).get(apiYn ? 1 : 0).keySet();
+      if (functionIdSet != null) {
+        if (functionIdSet.contains(functionId)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }

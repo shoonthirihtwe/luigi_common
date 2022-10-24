@@ -27,16 +27,12 @@ public class AuthorizationChecker {
     val roles = authentication.getAuthorities().stream().map(vo -> vo.getAuthority())
         .collect(Collectors.toList());
     try {
-      val functionList = authoritiesResources
-          .getAuthorityFunctionIds(userDetails.getCurrentUser().getTenantId(), roles, true);
-      val uri = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
-      if (functionList.contains(uri)) {
-        return true;
-      }
+      val functionId =
+          request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
+      return authoritiesResources.isAuthorityFunctionIds(userDetails.getCurrentUser().getTenantId(),
+          roles, true, functionId);
     } catch (Exception e) {
       return false;
     }
-
-    return false;
   }
 }
