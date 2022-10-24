@@ -196,7 +196,7 @@ public class Validity {
                 } else {
                   vitem = convert(validityVo, parentKey, idx, key, vitem, tenantId, exList);
 
-                  paramMap.put(key, vitem);
+                  list.set(i, vitem);
                   validateData(validityVo, serviceInstanceMap, exList, parentKey, i, key, vitem,
                       tenantId, validityVo.getIsChildrenCondition());
                 }

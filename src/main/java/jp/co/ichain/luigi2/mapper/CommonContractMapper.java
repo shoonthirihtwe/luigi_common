@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
-import jp.co.ichain.luigi2.vo.BenefitsVo;
 import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
 import jp.co.ichain.luigi2.vo.ClaimHeadersVo;
 import jp.co.ichain.luigi2.vo.ContractsVo;
