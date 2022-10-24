@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.exception.WebConditionException;
@@ -47,7 +48,7 @@ public class Validity {
    * @updatedAt : 2021-06-08
    */
   enum Vtype {
-    STRING, BOOL, INT, DATE, FRACTION, OBJECT
+    STRING, BOOL, INT, DATE, FRACTION, OBJECT, FILE
   }
 
   /**
@@ -173,6 +174,11 @@ public class Validity {
         val type = Vtype.valueOf(validityVo.getType());
 
         if (validityVo.getArray()) {
+
+          // Required
+          if (validityVo.getRequired() && data == null) {
+            exList.add(new WebParameterException(Luigi2ErrorCode.V0001, key));
+          }
           // Condition
           if (validityVo.getIsChildrenCondition() == false) {
             validateCondition(validityVo, parentKey, idx, key, data, tenantId, exList);
@@ -184,14 +190,23 @@ public class Validity {
 
               for (int i = 0; i < size; i++) {
                 val item = list.get(i);
-                validate(validityVo, serviceInstanceMap, exList, parentKey, i, key, item, tenantId,
-                    validityVo.getIsChildrenCondition());
+                var vitem = validateType(type, item, exList);
+                if (item != null && vitem == null) {
+                  exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
+                } else {
+                  vitem = convert(validityVo, parentKey, idx, key, vitem, tenantId, exList);
+
+                  paramMap.put(key, vitem);
+                  validateData(validityVo, serviceInstanceMap, exList, parentKey, i, key, vitem,
+                      tenantId, validityVo.getIsChildrenCondition());
+                }
               }
             } else {
               List<Map<String, Object>> list = (List<Map<String, Object>>) data;
+              val objValidityMap = (Map<String, Object>) validity;
               for (val map : list) {
-                validate(validityVo, serviceInstanceMap, exList, parentKey, idx, key, map,
-                    tenantId, validityVo.getIsChildrenCondition());
+                validate(validityMap, objValidityMap, tenantId, key, null,
+                    (Map<String, Object>) map, exList);
               }
             }
 
@@ -202,12 +217,13 @@ public class Validity {
           var vdata = validateType(type, data, exList);
           if (data != null && vdata == null) {
             exList.add(new WebParameterException(Luigi2ErrorCode.V0005, key));
-          }
-          vdata = convert(validityVo, parentKey, idx, key, vdata, tenantId, exList);
+          } else {
+            vdata = convert(validityVo, parentKey, idx, key, vdata, tenantId, exList);
 
-          paramMap.put(key, vdata);
-          validate(validityVo, serviceInstanceMap, exList, parentKey, idx, key, vdata, tenantId,
-              true);
+            paramMap.put(key, vdata);
+            validateData(validityVo, serviceInstanceMap, exList, parentKey, idx, key, data,
+                tenantId, true);
+          }
         }
       }
     }
@@ -235,7 +251,7 @@ public class Validity {
    * @throws IllegalArgumentException
    * @throws InvocationTargetException
    */
-  private void validate(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
+  private void validateData(ValidityVo validityVo, Map<String, Object> serviceInstanceMap,
       List<WebException> exList, String parentKey, Integer idx, String key, Object data,
       Integer tenantId, boolean isChildrenCondition)
       throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException,
@@ -322,8 +338,7 @@ public class Validity {
    * @throws InvocationTargetException
    */
   public Object convert(ValidityVo validityVo, String parentKey, Integer idx, String key,
-      Object data, Integer tenantId,
-      List<WebException> exList)
+      Object data, Integer tenantId, List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     if (validityVo.getConversion() != null && data != null) {
       val conditionMethod = validityVo.getConversion();
@@ -355,8 +370,7 @@ public class Validity {
    */
   @SuppressWarnings("unchecked")
   public void validateCondition(ValidityVo validityVo, String parentKey, Integer idx, String key,
-      Object data, Integer tenantId,
-      List<WebException> exList)
+      Object data, Integer tenantId, List<WebException> exList)
       throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     // Common Condition
     if (validityVo.getCondition() != null) {
@@ -403,8 +417,7 @@ public class Validity {
    */
   @SuppressWarnings("unchecked")
   private void validateFormat(String parentKey, Integer idx, String key, Object formats,
-      String strData,
-      List<WebException> exList) {
+      String strData, List<WebException> exList) {
     if (formats instanceof String) {
       if (FormatType.valueOf((String) formats) != null) {
         if (strData.matches(formatRegexMap.get(formats)) == false) {
@@ -446,8 +459,7 @@ public class Validity {
    * @param exList
    */
   private void validateRegex(String parentKey, Integer idx, String key, String regex,
-      String strData,
-      List<WebException> exList) {
+      String strData, List<WebException> exList) {
     if (strData.matches(regex) == false) {
       exList.add(new WebParameterException(Luigi2ErrorCode.V0004, key).setParentKey(parentKey)
           .setArrayIndex(idx));
@@ -504,6 +516,11 @@ public class Validity {
           } catch (Exception e) {
             return null;
           }
+        }
+        return null;
+      case FILE:
+        if (data instanceof MultipartFile) {
+          return data;
         }
         return null;
       default:
