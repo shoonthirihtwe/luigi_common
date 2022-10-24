@@ -98,6 +98,27 @@
 			allow_deny=1
 			AND api_yn=1
 	</select>
+    <select id="selectAuthorities" parameterType="map" resultType="AuthoritiesVo">
+        SELECT 
+            tenant_id,
+            function_id,
+            updated_at,
+            created_at,
+            role_id,
+            api_yn
+        FROM 
+            authorities
+        WHERE 
+            allow_deny=1
+            <if test="tenantId != null">AND tenant_id=#{tenantId}</if>
+    </select>
+    <select id="selectAuthoritiesLastUpdatedAt" resultType="VoHashMap">
+        SELECT
+            tenant_id
+            ,UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
+        FROM authorities
+        GROUP BY tenant_id
+    </select>
 	<update id="updateBatchDate" parameterType="hashmap">
 		update 
 			tenants

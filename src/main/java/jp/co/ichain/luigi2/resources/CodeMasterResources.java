@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import lombok.val;
 
@@ -38,11 +39,13 @@ public class CodeMasterResources {
   private CodeMasterResources self;
   private final ApplicationContext applicationContext;
 
+
   @Autowired
   TenantResources tenantResources;
 
   CodeMasterResources(ApplicationContext applicationContext,
-      ServiceInstancesBaseResources serviceInstancesBaseResources) {
+      ServiceInstancesBaseResources serviceInstancesBaseResources,
+      CommonMapper commonMapper) {
     this.applicationContext = applicationContext;
     this.serviceInstancesBaseResources = serviceInstancesBaseResources;
   }

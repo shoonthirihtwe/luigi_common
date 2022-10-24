@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import jp.co.ichain.luigi2.config.datasource.Luigi2Mapper;
+import jp.co.ichain.luigi2.vo.AuthoritiesVo;
 import jp.co.ichain.luigi2.vo.CodeMasterVo;
 import jp.co.ichain.luigi2.vo.FactoringCompaniesVo;
 import jp.co.ichain.luigi2.vo.SalesProductsVo;
@@ -165,8 +166,29 @@ public interface CommonMapper {
   List<String> selectFunctionId();
 
   /**
+   * 権限取得
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-10-17
+   * @updatedAt : 2022-10-17
+   * @param paramMap
+   * @return
+   */
+  List<AuthoritiesVo> selectAuthorities(@Param("tenantId") Integer tenantId);
+
+  /**
    * リソース更新用の更新日取得
-   * 
+   *
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-08-13
+   * @updatedAt : 2021-08-13
+   * @return
+   */
+  List<Map<String, Object>> selectAuthoritiesLastUpdatedAt();
+
+  /**
+   * リソース更新用の更新日取得
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-13
    * @updatedAt : 2021-08-13

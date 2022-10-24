@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.vo;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,8 +23,10 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthoritiesVo extends ObjectVo {
+public class AuthoritiesVo extends ObjectVo implements Serializable {
 
+  @Serial
+  private static final long serialVersionUID = 1L;
   /**
    * ID
    */

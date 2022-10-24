@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,26 +65,28 @@ public class AuthService {
 
   /**
    * ログイン
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-28
    * @updatedAt : 2021-07-28
    * @return
    */
-  public List<AuthoritiesVo> loginUser(UsersVo userVo) {
-
+  public List<String> getUserRole(UsersVo userVo) {
     if (userMapper.updateLoginUser(userVo) == 0) {
       throw new WebException(Luigi2ErrorCode.D0004, "account");
     }
 
-    val authorities = userMapper.getLoginUserAuth(userVo);
+    List<String> roleList = new ArrayList<String>();
+    for (val authority : userMapper.getLoginUserRole(userVo)) {
+      roleList.add(authority.getRoleId());
+    }
 
-    return authorities;
+    return roleList;
   }
 
   /**
    * Admin権限取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-28
    * @updatedAt : 2021-07-28

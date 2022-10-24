@@ -23,7 +23,7 @@ public interface UserMapper {
 
   Integer updateLoginUser(UsersVo param);
 
-  List<AuthoritiesVo> getLoginUserAuth(UsersVo param);
+  List<AuthoritiesVo> getLoginUserRole(UsersVo param);
 
   List<AuthoritiesVo> getApiAuth(@Param("tenantId") Integer tenantId, @Param("roleId") String roleId);
 
