@@ -147,11 +147,8 @@ public class AuthoritiesResources {
   public boolean isAuthorityFunctionIds(Integer tenantId, List<String> roleIds, boolean apiYn,
       String functionId) throws JsonMappingException, JsonProcessingException {
     for (val role : roleIds) {
-      val functionIdSet = self.get(tenantId).get(role).get(apiYn ? 1 : 0).keySet();
-      if (functionIdSet != null) {
-        if (functionIdSet.contains(functionId)) {
-          return true;
-        }
+      if (self.get(tenantId).get(role).get(apiYn ? 1 : 0).get(functionId) != null) {
+        return true;
       }
     }
     return false;
