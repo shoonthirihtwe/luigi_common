@@ -2,9 +2,9 @@ package jp.co.ichain.luigi2.resources;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.ejb.Lock;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
-import jp.co.ichain.luigi2.resources.code.Luigi2CodeCommon.FlagCode;
 import jp.co.ichain.luigi2.vo.AuthoritiesVo;
 import lombok.val;
 
@@ -97,9 +96,17 @@ public class AuthoritiesResources {
    * @throws JsonMappingException
    */
   @Cacheable(key = "{ #tenantId }", value = "AuthorityResources::get")
-  public List<AuthoritiesVo> get(Integer tenantId)
+  public Map<String, Map<Integer, List<String>>> get(Integer tenantId)
       throws JsonMappingException, JsonProcessingException {
-    return commonMapper.selectAuthorities(tenantId);
+    val authorities = commonMapper.selectAuthorities(tenantId);
+    if (authorities != null && authorities.size() != 0) {
+      val resultOptional = authorities.stream()
+          .collect(Collectors.groupingBy(AuthoritiesVo::getRoleId,
+              Collectors.groupingBy(AuthoritiesVo::getApiYn,
+                  Collectors.mapping(AuthoritiesVo::getFunctionId, Collectors.toList()))));
+      return resultOptional;
+    }
+    return null;
   }
 
   /**
@@ -113,99 +120,16 @@ public class AuthoritiesResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public List<String> getAuthorityFunctionIds(Integer tenantId, List<String> roles, boolean apiYn)
+  public List<String> getAuthorityFunctionIds(Integer tenantId, List<String> roleIds, boolean apiYn)
       throws JsonMappingException, JsonProcessingException {
-    val authorities = self.getAuthorities(tenantId, apiYn);
-    val functionList = new ArrayList<String>();
-    for (val role : roles) {
-      functionList.addAll(authorities.stream().filter(vo -> vo.getRoleId().equals(role))
-          .map(vo -> vo.getFunctionId()).collect(Collectors.toList()));
-    }
-    return functionList;
-
-  }
-
-  /**
-   * 情報取得
-   *
-   * @author : [AOT] g.kim
-   * @createdAt : 2022-03-17
-   * @updatedAt : 2022-03-17
-   * @param tenantId
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
-   */
-
-  public Date getLastUpdatedAt(Integer tenantId)
-      throws JsonMappingException, JsonProcessingException {
-
-    if (self == null) {
-      initialize();
-    }
-
-    // last updatedAt
-    return self.get(tenantId).stream()
-        .map(vo -> vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt())
-        .max(Comparator.comparing(updatedAt -> updatedAt.getTime())).orElse(null);
-  }
-
-  /**
-   * 情報取得
-   *
-   * @author : [AOT] g.kim
-   * @createdAt : 2021-10-01
-   * @updatedAt : 2021-10-01
-   * @param tenantId
-   * @param key
-   * @param codeValue
-   * @return
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
-   */
-  public List<AuthoritiesVo> getAuthorities(Integer tenantId, boolean apiYn)
-      throws JsonMappingException, JsonProcessingException {
-
-    val list = self.get(tenantId);
-    Integer apiFlag = apiYn ? Integer.parseInt(FlagCode.TRUE.toString())
-        : Integer.parseInt(FlagCode.FALSE.toString());
-    if (list != null) {
-      List<AuthoritiesVo> resultOptional =
-          list.stream().filter(vo -> apiFlag.equals(vo.getApiYn())).collect(Collectors.toList());
-      return resultOptional;
-    }
-    return null;
-  }
-
-  /**
-   * リソースを更新する
-   *
-   * @author : [AOT] g.kim
-   * @createdAt : 2022-10-21
-   * @updatedAt : 2022-10-21
-   */
-  public void refresh() {
-    val updatedAtResult = commonMapper.selectAuthoritiesLastUpdatedAt();
-    updatedAtResult.forEach(item -> {
-      val tenantId = ((Long) item.get("tenantId")).intValue();
-
-      try {
-        val updatedAt = self.getLastUpdatedAt(tenantId);
-        if (updatedAt == null || updatedAt.getTime() < (long) item.get("updatedAt")) {
-          // clear tenant redis data
-          RedisConnection conn = redisTemplate.getConnectionFactory().getConnection();
-          Set<byte[]> keys = conn.keys(("AuthorityResources::get::" + tenantId).getBytes());
-          for (val n : keys) {
-            conn.del(n);
-          }
-          self.initialize(tenantId);
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-          System.out
-              .println("[Authorities Refresh] Authorities Refresh : " + sdf.format(new Date()));
-        }
-      } catch (JsonProcessingException e) {
-        e.printStackTrace();
+    val ids = new ArrayList<String>();
+    for (val role : roleIds) {
+      val list = self.get(tenantId).get(role).get(apiYn ? 1 : 0);
+      if (list != null) {
+        ids.addAll(list);
       }
-    });
+    }
+    return ids;
   }
 
 }

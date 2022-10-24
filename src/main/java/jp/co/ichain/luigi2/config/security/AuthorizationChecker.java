@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import jp.co.ichain.luigi2.resources.AuthoritiesResources;
 import lombok.val;
 
@@ -30,10 +29,9 @@ public class AuthorizationChecker {
     try {
       val functionList = authoritiesResources
           .getAuthorityFunctionIds(userDetails.getCurrentUser().getTenantId(), roles, true);
-      for (val functionId : functionList) {
-        if (new AntPathMatcher().match("/**/" + functionId, request.getRequestURI())) {
-          return true;
-        }
+      val uri = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
+      if (functionList.contains(uri)) {
+        return true;
       }
     } catch (Exception e) {
       return false;

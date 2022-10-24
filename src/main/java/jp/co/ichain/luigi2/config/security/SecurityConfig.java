@@ -67,10 +67,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/login", "/logout", "/err/**", "/s/**", "/p/**", "/actuator/**").permitAll();
     http.authorizeRequests().antMatchers("/u/**").authenticated();
 
-    /*
-     * for (val functionId : commonMapper.selectFunctionId()) {
-     * http.authorizeRequests().antMatchers("/" + functionId).hasAnyAuthority(functionId); }
-     */
     http.authorizeRequests().antMatchers("/**")
         .access("@authorizationChecker.check(request, authentication)");
 
