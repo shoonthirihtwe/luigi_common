@@ -55,7 +55,11 @@ public class CommonNomalCondition {
     try {
       time = sdf.parse(data.toString()).getTime();
     } catch (Exception e) {
-      time = (Long) data;
+      if (data instanceof String) {
+        time = Long.valueOf((String) data);
+      } else {
+        time = (Long) data;
+      }
     }
     return time >= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
@@ -79,7 +83,11 @@ public class CommonNomalCondition {
     try {
       time = sdf.parse(data.toString()).getTime();
     } catch (Exception e) {
-      time = (Long) data;
+      if (data instanceof String) {
+        time = Long.valueOf((String) data);
+      } else {
+        time = (Long) data;
+      }
     }
     return time <= tenantResources.get(tenantId).getOnlineDate().getTime();
   }
