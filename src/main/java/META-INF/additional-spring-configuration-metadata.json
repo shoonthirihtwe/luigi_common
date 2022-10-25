@@ -200,16 +200,6 @@
     "description": "A description for 'dynamo.region'"
   },
   {
-    "name": "dynamo.ba002.keys",
-    "type": "java.lang.String",
-    "description": "A description for 'dynamo.ba002.keys'"
-  },
-  {
-    "name": "dynamo.ba002.table",
-    "type": "java.lang.String",
-    "description": "A description for 'dynamo.ba002.table'"
-  },
-  {
     "name": "newbusiness.sender.email.clients",
     "type": "java.lang.String",
     "description": "A description for 'newbusiness.sender.email.clients'"
@@ -253,5 +243,15 @@
     "name": "luigi2.s3.text.path",
     "type": "java.lang.String",
     "description": "A description for 'luigi2.s3.text.path'"
+  },
+  {
+    "name": "dynamo.ba003.keys",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.ba003.keys'"
+  },
+  {
+    "name": "dynamo.ba003.table",
+    "type": "java.lang.String",
+    "description": "A description for 'dynamo.ba003.table'"
   }
 ]}
