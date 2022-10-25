@@ -55,10 +55,6 @@ public class CommonContractService {
     // 保障内容照会情報を取得
     ContractsVo contracts = mapper.selectContracts(param);
 
-    if (contracts == null) {
-      throw new WebException(Luigi2ErrorCode.C0001);
-    }
-
     // 指定なしの場合は当日
     if (param.get("baseDate") == null) {
       // 基準日
