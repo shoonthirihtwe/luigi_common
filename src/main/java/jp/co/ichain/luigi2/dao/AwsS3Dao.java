@@ -202,9 +202,8 @@ public class AwsS3Dao {
         return (int) (df2.getCreatedAt().getTime() - df1.getCreatedAt().getTime());
       }
     });
-
     paramMap.put("totalCount", fileList.size());
-    return fileList.stream().skip(page * rowCount).limit(rowCount).collect(Collectors.toList());
+    return fileList.stream().skip(page).limit(rowCount).collect(Collectors.toList());
 
   }
 
@@ -252,7 +251,7 @@ public class AwsS3Dao {
     long ftime = fromDate.getTime();
     long ttime = toDate.getTime();
 
-    return (ArrayList<S3ObjectSummary>) summaryList.stream().filter(summary -> {
+    return summaryList.stream().filter(summary -> {
       long time;
       try {
         time = sdf.parse(summary.getKey().split("_")[2].substring(0, 8)).getTime();
