@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.mapper.CommonContractMapper;
 import jp.co.ichain.luigi2.resources.Luigi2ErrorCode;
-import jp.co.ichain.luigi2.resources.Luigi2TableInfo.TableInfo;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeMaintenanceRequestsCustomer.Role;
 import jp.co.ichain.luigi2.vo.ClaimContractSearchVo;
 import jp.co.ichain.luigi2.vo.ClaimCustomerVo;
@@ -103,8 +102,8 @@ public class CommonContractService {
    * @return SumUpCheckResultVo
    * @throws JSONException
    */
-  public List<SumUpCheckResultVo> checkSumUp(Map<String, Object> param, String role,
-      TableInfo table) throws JSONException {
+  public List<SumUpCheckResultVo> checkSumUp(Map<String, Object> param, String role, String table)
+      throws JSONException {
 
     if (role.equals(Role.PH.toString()) || role.equals(Role.IN.toString())) {
       param.put("targetType", role);
@@ -142,7 +141,7 @@ public class CommonContractService {
    * @updatedAt : 2022-09-27
    */
   private void insertSumUpCheckResult(Map<String, Object> param,
-      List<SumUpCheckResultVo> resultList, TableInfo table, String role) throws JSONException {
+      List<SumUpCheckResultVo> resultList, String table, String role) throws JSONException {
 
     boolean isPolicy = false;
     if (role.equals(Role.PH.toString())) {
@@ -167,6 +166,6 @@ public class CommonContractService {
     } else {
       param.put("insuredJson", insuredCheckList.toString());
     }
-    mapper.updateSumupCheckResult(param, table.name().toString());
+    mapper.updateSumupCheckResult(param, table);
   }
 }

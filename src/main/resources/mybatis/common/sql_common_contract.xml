@@ -227,15 +227,15 @@
         UPDATE 
             ${table}
         <set>
-            inherent_underwritings_result=JSON_SET(IFNULL(inherent_underwritings_result,'{}'), '$.auto_underwriting', IFNULL(inherent_underwritings_result->'$.auto_underwriting', JSON_OBJECT())),
-            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check', JSON_OBJECT())),
-            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.policy_holder', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check.policy_holder', CAST('{"target":"契約者","check_list":[]}' AS JSON))),
-            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.insured', IFNULL(inherent_underwritings_result->'$.auto_underwriting.sum_up_check.insured', CAST('{"target":"被保険者","check_list":[]}' AS JSON))),
+            underwriting_result=JSON_SET(IFNULL(underwriting_result,'{}'), '$.auto_underwriting', IFNULL(underwriting_result->'$.auto_underwriting', JSON_OBJECT())),
+            underwriting_result=JSON_SET(underwriting_result, '$.auto_underwriting.sum_up_check', IFNULL(underwriting_result->'$.auto_underwriting.sum_up_check', JSON_OBJECT())),
+            underwriting_result=JSON_SET(underwriting_result, '$.auto_underwriting.sum_up_check.policy_holder', IFNULL(underwriting_result->'$.auto_underwriting.sum_up_check.policy_holder', CAST('{"target":"契約者","check_list":[]}' AS JSON))),
+            underwriting_result=JSON_SET(underwriting_result, '$.auto_underwriting.sum_up_check.insured', IFNULL(underwriting_result->'$.auto_underwriting.sum_up_check.insured', CAST('{"target":"被保険者","check_list":[]}' AS JSON))),
             <if test="paramMap.policyHolderJson != null">
-            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.policy_holder.check_list', CAST(#{paramMap.policyHolderJson} AS JSON)),
+            underwriting_result=JSON_SET(underwriting_result, '$.auto_underwriting.sum_up_check.policy_holder.check_list', CAST(#{paramMap.policyHolderJson} AS JSON)),
             </if>
             <if test="paramMap.insuredJson != null">
-            inherent_underwritings_result=JSON_SET(inherent_underwritings_result, '$.auto_underwriting.sum_up_check.insured.check_list', CAST(#{paramMap.insuredJson} AS JSON)),
+            underwriting_result=JSON_SET(underwriting_result, '$.auto_underwriting.sum_up_check.insured.check_list', CAST(#{paramMap.insuredJson} AS JSON)),
             </if>
             update_count=update_count + 1,
             updated_by=#{paramMap.updatedBy}
