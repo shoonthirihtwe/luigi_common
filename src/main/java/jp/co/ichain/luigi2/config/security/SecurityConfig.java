@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers("/login", "/logout", "/err/**", "/s/**", "/p/**", "/actuator/**").permitAll();
     http.authorizeRequests().antMatchers("/u/**").authenticated();
-
+    http.authorizeRequests().antMatchers("/master/**").hasAuthority("master");
     http.authorizeRequests().antMatchers("/**")
         .access("@authorizationChecker.check(request, authentication)");
 
