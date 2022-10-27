@@ -239,7 +239,8 @@ public class ServiceInstancesResources {
    * @return
    */
   public boolean isReset(Integer tenantId, long updatedAtTime) {
-    if (updatedAtTime < getUpdatedAt(tenantId)) {
+    val dbUpdatedAtTime = getUpdatedAt(tenantId);
+    if (dbUpdatedAtTime != null && updatedAtTime < getUpdatedAt(tenantId)) {
       return true;
     } else {
       return false;
