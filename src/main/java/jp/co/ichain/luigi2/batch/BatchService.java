@@ -11,8 +11,7 @@ import jp.co.ichain.luigi2.vo.TenantsVo;
 
 public interface BatchService {
 
-  public void run(List<TenantsVo> tenantList)
-      throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-      JsonMappingException, JsonProcessingException, ParseException,
-      UnsupportedEncodingException, IOException;
+  public void run(List<TenantsVo> tenantList, String... args) throws IllegalAccessException,
+      IllegalArgumentException, InvocationTargetException, JsonMappingException,
+      JsonProcessingException, ParseException, UnsupportedEncodingException, IOException;
 }

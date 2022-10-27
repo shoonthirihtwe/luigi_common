@@ -5,16 +5,16 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jp.co.ichain.luigi2.batch.BatchService;
 import jp.co.ichain.luigi2.mapper.CommonBatchMapper;
+import jp.co.ichain.luigi2.resources.TenantResources;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeBillingHeaders.BillingHeaderStatus;
 import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositDetails.CashDetailStatus;
@@ -25,7 +25,6 @@ import jp.co.ichain.luigi2.resources.code.Luigi2CodeDepositHeaders.CollectionRou
 import jp.co.ichain.luigi2.resources.code.Luigi2CodePremium.PremiumStatus;
 import jp.co.ichain.luigi2.service.pay.PaymentService;
 import jp.co.ichain.luigi2.service.pay.gmo.GmoPaymentProperties;
-import jp.co.ichain.luigi2.util.CollectionUtils;
 import jp.co.ichain.luigi2.util.DateTimeUtils;
 import jp.co.ichain.luigi2.vo.BillingDetailVo;
 import jp.co.ichain.luigi2.vo.BillingDetailsVo;
@@ -59,11 +58,16 @@ public class CommonBatchService {
   @Autowired
   PaymentService paymentService;
 
+  @Autowired
+  TenantResources tenantResources;
+
   private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMdd");
+
+  final List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
 
   /**
    * バッチを実行する
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-18
    * @updatedAt : 2021-08-18
@@ -78,34 +82,26 @@ public class CommonBatchService {
     }
 
     // テナントID & バッチ日付を取得
-    List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
-    for (val tmp : CollectionUtils.safe(args[0].split(","))) {
+    if (args.length <= 1) {
+      tenantList.addAll(tenantResources.getAll());
+    } else {
       val tenant = new TenantsVo();
-      val tmp2 = tmp.split(":");
+      val tmp2 = args[1].split(":");
       tenant.setId(Integer.valueOf(tmp2[0]));
       tenant.setBatchDate(batchForamt.parse(tmp2[1]));
       tenantList.add(tenant);
     }
 
-    Set<String> keys = null;
-    if (args.length > 1) {
-      keys = new HashSet<String>();
-      keys.add(args[1]);
-    } else {
-      keys = batchMap.keySet();
+    String key = args[0];
+    log.info(key + "開始");
+    try {
+      batchMap.get(key).run(tenantList, Arrays.stream(args).skip(2).toArray(String[]::new));
+    } catch (Exception e) {
+      StringWriter sw = new StringWriter();
+      e.printStackTrace(new PrintWriter(sw));
+      log.error(sw.toString());
     }
-
-    keys.forEach(key -> {
-      log.info(key + "開始");
-      try {
-        batchMap.get(key).run(tenantList);
-      } catch (Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        log.error(sw.toString());
-      }
-      log.info(key + "完了");
-    });
+    log.info(key + "完了");
 
     if (TEST_FLAG == false) {
       System.exit(0);
