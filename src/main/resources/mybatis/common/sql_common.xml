@@ -49,7 +49,9 @@
 		<where>
 			<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
 			<if test="id != null">id=#{id}</if>
+            <if test="id == null">id!=0</if>
 			<if test="domain != null">site_url=#{domain}</if>
+            AND deleted_at is null
 		</where>
 		ORDER BY updated_at DESC
 	</select>
@@ -150,6 +152,8 @@
 	<select id="selectResourcesLastUpdatedAt" resultType="VoHashMap">
 		SELECT -1 as tenant_id, UNIX_TIMESTAMP(IFNULL(max(updated_at), max(created_at))) *1000 as updated_at
 		FROM tenants
+        WHERE 
+            deleted_at is null AND id != 0
 		UNION ALL
 		SELECT
 			tenant_id
