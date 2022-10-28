@@ -121,10 +121,14 @@ public class AuthoritiesResources {
       throws JsonMappingException, JsonProcessingException {
     val ids = new ArrayList<String>();
     for (val role : roleIds) {
-      val functionIdSet = self.get(tenantId).get(role).get(apiYn ? 1 : 0).keySet();
-      if (functionIdSet != null) {
-        ids.addAll(functionIdSet);
+      val authoritiesMap = self.get(tenantId).get(role);
+      if (authoritiesMap != null) {
+        val functionIdSet = authoritiesMap.get(apiYn ? 1 : 0).keySet();
+        if (functionIdSet != null) {
+          ids.addAll(functionIdSet);
+        }
       }
+
     }
     return ids;
   }
