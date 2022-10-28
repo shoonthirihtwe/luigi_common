@@ -47,11 +47,11 @@
 		FROM
 			tenants
 		<where>
+            deleted_at is null
 			<if test="updatedAt != null">AND CASE WHEN updated_at is null THEN created_at ELSE updated_at END > #{updatedAt}</if>
-			<if test="id != null">id=#{id}</if>
-            <if test="id == null">id!=0</if>
-			<if test="domain != null">site_url=#{domain}</if>
-            AND deleted_at is null
+			<if test="id != null">AND id=#{id}</if>
+            <if test="id == null">AND id!=0</if>
+			<if test="domain != null">AND site_url=#{domain}</if>
 		</where>
 		ORDER BY updated_at DESC
 	</select>
