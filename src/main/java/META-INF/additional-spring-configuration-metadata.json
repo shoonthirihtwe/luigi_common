@@ -253,5 +253,25 @@
     "name": "dynamo.ba003.table",
     "type": "java.lang.String",
     "description": "A description for 'dynamo.ba003.table'"
+  },
+  {
+    "name": "settings.mail.sender",
+    "type": "java.lang.String",
+    "description": "A description for 'settings.mail.sender'"
+  },
+  {
+    "name": "settings.mail.operation",
+    "type": "java.lang.String",
+    "description": "A description for 'settings.mail.operation'"
+  },
+  {
+    "name": "settings.deployment.environment",
+    "type": "java.lang.String",
+    "description": "A description for 'settings.deployment.environment'"
+  },
+  {
+    "name": "settings.slack.webwook-url",
+    "type": "java.lang.String",
+    "description": "A description for 'settings.slack.webwook-url'"
   }
 ]}
