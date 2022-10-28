@@ -63,8 +63,6 @@ public class CommonBatchService {
 
   private SimpleDateFormat batchForamt = new SimpleDateFormat("yyyyMMdd");
 
-  final List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
-
   /**
    * バッチを実行する
    *
@@ -80,6 +78,8 @@ public class CommonBatchService {
     if (args.length == 0) {
       return;
     }
+
+    List<TenantsVo> tenantList = new ArrayList<TenantsVo>();
 
     // テナントID & バッチ日付を取得
     if (args.length <= 1) {
