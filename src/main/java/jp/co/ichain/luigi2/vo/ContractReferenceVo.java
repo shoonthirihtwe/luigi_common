@@ -62,12 +62,17 @@ public class ContractReferenceVo extends ObjectVo {
    */
   @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date inceptionDate;
-  
+
   /**
    * 責任開始日
    */
   @JsonSerialize(using = JsonDateSimpleFormatSerializer.class)
   Date effectiveDate;
+
+  /**
+   * １回分保険料
+   */
+  String premium;
 
   /**
    * 契約ステータス
@@ -83,11 +88,21 @@ public class ContractReferenceVo extends ObjectVo {
    * 販売プラン種別コード
    */
   String salesPlanTypeCode;
-  
+
   /**
    * 画面表示名
    */
   String salesPlanNameDisplay;
+
+  /**
+   * 保険商品コード
+   */
+  String productCode;
+
+  /**
+   * 保険商品名
+   */
+  String productName;
 
   /**
    * 代理店コード1
@@ -199,7 +214,7 @@ public class ContractReferenceVo extends ObjectVo {
   /**
    * 代理店名1
    */
-  String agenyName1;
+  String agencyName1;
   /**
    * 代理店名2
    */
