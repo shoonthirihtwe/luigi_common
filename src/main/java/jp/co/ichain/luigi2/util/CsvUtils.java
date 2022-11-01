@@ -20,7 +20,7 @@ import lombok.val;
 
 /**
  * csv Utils
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-08-26
  * @updatedAt : 2021-08-26
@@ -30,7 +30,7 @@ public class CsvUtils {
 
   /**
    * csvデータ取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-26
    * @updatedAt : 2021-08-26
@@ -81,7 +81,7 @@ public class CsvUtils {
 
   /**
    * Csvを作成する
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-08-30
    * @updatedAt : 2021-08-30
@@ -122,7 +122,7 @@ public class CsvUtils {
 
   /**
    * Csvを作成する
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-09-02
    * @updatedAt : 2021-09-02
@@ -139,7 +139,10 @@ public class CsvUtils {
       for (val entry : titleMap.entrySet()) {
         mappingMap.put(entry.getValue(), entry.getKey().trim());
       }
+      return write(mappingMap, dataList);
+    } else {
+      return write(titleMap, dataList);
     }
-    return write(mappingMap, dataList);
+
   }
 }
