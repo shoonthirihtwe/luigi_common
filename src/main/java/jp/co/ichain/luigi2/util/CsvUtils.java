@@ -1,5 +1,7 @@
 package jp.co.ichain.luigi2.util;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.input.BOMInputStream;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -143,6 +148,41 @@ public class CsvUtils {
     } else {
       return write(titleMap, dataList);
     }
+
+  }
+
+  /**
+   * Csv To xlsx
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-09-02
+   * @updatedAt : 2021-09-02
+   * @param csvFileBytes
+   * @return
+   * @throws IOException
+   */
+  public static byte[] csvToXlsx(byte[] csvFileBytes) throws IOException {
+    XSSFWorkbook workBook = new XSSFWorkbook();
+    XSSFSheet sheet = workBook.createSheet("sheet1");
+    String currentLine = null;
+    int RowNum = 0;
+    BufferedReader br =
+        new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFileBytes)));
+    while ((currentLine = br.readLine()) != null) {
+      String str[] = currentLine.split(",");
+      XSSFRow currentRow = sheet.createRow(RowNum);
+      for (int i = 0; i < str.length; i++) {
+        currentRow.createCell(i).setCellValue(str[i]);
+      }
+      RowNum++;
+    }
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+    workBook.write(byteArrayOutputStream);
+    val result = byteArrayOutputStream.toByteArray();
+    byteArrayOutputStream.close();
+    workBook.close();
+    return result;
 
   }
 }
