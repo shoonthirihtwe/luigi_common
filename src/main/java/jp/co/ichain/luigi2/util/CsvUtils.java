@@ -165,16 +165,16 @@ public class CsvUtils {
     XSSFWorkbook workBook = new XSSFWorkbook();
     XSSFSheet sheet = workBook.createSheet("sheet1");
     String currentLine = null;
-    int RowNum = 0;
+    int rowNum = 0;
     BufferedReader br =
         new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFileBytes)));
     while ((currentLine = br.readLine()) != null) {
-      String str[] = currentLine.split(",");
-      XSSFRow currentRow = sheet.createRow(RowNum);
+      String[] str = currentLine.split(",");
+      XSSFRow currentRow = sheet.createRow(rowNum);
       for (int i = 0; i < str.length; i++) {
         currentRow.createCell(i).setCellValue(str[i]);
       }
-      RowNum++;
+      rowNum++;
     }
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
