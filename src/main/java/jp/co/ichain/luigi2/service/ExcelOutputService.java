@@ -289,30 +289,33 @@ public class ExcelOutputService {
         errorList.add(error);
       }
 
-      try {
-        lineMap.put("inherentList", setInherentData((Map<String, Object>) lineMap.get("data")));
-        serviceObjectService.validateInherentList(tenantId,
-            (List<Map<String, Object>>) lineMap.get("inherentList"));
-      } catch (WebParameterException | WebConditionException e) {
+      if (lineMap.get("data") != null) {
+        try {
+          lineMap.put("inherentList", setInherentData((Map<String, Object>) lineMap.get("data")));
+          serviceObjectService.validateInherentList(tenantId,
+              (List<Map<String, Object>>) lineMap.get("inherentList"));
+        } catch (WebParameterException | WebConditionException e) {
 
-        e.getErrArgs().forEach(err -> {
+          e.getErrArgs().forEach(err -> {
+            ExcelErrorResultVo error = new ExcelErrorResultVo();
+            val exception = (WebException) err;
+            error.setErrArgs((List<Object>) (exception).getErrArgs());
+            error.setParentKey(exception.getParentKey());
+            error.setArrayIndex(exception.getArrayIndex());
+            error.setCode(((WebException) err).getCode().toString());
+            error.setLineNumber(num);
+            errorList.add(error);
+          });
+        } catch (Exception e) {
+          e.printStackTrace();
           ExcelErrorResultVo error = new ExcelErrorResultVo();
-          val exception = (WebException) err;
-          error.setErrArgs((List<Object>) (exception).getErrArgs());
-          error.setParentKey(exception.getParentKey());
-          error.setArrayIndex(exception.getArrayIndex());
-          error.setCode(((WebException) err).getCode().toString());
+          error.setCode(Luigi2ErrorCode.V0000);
           error.setLineNumber(num);
           errorList.add(error);
-        });
-      } catch (Exception e) {
-        e.printStackTrace();
-        ExcelErrorResultVo error = new ExcelErrorResultVo();
-        error.setCode(Luigi2ErrorCode.V0000);
-        error.setLineNumber(num);
-        errorList.add(error);
+        }
       }
     }
+
     return errorList;
   }
 
