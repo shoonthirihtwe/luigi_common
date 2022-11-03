@@ -454,7 +454,6 @@ public class ExcelOutputService {
       sheet = workbook.getSheetAt(0);
     }
 
-
     // header Cell Style
     CellStyle cellStyle = workbook.createCellStyle();
     for (int j = 0; j < sheet.getRow(0).getPhysicalNumberOfCells(); j++) {
@@ -463,25 +462,27 @@ public class ExcelOutputService {
       }
     }
 
+    // 追加行出力
+    if (applicationList != null && applicationList.size() > 0) {
+      sheet.shiftColumns(0, sheet.getRow(0).getPhysicalNumberOfCells(), 2);
+      Row row = null;
+      Cell cell = null;
+      int rowNum = 0;
 
-    sheet.shiftColumns(0, sheet.getRow(0).getPhysicalNumberOfCells(), 2);
-    Row row = null;
-    Cell cell = null;
-    int rowNum = 0;
-
-    // Header
-    row = sheet.getRow(rowNum++);
-    cell = row.createCell(0);
-    cell.setCellValue("申込行");
-    cell = row.createCell(1);
-    cell.setCellValue("証券番号");
-
-    for (val applyResult : applicationList) {
+      // Header
       row = sheet.getRow(rowNum++);
       cell = row.createCell(0);
-      cell.setCellValue(String.valueOf(rowNum - 1));
+      cell.setCellValue("申込行");
       cell = row.createCell(1);
-      cell.setCellValue(applyResult.getContractNo());
+      cell.setCellValue("証券番号");
+
+      for (val applyResult : applicationList) {
+        row = sheet.getRow(rowNum++);
+        cell = row.createCell(0);
+        cell.setCellValue(String.valueOf(rowNum - 1));
+        cell = row.createCell(1);
+        cell.setCellValue(applyResult.getContractNo());
+      }
     }
 
     val resultOutput = new ByteArrayOutputStream();
