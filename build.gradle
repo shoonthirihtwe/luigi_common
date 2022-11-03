@@ -98,5 +98,10 @@ dependencies {
     //csv
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.4'
 	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+	
+    //excel
+    implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+    
 
 }
