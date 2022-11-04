@@ -186,7 +186,8 @@ public class AwsS3Dao {
       String key = s.getKey();
       key = key.substring(key.indexOf("/") + 1);
       try {
-        return new DownloadFileVo(key, key.substring(key.lastIndexOf("/") + 1),
+        return new DownloadFileVo(key,
+            key.substring(key.lastIndexOf("/") + 1, key.lastIndexOf(".") - 1),
             format.parse(s.getKey().split("_")[2]), s.getLastModified());
       } catch (ParseException e) {
         e.printStackTrace();
