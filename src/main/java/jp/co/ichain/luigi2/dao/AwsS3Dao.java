@@ -41,7 +41,7 @@ import lombok.val;
 
 /**
  * AWS S3 dao
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-06-30
  * @updatedAt : 2021-06-30
@@ -59,7 +59,7 @@ public class AwsS3Dao {
 
   /**
    * ファイルをS3にアップロード
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-07-01
    * @updatedAt : 2021-07-01
@@ -86,7 +86,7 @@ public class AwsS3Dao {
 
   /**
    * S3にからファイルダウンロード
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-07-01
    * @updatedAt : 2021-07-01
@@ -110,7 +110,7 @@ public class AwsS3Dao {
 
   /**
    * S3にからファイル削除
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-30
    * @updatedAt : 2021-08-30
@@ -187,7 +187,7 @@ public class AwsS3Dao {
       key = key.substring(key.indexOf("/") + 1);
       try {
         return new DownloadFileVo(key,
-            key.substring(key.lastIndexOf("/") + 1, key.lastIndexOf(".") - 1),
+            key.substring(key.lastIndexOf("/") + 1, key.lastIndexOf(".")),
             format.parse(s.getKey().split("_")[2]), s.getLastModified());
       } catch (ParseException e) {
         e.printStackTrace();
