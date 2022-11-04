@@ -46,7 +46,7 @@ import lombok.val;
 
 /**
  * ExcelUtils
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-08-26
  * @updatedAt : 2021-08-26
@@ -71,18 +71,18 @@ public class ExcelOutputService {
 
   /**
    * パラメータータイプ
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-01
    * @updatedAt : 2021-10-01
    */
   public enum Vtype {
-    NUM, STRING, DATE, OBJECT, OBJECT_LIST
+    NUM, STRING, DATE, OBJECT, OBJECT_LIST, UNIX_DATE
   }
 
   /**
    * Excelデータ取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-26
    * @updatedAt : 2021-08-26
@@ -152,7 +152,7 @@ public class ExcelOutputService {
 
   /**
    * データマーチングして取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-08-26
    * @updatedAt : 2021-08-26
@@ -239,7 +239,7 @@ public class ExcelOutputService {
 
   /**
    * AB001申込バリデーションチェック
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-04
    * @updatedAt : 2021-10-04
@@ -331,7 +331,7 @@ public class ExcelOutputService {
 
   /**
    * Excel 値type変更
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05
@@ -355,19 +355,22 @@ public class ExcelOutputService {
         default:
           return null;
       }
-
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
       switch (type.name()) {
         case "NUM":
           return Long.valueOf(result.toString());
         case "STRING":
           return result.toString();
         case "DATE":
-          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
           if (value.getCellType() == CellType.NUMERIC) {
             return sdf.format(value.getDateCellValue());
           }
           return value.getStringCellValue();
-
+        case "UNIX_DATE":
+          if (value.getCellType() == CellType.NUMERIC) {
+            return value.getDateCellValue().getTime();
+          }
+          return Long.valueOf(sdf.parse(value.getStringCellValue()).getTime());
         default:
           return null;
       }
@@ -379,7 +382,7 @@ public class ExcelOutputService {
 
   /**
    * エラー結果を作成
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05
@@ -427,7 +430,7 @@ public class ExcelOutputService {
 
   /**
    * エラー結果を作成
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05
@@ -496,7 +499,7 @@ public class ExcelOutputService {
 
   /**
    * OutputStreamをResourceに変更
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05
@@ -517,7 +520,7 @@ public class ExcelOutputService {
 
   /**
    * エラーパラメータを対象ヘッダー名に変更
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05
@@ -554,7 +557,7 @@ public class ExcelOutputService {
 
   /**
    * parentKeyがない場合、下のMapでマッチングを探索
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2022-09-13
    * @updatedAt : 2022-09-13
@@ -578,7 +581,7 @@ public class ExcelOutputService {
 
   /**
    * errorMessage取得
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-10-05
    * @updatedAt : 2021-10-05

@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * 各種コード
- * 
+ *
  * @author : [AOT] s.paku
  * @createdAt : 2021-05-26
  * @updatedAt : 2021-07-01
@@ -68,27 +68,27 @@ public class Luigi2TableInfo {
     map = new HashMap<String, Object>();
     map.put("table", "agencies");
     map.put("key", "agency_code");
-    map.put("size", 5);
+    map.put("size", 20);
     TABLE_INFO_MAP.put(TableInfo.Agencies, map);
 
     // agency_code
     map = new HashMap<String, Object>();
     map.put("table", "agency_branches");
     map.put("key", "agency_branch_code");
-    map.put("size", 4);
+    map.put("size", 20);
     TABLE_INFO_MAP.put(TableInfo.AgencyBranches, map);
 
     // agency_code
     map = new HashMap<String, Object>();
     map.put("table", "sales_agents");
     map.put("key", "agent_code");
-    map.put("size", 6);
+    map.put("size", 20);
     TABLE_INFO_MAP.put(TableInfo.SalesAgents, map);
   }
 
   /**
    * Lockを掛けたいテーブルを取得
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2021-06-02
    * @updatedAt : 2021-06-02
