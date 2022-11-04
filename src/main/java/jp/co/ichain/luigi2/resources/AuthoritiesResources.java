@@ -1,6 +1,9 @@
 package jp.co.ichain.luigi2.resources;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import jp.co.ichain.luigi2.exception.WebDataException;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.vo.AuthoritiesVo;
 import lombok.val;
@@ -117,8 +121,14 @@ public class AuthoritiesResources {
    * @throws JsonProcessingException
    * @throws JsonMappingException
    */
-  public List<String> getAuthorityFunctionIds(Integer tenantId, List<String> roleIds, boolean apiYn)
-      throws JsonMappingException, JsonProcessingException {
+  public List<String> getAuthorityFunctionIds(Integer tenantId, List<String> roleIds, boolean apiYn,
+      Long updatedAt) throws JsonMappingException, JsonProcessingException {
+
+    if (updatedAt != null
+        && updatedAt >= self.getLastUpdatedAt(tenantId, roleIds, apiYn).getTime()) {
+      return null;
+    }
+
     val ids = new ArrayList<String>();
     for (val role : roleIds) {
       val authoritiesMap = self.get(tenantId).get(role);
@@ -152,5 +162,31 @@ public class AuthoritiesResources {
       }
     }
     return false;
+  }
+
+  /**
+   * メッセージリソースを初期化する
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2021-08-17
+   * @updatedAt : 2021-08-17
+   * @param tenantId
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
+  public Date getLastUpdatedAt(Integer tenantId, List<String> roleIds, boolean apiYn)
+      throws JsonMappingException, JsonProcessingException {
+    Map<String, AuthoritiesVo> authorities = new HashMap<String, AuthoritiesVo>();
+    for (val role : roleIds) {
+      val authoritiesMap = self.get(tenantId).get(role);
+      if (authoritiesMap != null) {
+        authorities.putAll(authoritiesMap.get(apiYn ? 1 : 0));
+      }
+    }
+    return authorities.entrySet().stream().map(entry -> {
+      val vo = entry.getValue();
+      return vo.getUpdatedAt() != null ? vo.getUpdatedAt() : vo.getCreatedAt();
+    }).max(Comparator.comparing(updatedAt -> updatedAt.getTime()))
+        .orElseThrow(() -> new WebDataException(Luigi2ErrorCode.D0002));
   }
 }
