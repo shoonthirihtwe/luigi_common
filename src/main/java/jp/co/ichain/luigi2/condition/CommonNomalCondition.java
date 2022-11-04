@@ -110,8 +110,25 @@ public class CommonNomalCondition {
   }
 
   /**
+   * キーに値するデータ存在チェック
+   *
+   * @author : [AOT] s.paku
+   * @createdAt : 2021-07-02
+   * @updatedAt : 2021-07-02
+   * @param data
+   * @param max
+   * @return
+   */
+  public boolean checkDuplicateKey(Object data, Integer tenantId, List<Object> paramList) {
+    val key = (String) paramList.get(0);
+    Boolean result = mapper.selectIsExistKey(Luigi2TableInfo.getLockTable(TableInfo.valueOf(key)),
+        tenantId, data);
+    return result != null ? false : true;
+  }
+
+  /**
    * 郵便番号チェック
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-19
    * @updatedAt : 2021-07-19
