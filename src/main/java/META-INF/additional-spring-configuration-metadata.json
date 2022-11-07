@@ -273,5 +273,10 @@
     "name": "settings.slack.webwook-url",
     "type": "java.lang.String",
     "description": "A description for 'settings.slack.webwook-url'"
+  },
+  {
+    "name": "config.authentication.key.limit",
+    "type": "java.lang.String",
+    "description": "A description for 'config.authentication.key.limit'"
   }
 ]}
