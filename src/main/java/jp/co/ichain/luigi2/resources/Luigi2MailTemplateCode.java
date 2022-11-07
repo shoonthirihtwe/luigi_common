@@ -25,9 +25,19 @@ public class Luigi2MailTemplateCode {
   public static final String SK_011 = "SK_011";
 
   /**
+   * 請求受付のお知らせ
+   */
+  public static final String HK_001 = "HK_001";
+
+  /**
    * 請求査定通知
    */
   public static final String HK_002 = "HK_002";
+
+  /**
+   * １次査定通知
+   */
+  public static final String HK_003 = "HK_003";
 
   /**
    * 新契約：申込受付通知
