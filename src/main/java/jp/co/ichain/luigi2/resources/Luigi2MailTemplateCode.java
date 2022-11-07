@@ -35,6 +35,11 @@ public class Luigi2MailTemplateCode {
   public static final String SK_001 = "SK_001";
 
   /**
+   * 認証キー再発行完了のお知らせ
+   */
+  public static final String SK_002 = "SK_002";
+
+  /**
    * バッチエラー通知
    */
   public static final String BE_001 = "BE_001";
