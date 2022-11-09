@@ -76,14 +76,14 @@ public class ServiceObjectsService {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
   public void execute(Map<String, Object> paramMap)
       throws JsonMappingException, JsonProcessingException {
     var inherentList = paramMap.get("inherentList");
 
     // inherentList null check
-    if (inherentList == null) {
+    if (inherentList == null || ((List) inherentList).size() < 1) {
       return;
     }
 
@@ -153,7 +153,7 @@ public class ServiceObjectsService {
       throws JsonMappingException, JsonProcessingException, WebParameterException {
     if (inherentList != null) {
       serviceInstancesResources.resetCacheableToUpdatedAt(tenantId);
-      
+
       val schemaMap = serviceInstancesResources.getSchema(tenantId);
       if (schemaMap == null) {
         return;
