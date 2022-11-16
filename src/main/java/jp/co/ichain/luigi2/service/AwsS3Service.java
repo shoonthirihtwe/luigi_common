@@ -132,15 +132,17 @@ public class AwsS3Service {
    * @throws IOException
    */
   @Transactional(transactionManager = "luigi2TransactionManager", rollbackFor = Exception.class)
-  public void upload(Documents documents, InputStream inputStream, String fileName,
-      Integer tenantId, Object ownerCode, Object updatedBy)
-      throws InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException,
-      BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException,
-      InvalidKeySpecException, DecoderException, IOException {
+  public void upload(Documents documents, String orgKey, String fileName, Integer tenantId,
+      Object ownerCode, Object updatedBy) throws InvalidKeyException, NoSuchAlgorithmException,
+      IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException,
+      NoSuchPaddingException, InvalidKeySpecException, DecoderException, IOException {
 
     // file name
-    val encodeFileName = Base64.encodeBase64String(fileName.getBytes("UTF-8"));
+    if (orgKey == null) {
+      return;
+    }
 
+    val encodeFileName = Base64.encodeBase64String(fileName.getBytes("UTF-8"));
     // db insert
     Map<String, Object> dataMap = new HashMap<String, Object>();
     dataMap.put("document", documents.name);
@@ -165,9 +167,8 @@ public class AwsS3Service {
     }
     documentsMapper.insertDocuments(dataMap);
 
-    // file upload
-    awsS3Dao.upload(tenantId, documents.name + dataMap.get("id") + "_" + encodeFileName,
-        inputStream);
+    // file move
+    awsS3Dao.move(tenantId, orgKey, documents.name + dataMap.get("id") + "_" + encodeFileName);
   }
 
   /**

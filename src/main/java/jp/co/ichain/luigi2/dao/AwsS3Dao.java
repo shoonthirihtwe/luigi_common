@@ -23,6 +23,7 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
@@ -56,6 +57,27 @@ public class AwsS3Dao {
 
   @Value("${env.debug.mode}")
   Boolean isDebugMode;
+
+  /**
+   * ファイルをS3ファイルMove
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/16
+   * @updatedAt : 2022/11/16
+   * @param tenantId
+   * @param orgKey
+   * @param copyKey
+   * @return
+   * @throws IOException
+   * @throws WebException
+   */
+  public CopyObjectResult move(Integer tenantId, String orgKey, String copyKey)
+      throws IOException, WebException {
+    CopyObjectResult result =
+        s3Client.copyObject(bucketName, orgKey, bucketName, tenantId + "/" + copyKey);
+    s3Client.deleteObject(bucketName, orgKey);
+    return result;
+  }
 
   /**
    * ファイルをS3にアップロード
