@@ -55,6 +55,9 @@ public class AwsS3Dao {
 
   private final ClamAVClient clamAvClient;
 
+  @Value("${luigi2.s3.temp.path}")
+  String uploadTempPath;
+
   @Value("${env.debug.mode}")
   Boolean isDebugMode;
 
@@ -104,6 +107,35 @@ public class AwsS3Dao {
     }
 
     return s3Client.putObject(bucketName, tenantId + "/" + url, new ByteArrayInputStream(f), meta);
+  }
+
+  /**
+   * 臨時ファイルアップロードf
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/16
+   * @updatedAt : 2022/11/16
+   * @param tenantId
+   * @param url
+   * @param inputStream
+   * @return
+   * @throws IOException
+   * @throws WebException
+   */
+  public PutObjectResult uploadTemp(String url, InputStream inputStream)
+      throws IOException, WebException {
+    ObjectMetadata meta = new ObjectMetadata();
+    // size
+    byte[] f = IOUtils.toByteArray(inputStream);
+    meta.setContentLength(f.length);
+    meta.setContentType(new Tika().detect(inputStream));
+
+    // clamAV
+    if (isDebugMode == false) {
+      scanFile(f);
+    }
+
+    return s3Client.putObject(bucketName, uploadTempPath + url, new ByteArrayInputStream(f), meta);
   }
 
   /**

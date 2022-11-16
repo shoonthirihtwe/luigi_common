@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -94,6 +95,9 @@ public class AwsS3Service {
 
   @Value("${aws.s3.salt}")
   String salt;
+
+  @Value("${luigi2.s3.temp.path}")
+  String uploadTempPath;
 
   @Value("${luigi2.s3.text.path}")
   String textPath;
@@ -192,6 +196,31 @@ public class AwsS3Service {
 
     // file upload
     awsS3Dao.upload(tenantId, new String(sb), inputsteam);
+  }
+
+  /**
+   * 臨時ファイルアップロード
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/16
+   * @updatedAt : 2022/11/16
+   * @param inputsteam
+   * @param fileName
+   * @param tenantId
+   * @throws IOException
+   */
+  public String uploadTemp(InputStream inputsteam, String fileName, int tenantId)
+      throws IOException {
+
+    val encodeFileName = Base64.encodeBase64String((tenantId + "_" + fileName).getBytes("UTF-8"));
+
+    StringBuffer sb = new StringBuffer();
+    sb.append(UUID.randomUUID().toString()).append(encodeFileName);
+
+    String result = new String(sb);
+    // file upload
+    awsS3Dao.uploadTemp(result, inputsteam);
+    return uploadTempPath + result;
   }
 
   /**
