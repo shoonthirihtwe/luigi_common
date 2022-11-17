@@ -120,6 +120,14 @@ public class Luigi2ErrorCode {
    */
   public static final String F0003 = "F0003";
   /**
+   * CSVファイルのデータ不備
+   */
+  public static final String F0004 = "F0004";
+  /**
+   * CSVファイルのデータ不備
+   */
+  public static final String F0005 = "F0005";
+  /**
    * 責任開始日前の契約
    */
   public static final String C0001 = "C0001";

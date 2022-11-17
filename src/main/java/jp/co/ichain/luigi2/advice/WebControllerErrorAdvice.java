@@ -1,5 +1,6 @@
 package jp.co.ichain.luigi2.advice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ws.rs.Produces;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import jp.co.ichain.luigi2.dto.ResultListDto;
 import jp.co.ichain.luigi2.exception.WebException;
 import jp.co.ichain.luigi2.exception.WebParameterException;
@@ -91,6 +93,43 @@ public class WebControllerErrorAdvice {
   }
 
   /**
+   * 
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/17
+   * @updatedAt : 2022/11/17
+   * @param e
+   * @return
+   */
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  @Produces(MediaType.APPLICATION_JSON)
+  @ExceptionHandler(AmazonS3Exception.class)
+  public @ResponseBody ResultListDto<Object> handleAmazonS3Exception(AmazonS3Exception e) {
+    val result = new ResultListDto<Object>();
+
+    try {
+      // NoSuchKey
+      switch (e.getErrorCode()) {
+        case "NoSuchKey":
+          result.setCode(Luigi2ErrorCode.F0005);
+          val items = new ArrayList<Object>();
+          items.add(e.getAdditionalDetails().get("Key"));
+          result.setItems(items);
+          break;
+
+        default:
+          result.setCode(Luigi2ErrorCode.F0004);
+      }
+    } catch (Exception ex) {
+      log.error(ex.getLocalizedMessage());
+      result.setCode(Luigi2ErrorCode.S0000);
+    }
+
+    return result;
+  }
+
+
+  /**
    * APIエラー発生（リスト）
    * 
    * @author : [AOT] s.paku
@@ -110,9 +149,8 @@ public class WebControllerErrorAdvice {
       if (e.getErrArgs() != null) {
 
         result.setItems(e.getErrArgs().stream()
-            .map(
-                ex -> new ErrorVo(((WebException) ex).getCode(), ((WebException) ex).getErrArgs(),
-                    ((WebException) ex).getParentKey(), ((WebException) ex).getArrayIndex()))
+            .map(ex -> new ErrorVo(((WebException) ex).getCode(), ((WebException) ex).getErrArgs(),
+                ((WebException) ex).getParentKey(), ((WebException) ex).getArrayIndex()))
             .collect(Collectors.toList()));
       }
     } catch (Exception ex) {
