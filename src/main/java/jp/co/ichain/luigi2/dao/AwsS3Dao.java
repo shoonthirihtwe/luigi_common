@@ -178,6 +178,17 @@ public class AwsS3Dao {
     this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, tenantId + "/" + url));
   }
 
+  /**
+   * 初期化
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/18
+   * @updatedAt : 2022/11/18
+   * @param region
+   * @param bucket
+   * @param credentialsProvider
+   * @param clamAvClient
+   */
   AwsS3Dao(@Value("${aws.s3.region}") String region, @Value("${aws.s3.bucket}") String bucket,
       AWSCredentialsProvider credentialsProvider, ClamAVClient clamAvClient) {
 
@@ -185,6 +196,35 @@ public class AwsS3Dao {
         .withCredentials(credentialsProvider).build();
     this.bucketName = bucket;
     this.clamAvClient = clamAvClient;
+  }
+
+  /**
+   * 臨時ファイル削除
+   * 
+   * @author : [AOT] s.paku
+   * @createdAt : 2022/11/18
+   * @updatedAt : 2022/11/18
+   * @throws AmazonServiceException
+   * @throws SdkClientException
+   * @throws ParseException
+   */
+  public void removeTemp() throws AmazonServiceException, SdkClientException, ParseException {
+
+    // 1ヶ月前データ
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.MONTH, -1);
+    val removeLongTime = c.getTime().getTime();
+
+    ListObjectsV2Request req =
+        new ListObjectsV2Request().withBucketName(this.bucketName).withPrefix(uploadTempPath);
+    ListObjectsV2Result result = s3Client.listObjectsV2(req);
+
+    for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+      val objTime = objectSummary.getLastModified().getTime();
+      if (objTime <= removeLongTime) {
+        this.s3Client.deleteObject(new DeleteObjectRequest(bucketName, objectSummary.getKey()));
+      }
+    }
   }
 
   /**
