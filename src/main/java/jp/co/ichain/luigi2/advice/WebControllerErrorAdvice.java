@@ -141,7 +141,7 @@ public class WebControllerErrorAdvice {
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   @Produces(MediaType.APPLICATION_JSON)
   @ExceptionHandler(WebParameterException.class)
-  public @ResponseBody ResultListDto<ErrorVo> handleWebException(WebParameterException e) {
+  public @ResponseBody ResultListDto<ErrorVo> handleWebParameterException(WebParameterException e) {
     val result = new ResultListDto<ErrorVo>();
 
     try {
