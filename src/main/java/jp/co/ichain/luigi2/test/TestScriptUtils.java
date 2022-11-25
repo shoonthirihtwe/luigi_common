@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,10 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptException;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,14 +37,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jp.co.ichain.luigi2.config.security.SecurityUserDetails;
+import jp.co.ichain.luigi2.config.security.SecurityUserDetailsImpl;
 import jp.co.ichain.luigi2.dao.AwsS3Dao;
 import jp.co.ichain.luigi2.mapper.CommonMapper;
 import jp.co.ichain.luigi2.mapper.DocumentsMapper;
+import jp.co.ichain.luigi2.vo.UsersVo;
 import lombok.val;
 
 /**
  * TestScriptUtils
- * 
+ *
  * @author : [AOT] g.kim
  * @createdAt : 2021-07-13
  * @updatedAt : 2021-07-13
@@ -67,7 +75,7 @@ public class TestScriptUtils {
 
   /**
    * execute Sql
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-13
    * @updatedAt : 2021-07-13
@@ -86,7 +94,7 @@ public class TestScriptUtils {
 
   /**
    * データベースを初期化
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-13
    * @updatedAt : 2021-07-13
@@ -101,11 +109,12 @@ public class TestScriptUtils {
       connection.close();
       connection = null;
     }
+    SecurityContextHolder.clearContext();
   }
 
   /**
    * JsonFile to MultiValueMap
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-13
    * @updatedAt : 2021-07-13
@@ -141,7 +150,7 @@ public class TestScriptUtils {
 
   /**
    * JsonFile to HashMap
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-13
    * @updatedAt : 2021-07-13
@@ -162,7 +171,7 @@ public class TestScriptUtils {
 
   /**
    * JsonFile to String
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-13
    * @updatedAt : 2021-07-13
@@ -181,7 +190,7 @@ public class TestScriptUtils {
 
   /**
    * バッチ日付更新
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-29
    * @updatedAt : 2021-07-29
@@ -211,7 +220,7 @@ public class TestScriptUtils {
 
   /**
    * delete s3file
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-29
    * @updatedAt : 2021-07-29
@@ -229,7 +238,7 @@ public class TestScriptUtils {
 
   /**
    * オンライン日付更新
-   * 
+   *
    * @author : [AOT] g.kim
    * @createdAt : 2021-07-29
    * @updatedAt : 2021-07-29
@@ -258,7 +267,7 @@ public class TestScriptUtils {
 
   /**
    * テーブル値検証
-   * 
+   *
    * @author : [AOT] s.paku
    * @createdAt : 2022-04-08
    * @updatedAt : 2022-04-08
@@ -281,5 +290,33 @@ public class TestScriptUtils {
             actualTable.getValue(idx, column.getColumnName()).toString());
       }
     }
+  }
+
+  /**
+   * テストアカウント設定
+   *
+   * @author : [AOT] g.kim
+   * @createdAt : 2022-11-25
+   * @updatedAt : 2022-11-25
+   * @param UsersVo
+   * @return
+   */
+  public void setTestUserVo(UsersVo userVo) {
+
+    val roles = new ArrayList<String>();
+    roles.add("admin");
+    List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+    for (val role : roles) {
+      grantedAuthorities.add(new SimpleGrantedAuthority(role));
+    }
+    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+        String.valueOf(userVo.getTenantId() + "::" + userVo.getId() + "::"
+            + userVo.getLastLoginAt().getTime()),
+        userVo.getSub(), grantedAuthorities);
+    SecurityUserDetails userDetails = new SecurityUserDetailsImpl();
+    userDetails.setUser(userVo);
+    token.setDetails(userDetails);
+    SecurityContextHolder.getContext().setAuthentication(token);
+
   }
 }
